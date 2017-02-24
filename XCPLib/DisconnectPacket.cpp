@@ -12,8 +12,3 @@ DisconnectPacket::DisconnectPacket() : CommandPacket()
 DisconnectPacket::~DisconnectPacket()
 {
 }
-
-uint8_t * DisconnectPacket::GetRawBytes()
-{
-	return nullptr;
-}
