@@ -3,6 +3,16 @@
 #include "IncomingMessageHandler.h"
 
 
+XCPMaster::SlaveProperties XCPMaster::GetSlaveProperties()
+{
+	return m_SlaveProperties;
+}
+
+void XCPMaster::SetSlaveProperties(const SlaveProperties& properties)
+{
+	m_SlaveProperties = properties;
+}
+
 XCPMaster::XCPMaster(TransportLayer transportlayer)
 {
 	switch (transportlayer)

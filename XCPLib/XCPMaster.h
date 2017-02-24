@@ -26,12 +26,7 @@ enum TransportLayer
 
 class XCP_API XCPMaster
 {
-private:
-	IMessageFactory* m_MessageFactory;
-	PacketFactory* m_PacketFactory;
-	std::queue<CommandPacket*> m_SentCommandQueue;
-	IIncomingMessageHandler* m_MessageHandler;
-
+public:
 	struct SlaveProperties
 	{
 		bool CAL_PG;
@@ -39,9 +34,28 @@ private:
 		bool STIM;
 		bool PGM;
 
+		bool ByteOrder;
+		uint8_t AddressGranularity;
+		bool SlaveBlockMode;
+		bool OptionalData;
 
+		uint16_t MaxDto;
+		uint8_t MaxCto;
+		uint8_t ProtocolLayerVersion;
+		uint8_t TransportLayerVersion;
 	};
+
+private:
+	IMessageFactory* m_MessageFactory;
+	PacketFactory* m_PacketFactory;
+	std::queue<CommandPacket*> m_SentCommandQueue;
+	IIncomingMessageHandler* m_MessageHandler;
+
+
+	SlaveProperties m_SlaveProperties;
 public:
+	SlaveProperties GetSlaveProperties();
+	void SetSlaveProperties(const SlaveProperties& properties);
 	XCPMaster(TransportLayer transportlayer);
 	virtual ~XCPMaster();
 	std::unique_ptr<IXCPMessage> CreateConnectMessage(ConnectMode mode);
