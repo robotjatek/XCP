@@ -24,7 +24,7 @@ enum TransportLayer
 	FLEXRAY
 };
 
-class XCP_API XCPMaster
+class XCPMaster
 {
 public:
 	struct SlaveProperties
@@ -50,21 +50,19 @@ private:
 	PacketFactory* m_PacketFactory;
 	std::queue<CommandPacket*> m_SentCommandQueue;
 	IIncomingMessageHandler* m_MessageHandler;
-
-
 	SlaveProperties m_SlaveProperties;
 public:
-	SlaveProperties GetSlaveProperties();
-	void SetSlaveProperties(const SlaveProperties& properties);
-	XCPMaster(TransportLayer transportlayer);
-	virtual ~XCPMaster();
-	std::unique_ptr<IXCPMessage> CreateConnectMessage(ConnectMode mode);
-	std::unique_ptr<IXCPMessage> CreateDisconnectMessage();
-	std::unique_ptr<IXCPMessage> CreateGetStatusMessage();
-	std::unique_ptr<IXCPMessage> CreateSynchMessage();
-	std::unique_ptr<IXCPMessage> DeserializeMessage(std::vector<uint8_t>& data);
-	void SendMessage(IXCPMessage* Message);
-	IXCPMessage* ReceiveMessage(IXCPMessage* Message);
-	void AddSentMessage(IXCPMessage* Packet);
+	XCP_API SlaveProperties GetSlaveProperties();
+	XCP_API void SetSlaveProperties(const SlaveProperties& properties);
+	XCP_API XCPMaster(TransportLayer transportlayer);
+	XCP_API virtual ~XCPMaster();
+	XCP_API std::unique_ptr<IXCPMessage> CreateConnectMessage(ConnectMode mode);
+	XCP_API std::unique_ptr<IXCPMessage> CreateDisconnectMessage();
+	XCP_API std::unique_ptr<IXCPMessage> CreateGetStatusMessage();
+	XCP_API std::unique_ptr<IXCPMessage> CreateSynchMessage();
+	XCP_API std::unique_ptr<IXCPMessage> DeserializeMessage(std::vector<uint8_t>& data);
+	XCP_API void SendMessage(IXCPMessage* Message);
+	XCP_API IXCPMessage* ReceiveMessage(IXCPMessage* Message);
+	XCP_API void AddSentMessage(IXCPMessage* Packet);
 };
 
