@@ -37,9 +37,9 @@ public:
 		PGM = 0x10,
 	};
 
-	GetStatusResponsePacket(std::vector<uint8_t>& Data, uint8_t HeaderSize);
+	GetStatusResponsePacket(const std::vector<uint8_t>& Data, uint8_t HeaderSize);
 	virtual ~GetStatusResponsePacket();
-	static GetStatusResponsePacket* Deserialize(std::vector<uint8_t> Data, uint8_t HeaderSize);
+	static GetStatusResponsePacket* Deserialize(const std::vector<uint8_t>& Data, uint8_t HeaderSize);
 	virtual void Dispatch(IIncomingMessageHandler& Handler);
 	uint8_t GetCurrentSessionStatus();
 	void SetCurrentSessionStatus(uint8_t SessionStatus);

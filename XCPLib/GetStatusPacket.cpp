@@ -14,7 +14,7 @@ GetStatusPacket::~GetStatusPacket()
 {
 }
 
-GetStatusResponsePacket::GetStatusResponsePacket(std::vector<uint8_t>& Data, uint8_t HeaderSize) : ResponsePacket()
+GetStatusResponsePacket::GetStatusResponsePacket(const std::vector<uint8_t>& Data, uint8_t HeaderSize) : ResponsePacket()
 {
 	m_DataLength = 5;
 	m_PacketSize = 6;
@@ -32,7 +32,7 @@ GetStatusResponsePacket::~GetStatusResponsePacket()
 	m_Data = nullptr;
 }
 
-GetStatusResponsePacket * GetStatusResponsePacket::Deserialize(std::vector<uint8_t> Data, uint8_t HeaderSize)
+GetStatusResponsePacket * GetStatusResponsePacket::Deserialize(const std::vector<uint8_t>& Data, uint8_t HeaderSize)
 {
 	return new GetStatusResponsePacket(Data,HeaderSize);
 }
@@ -87,5 +87,6 @@ uint16_t GetStatusResponsePacket::GetSessionConfigurationId(bool LittleEndian)
 
 void GetStatusResponsePacket::SetSessionConfigurationId(uint16_t SessionConfigurationId)
 {
-	m_Data[BytePositions::SESSION_CONFIGURATION_ID] = SessionConfigurationId;
+	m_Data[BytePositions::SESSION_CONFIGURATION_ID] = SessionConfigurationId & 0xFF;
+	m_Data[BytePositions::SESSION_CONFIGURATION_ID + 1] = (SessionConfigurationId & 0xFF00) >> 8;
 }

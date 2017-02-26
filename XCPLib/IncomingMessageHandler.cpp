@@ -61,5 +61,5 @@ void IncomingMessageHandler::Handle(ResponsePacket & Packet)
 
 void IncomingMessageHandler::Handle(GetStatusResponsePacket & Packet)
 {
-	std::cout << "jött egy statusresonse packet\n";
+	std::cout << "jott egy statusresonse packet\n";
 }
