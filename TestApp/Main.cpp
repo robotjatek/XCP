@@ -73,6 +73,7 @@ int main()
 	XCPMaster master(TransportLayer::ETHERNET);
 	XCPMsgPtr connect_message = master.CreateConnectMessage(ConnectMode::NORMAL);
 	XCPMsgPtr disconnect_message = master.CreateDisconnectMessage();
+	XCPMsgPtr GetStatus = master.CreateGetStatusMessage();
 	
 
 	std::vector<uint8_t> bytes;
@@ -90,6 +91,22 @@ int main()
 	std::cout << "\n";
 	XCPMsgPtr asd = master.DeserializeMessage(bytes);
 	bytes.clear();
+
+	GetStatus->Serialize(bytes);
+	send(s, (const char*)bytes.begin()._Ptr, bytes.size(), 0);
+	bytes.clear();
+	bytes.resize(2000);
+	master.AddSentMessage(GetStatus.get());
+
+	recv_size = recv(s, (char*)&bytes[0], 2000, 0);
+	for (int i = 0; i < recv_size; i++)
+	{
+		std::cout << std::hex << (int)(bytes[i] & 0xff) << " ";
+	}
+	std::cout << "\n";
+	asd = master.DeserializeMessage(bytes);
+	bytes.clear();
+	
 
 	
 	disconnect_message->Serialize(bytes);

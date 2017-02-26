@@ -58,6 +58,16 @@ std::unique_ptr<IXCPMessage> XCPMaster::CreateDisconnectMessage()
 	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateDisconnectPacket()));
 }
 
+std::unique_ptr<IXCPMessage> XCPMaster::CreateGetStatusMessage()
+{
+	if (!m_MessageFactory)
+	{
+		return nullptr;
+	}
+
+	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateGetStatusPacket()));
+}
+
 std::unique_ptr<IXCPMessage> XCPMaster::DeserializeMessage(std::vector<uint8_t>& data)
 {
 	IXCPPacket* Packet = m_PacketFactory->DeserializeIncomingFromSlave(data, m_MessageFactory->GetHeaderSize(), m_SentCommandQueue.front());

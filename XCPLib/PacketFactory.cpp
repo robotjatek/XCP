@@ -1,5 +1,6 @@
 #include "PacketFactory.h"
 #include "ConnectPositivePacket.h"
+#include "GetStatusPacket.h"
 #include <iostream>
 
 
@@ -14,12 +15,15 @@ IXCPPacket * PacketFactory::CreateResponsePacket(std::vector<uint8_t>& Data, uin
 	case CTOMasterToSlaveCommands::DISCONNECT:
 		return new ResponsePacket();
 		break;
+	case CTOMasterToSlaveCommands::GET_STATUS:
+		return GetStatusResponsePacket::Deserialize(Data, HeaderSize);
+		break;
 	default:
 		std::cout << "Unhandled response format\n";
 		return nullptr;
 		break;
 	}
-//	return nullptr;
+	//	return nullptr;
 }
 
 PacketFactory::PacketFactory()
@@ -39,6 +43,11 @@ IXCPPacket * PacketFactory::CreateConnectPacket(ConnectMode mode)
 IXCPPacket * PacketFactory::CreateDisconnectPacket()
 {
 	return new DisconnectPacket();
+}
+
+IXCPPacket * PacketFactory::CreateGetStatusPacket()
+{
+	return new GetStatusPacket();
 }
 
 IXCPPacket * PacketFactory::DeserializeIncomingFromSlave(std::vector<uint8_t>& Data, uint8_t HeaderSize, CommandPacket* LastSentCommand)

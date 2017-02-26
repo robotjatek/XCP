@@ -13,6 +13,7 @@ public:
 	virtual ~PacketFactory();
 	IXCPPacket* CreateConnectPacket(ConnectMode Mode);
 	IXCPPacket* CreateDisconnectPacket();
+	IXCPPacket* CreateGetStatusPacket();
 	IXCPPacket* DeserializeIncomingFromSlave(std::vector<uint8_t>& Data, uint8_t HeaderSize, CommandPacket* LastSentCommand);
 };
 

@@ -3,6 +3,7 @@
 #include <iomanip>
 #include "IXCPMessage.h"
 #include "DisconnectPacket.h"
+#include "GetStatusPacket.h"
 
 IncomingMessageHandler::IncomingMessageHandler(XCPMaster& Master) : m_Master(Master)
 {
@@ -56,4 +57,9 @@ void IncomingMessageHandler::Handle(ConnectPositivePacket & Packet)
 void IncomingMessageHandler::Handle(ResponsePacket & Packet)
 {
 	std::cout << "General Ack packet received (or an unhandled packet format) PID: "<<(int)Packet.GetPid()<<"\n";
+}
+
+void IncomingMessageHandler::Handle(GetStatusResponsePacket & Packet)
+{
+	std::cout << "jött egy statusresonse packet\n";
 }

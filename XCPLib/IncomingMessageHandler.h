@@ -13,5 +13,6 @@ public:
 	virtual ~IncomingMessageHandler();
 	virtual void Handle(ConnectPositivePacket& Packet);
 	virtual void Handle(ResponsePacket& Packet);
+	virtual void Handle(GetStatusResponsePacket& Packet);
 };
 
