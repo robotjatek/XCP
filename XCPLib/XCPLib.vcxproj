@@ -162,6 +162,7 @@
     <ClInclude Include="CommandPacket.h" />
     <ClInclude Include="PacketFactory.h" />
     <ClInclude Include="ResponsePacket.h" />
+    <ClInclude Include="SynchPacket.h" />
     <ClInclude Include="TCPHeader.h" />
     <ClInclude Include="TCPMessage.h" />
     <ClInclude Include="TCPMessageFactory.h" />
@@ -177,6 +178,7 @@
     <ClCompile Include="IXCPMessage.cpp" />
     <ClCompile Include="IXCPPacket.cpp" />
     <ClCompile Include="PacketFactory.cpp" />
+    <ClCompile Include="SynchPacket.cpp" />
     <ClCompile Include="TCPHeader.cpp" />
     <ClCompile Include="TCPMessage.cpp" />
     <ClCompile Include="TCPMessageFactory.cpp" />

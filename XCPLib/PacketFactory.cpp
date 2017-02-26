@@ -1,10 +1,12 @@
 #include "PacketFactory.h"
 #include "ConnectPositivePacket.h"
 #include "GetStatusPacket.h"
+#include "SynchPacket.h"
+#include "DisconnectPacket.h"
 #include <iostream>
 
 
-IXCPPacket * PacketFactory::CreateResponsePacket(std::vector<uint8_t>& Data, uint8_t HeaderSize, CommandPacket * LastSentCommand)
+IXCPPacket * PacketFactory::CreateResponsePacket(const std::vector<uint8_t>& Data, uint8_t HeaderSize, CommandPacket * LastSentCommand)
 {
 	uint8_t LastCommandPID = LastSentCommand->GetPid();
 	switch (LastCommandPID)
@@ -23,7 +25,22 @@ IXCPPacket * PacketFactory::CreateResponsePacket(std::vector<uint8_t>& Data, uin
 		return nullptr;
 		break;
 	}
-	//	return nullptr;
+}
+
+IXCPPacket * PacketFactory::CreateErrorPacket(const std::vector<uint8_t>& data, uint8_t header_size, CommandPacket * LastSentCommand)
+{
+	uint8_t ErrorCode = data[header_size + 1];
+	uint8_t LastCommandPID = LastSentCommand->GetPid();
+	switch (ErrorCode)
+	{
+	case ErrorCodes::ERR_CMD_SYNCH:
+		return new SynchResponsePacket();
+		break;
+	default:
+		std::cout << "Deserialization error: Unhandled errorcode\n";
+		return nullptr;
+		break;
+	}
 }
 
 PacketFactory::PacketFactory()
@@ -50,7 +67,12 @@ IXCPPacket * PacketFactory::CreateGetStatusPacket()
 	return new GetStatusPacket();
 }
 
-IXCPPacket * PacketFactory::DeserializeIncomingFromSlave(std::vector<uint8_t>& Data, uint8_t HeaderSize, CommandPacket* LastSentCommand)
+IXCPPacket * PacketFactory::CreateSynchPacket()
+{
+	return new SynchPacket();
+}
+
+IXCPPacket * PacketFactory::DeserializeIncomingFromSlave(const std::vector<uint8_t>& Data, uint8_t HeaderSize, CommandPacket* LastSentCommand)
 {
 	uint8_t PID = Data[HeaderSize];
 	switch (PID)
@@ -61,6 +83,7 @@ IXCPPacket * PacketFactory::DeserializeIncomingFromSlave(std::vector<uint8_t>& D
 	case CTOSlaveToMasterPacketTypes::EV:
 		break;
 	case CTOSlaveToMasterPacketTypes::ERR:
+		return CreateErrorPacket(Data, HeaderSize, LastSentCommand);
 		break;
 	case CTOSlaveToMasterPacketTypes::SERV:
 		break;

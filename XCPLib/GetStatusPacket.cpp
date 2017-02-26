@@ -14,6 +14,8 @@ GetStatusPacket::~GetStatusPacket()
 {
 }
 
+//-------------------------------------------------------------------------------------------------------------------------------
+
 GetStatusResponsePacket::GetStatusResponsePacket(const std::vector<uint8_t>& Data, uint8_t HeaderSize) : ResponsePacket()
 {
 	m_DataLength = 5;

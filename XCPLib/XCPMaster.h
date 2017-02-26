@@ -61,6 +61,7 @@ public:
 	std::unique_ptr<IXCPMessage> CreateConnectMessage(ConnectMode mode);
 	std::unique_ptr<IXCPMessage> CreateDisconnectMessage();
 	std::unique_ptr<IXCPMessage> CreateGetStatusMessage();
+	std::unique_ptr<IXCPMessage> CreateSynchMessage();
 	std::unique_ptr<IXCPMessage> DeserializeMessage(std::vector<uint8_t>& data);
 	void SendMessage(IXCPMessage* Message);
 	IXCPMessage* ReceiveMessage(IXCPMessage* Message);

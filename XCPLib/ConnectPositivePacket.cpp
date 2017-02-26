@@ -16,7 +16,7 @@ ConnectPositivePacket::ConnectPositivePacket(uint8_t resource, uint8_t comm_mode
 	SetTransportLayerVersion(transport_layer_version);
 }
 
-ConnectPositivePacket::ConnectPositivePacket(std::vector<uint8_t>& Data, uint8_t HeaderSize)
+ConnectPositivePacket::ConnectPositivePacket(const std::vector<uint8_t>& Data, uint8_t HeaderSize)
 	: ResponsePacket::ResponsePacket()
 {
 	m_PacketSize = 8;
@@ -112,7 +112,7 @@ void ConnectPositivePacket::SetTransportLayerVersion(uint8_t version)
 	m_Data[BytePositions::TRANSPORT_LAYER_VERSION] = version;
 }
 
-ConnectPositivePacket * ConnectPositivePacket::Deserialize(std::vector<uint8_t>& Data, uint8_t HeaderSize)
+ConnectPositivePacket * ConnectPositivePacket::Deserialize(const std::vector<uint8_t>& Data, uint8_t HeaderSize)
 {
 	return new ConnectPositivePacket(Data, HeaderSize);
 }

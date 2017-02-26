@@ -14,5 +14,6 @@ public:
 	virtual void Handle(ConnectPositivePacket& Packet);
 	virtual void Handle(ResponsePacket& Packet);
 	virtual void Handle(GetStatusResponsePacket& Packet);
+	virtual void Handle(SynchResponsePacket& Packet);
 };
 

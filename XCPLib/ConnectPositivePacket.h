@@ -15,7 +15,7 @@ private:
 		TRANSPORT_LAYER_VERSION		= 6,
 	};
 
-	ConnectPositivePacket(std::vector<uint8_t>& data, uint8_t header_size);
+	ConnectPositivePacket(const std::vector<uint8_t>& data, uint8_t header_size);
 public:
 	//If a resource is available the mandatory commands of this resource must be supported
 	enum ResourceParameterBits
@@ -50,7 +50,7 @@ public:
 	void SetMaxDto(uint16_t dto);
 	void SetProtocolLayerVersion(uint8_t version);
 	void SetTransportLayerVersion(uint8_t version);
-	static ConnectPositivePacket* Deserialize(std::vector<uint8_t>& Data, uint8_t HeaderSize);
+	static ConnectPositivePacket* Deserialize(const std::vector<uint8_t>& Data, uint8_t HeaderSize);
 	virtual void Dispatch(IIncomingMessageHandler& Handler);
 };
 

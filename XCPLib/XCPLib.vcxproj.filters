@@ -75,6 +75,9 @@
     <ClInclude Include="GetStatusPacket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SynchPacket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConnectPacket.cpp">
@@ -114,6 +117,9 @@
       <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="GetStatusPacket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SynchPacket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

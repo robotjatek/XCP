@@ -63,3 +63,11 @@ void IncomingMessageHandler::Handle(GetStatusResponsePacket & Packet)
 {
 	std::cout << "jott egy statusresonse packet\n";
 }
+
+void IncomingMessageHandler::Handle(SynchResponsePacket & Packet)
+{
+	std::cout << "jott egy sync response...\n";
+}
+
+
+
