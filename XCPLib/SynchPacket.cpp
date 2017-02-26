@@ -31,7 +31,7 @@ SynchResponsePacket::~SynchResponsePacket()
 
 SynchResponsePacket * SynchResponsePacket::Deserialize(const std::vector<uint8_t>& Data, uint8_t HeaderSize)
 {
-	return nullptr;
+	return new SynchResponsePacket();
 }
 
 void SynchResponsePacket::Dispatch(IIncomingMessageHandler & Handler)

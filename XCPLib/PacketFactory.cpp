@@ -34,7 +34,7 @@ IXCPPacket * PacketFactory::CreateErrorPacket(const std::vector<uint8_t>& data, 
 	switch (ErrorCode)
 	{
 	case ErrorCodes::ERR_CMD_SYNCH:
-		return new SynchResponsePacket();
+		return new SynchResponsePacket::Deserialize()
 		break;
 	default:
 		std::cout << "Deserialization error: Unhandled errorcode\n";
