@@ -3,6 +3,7 @@
 #include "GetStatusPacket.h"
 #include "SynchPacket.h"
 #include "DisconnectPacket.h"
+#include "SetMTAPacket.h"
 #include <iostream>
 
 
@@ -70,6 +71,14 @@ IXCPPacket * PacketFactory::CreateGetStatusPacket()
 IXCPPacket * PacketFactory::CreateSynchPacket()
 {
 	return new SynchPacket();
+}
+
+IXCPPacket * PacketFactory::CreateSetMTAPacket(uint32_t address, uint8_t extension, bool LittleEndian)
+{
+	SetMTAPacket* packet = new SetMTAPacket();
+	packet->SetAddress(address, LittleEndian);
+	packet->SetAddressExtension(extension);
+	return packet;
 }
 
 IXCPPacket * PacketFactory::DeserializeIncomingFromSlave(const std::vector<uint8_t>& Data, uint8_t HeaderSize, CommandPacket* LastSentCommand)

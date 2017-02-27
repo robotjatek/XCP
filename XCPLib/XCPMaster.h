@@ -60,6 +60,7 @@ public:
 	XCP_API std::unique_ptr<IXCPMessage> CreateDisconnectMessage();
 	XCP_API std::unique_ptr<IXCPMessage> CreateGetStatusMessage();
 	XCP_API std::unique_ptr<IXCPMessage> CreateSynchMessage();
+	XCP_API std::unique_ptr<IXCPMessage> CreateSetMTAMessage(uint32_t address, uint8_t extension);
 	XCP_API std::unique_ptr<IXCPMessage> DeserializeMessage(std::vector<uint8_t>& data);
 	XCP_API void SendMessage(IXCPMessage* Message);
 	XCP_API IXCPMessage* ReceiveMessage(IXCPMessage* Message);

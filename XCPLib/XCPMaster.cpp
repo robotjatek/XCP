@@ -78,6 +78,16 @@ std::unique_ptr<IXCPMessage> XCPMaster::CreateSynchMessage()
 	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateSynchPacket()));
 }
 
+XCP_API std::unique_ptr<IXCPMessage> XCPMaster::CreateSetMTAMessage(uint32_t address, uint8_t extension)
+{
+	if (!m_MessageFactory)
+	{
+		return nullptr;
+	}
+
+	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateSetMTAPacket(address,extension,m_SlaveProperties.ByteOrder==0)));
+}
+
 std::unique_ptr<IXCPMessage> XCPMaster::DeserializeMessage(std::vector<uint8_t>& data)
 {
 	IXCPPacket* Packet = m_PacketFactory->DeserializeIncomingFromSlave(data, m_MessageFactory->GetHeaderSize(), m_SentCommandQueue.front());

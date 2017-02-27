@@ -75,6 +75,7 @@ int main()
 	XCPMsgPtr disconnect_message = master.CreateDisconnectMessage();
 	XCPMsgPtr GetStatus = master.CreateGetStatusMessage();
 	XCPMsgPtr Synch = master.CreateSynchMessage();
+	XCPMsgPtr SetMTA = master.CreateSetMTAMessage(0x219020, 0);
 	
 
 	std::vector<uint8_t> bytes;
@@ -114,6 +115,22 @@ int main()
 	bytes.clear();
 	bytes.resize(2000);
 	master.AddSentMessage(Synch.get());
+
+	recv_size = recv(s, (char*)&bytes[0], 2000, 0);
+	for (int i = 0; i < recv_size; i++)
+	{
+		std::cout << std::hex << (int)(bytes[i] & 0xff) << " ";
+	}
+	std::cout << "\n";
+	asd = master.DeserializeMessage(bytes);
+	bytes.clear();
+
+
+	SetMTA->Serialize(bytes);
+	send(s, (const char*)bytes.begin()._Ptr, bytes.size(), 0);
+	bytes.clear();
+	bytes.resize(2000);
+	master.AddSentMessage(SetMTA.get());
 
 	recv_size = recv(s, (char*)&bytes[0], 2000, 0);
 	for (int i = 0; i < recv_size; i++)

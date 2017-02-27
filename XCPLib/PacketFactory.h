@@ -15,6 +15,7 @@ public:
 	IXCPPacket* CreateDisconnectPacket();
 	IXCPPacket* CreateGetStatusPacket();
 	IXCPPacket* CreateSynchPacket();
+	IXCPPacket* CreateSetMTAPacket(uint32_t address, uint8_t extension, bool LittleEndian);
 	IXCPPacket* DeserializeIncomingFromSlave(const std::vector<uint8_t>& Data, uint8_t HeaderSize, CommandPacket* LastSentCommand);
 };
 
