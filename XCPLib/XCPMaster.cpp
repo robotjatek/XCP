@@ -99,10 +99,12 @@ std::unique_ptr<IXCPMessage> XCPMaster::DeserializeMessage(std::vector<uint8_t>&
 		if (m_MessageHandler)
 		{
 			Packet->Dispatch(*m_MessageHandler);
+			std::cout << "---------------------------------------------\n";
 		}
 		return std::unique_ptr<IXCPMessage>(MessageFrame);
 	}
 	std::cout << "couldnt deserialise the message\n";
+	std::cout << "---------------------------------------------\n";
 	return nullptr;
 }
 

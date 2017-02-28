@@ -29,9 +29,12 @@ IXCPPacket * PacketFactory::CreateResponsePacket(const std::vector<uint8_t>& Dat
 	case CTOMasterToSlaveCommands::SHORT_UPLOAD:
 		return UploadResponse::Deserialize(Data, HeaderSize, m_Master.GetSlaveProperties().AddressGranularity);
 		break;
+	case CTOMasterToSlaveCommands::SET_MTA:
+		return new ResponsePacket();
+		break;
 	default:
 		std::cout << "Unhandled response format\n";
-		return nullptr;
+		return new ResponsePacket();
 		break;
 	}
 }
