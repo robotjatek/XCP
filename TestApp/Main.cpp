@@ -33,15 +33,11 @@
 
 
 using XCPMsgPtr = std::unique_ptr<IXCPMessage>;
+XCPMaster master(TransportLayer::ETHERNET);
 
-int main()
+int SetupConnection(SOCKET& s)
 {
 	WSADATA wsa;
-	SOCKET s;
-	uint8_t message[] = { 0x02, 0x00, 0x00, 0x00,0xff, 0x00 };
-	//char server_reply[2000];
-	int recv_size;
-
 	printf("\nInitialising Winsock...");
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
 	{
@@ -69,23 +65,26 @@ int main()
 	}
 
 	puts("Connected");
-	Sleep(500);
-	XCPMaster master(TransportLayer::ETHERNET);
-	XCPMsgPtr connect_message = master.CreateConnectMessage(ConnectMode::NORMAL);
-	XCPMsgPtr disconnect_message = master.CreateDisconnectMessage();
-	XCPMsgPtr GetStatus = master.CreateGetStatusMessage();
-	XCPMsgPtr Synch = master.CreateSynchMessage();
-	XCPMsgPtr SetMTA = master.CreateSetMTAMessage(0x219020, 0);
-	
+	return 0;
+}
 
+
+void Cleanup(SOCKET s)
+{
+	closesocket(s);
+	WSACleanup();
+}
+
+void Send(SOCKET s, XCPMsgPtr message)
+{
 	std::vector<uint8_t> bytes;
-	connect_message->Serialize(bytes);
+	message->Serialize(bytes);
 	send(s, (const char*)bytes.begin()._Ptr, bytes.size(), 0);
 	bytes.clear();
 	bytes.resize(2000);
-	master.AddSentMessage(connect_message.get());
+	master.AddSentMessage(message.get());
 
-	recv_size = recv(s, (char*)&bytes[0], 2000, 0);
+	int recv_size = recv(s, (char*)&bytes[0], 2000, 0);
 	for (int i = 0; i < recv_size; i++)
 	{
 		std::cout << std::hex << (int)(bytes[i] & 0xff) << " ";
@@ -93,73 +92,29 @@ int main()
 	std::cout << "\n";
 	XCPMsgPtr asd = master.DeserializeMessage(bytes);
 	bytes.clear();
+}
 
-	GetStatus->Serialize(bytes);
-	send(s, (const char*)bytes.begin()._Ptr, bytes.size(), 0);
-	bytes.clear();
-	bytes.resize(2000);
-	master.AddSentMessage(GetStatus.get());
-
-	recv_size = recv(s, (char*)&bytes[0], 2000, 0);
-	for (int i = 0; i < recv_size; i++)
+int main()
+{
+	SOCKET s;
+	if (SetupConnection(s))
 	{
-		std::cout << std::hex << (int)(bytes[i] & 0xff) << " ";
+		return 1;
 	}
-	std::cout << "\n";
-	asd = master.DeserializeMessage(bytes);
-	bytes.clear();
-
-
-	Synch->Serialize(bytes);
-	send(s, (const char*)bytes.begin()._Ptr, bytes.size(), 0);
-	bytes.clear();
-	bytes.resize(2000);
-	master.AddSentMessage(Synch.get());
-
-	recv_size = recv(s, (char*)&bytes[0], 2000, 0);
-	for (int i = 0; i < recv_size; i++)
-	{
-		std::cout << std::hex << (int)(bytes[i] & 0xff) << " ";
-	}
-	std::cout << "\n";
-	asd = master.DeserializeMessage(bytes);
-	bytes.clear();
-
-
-	SetMTA->Serialize(bytes);
-	send(s, (const char*)bytes.begin()._Ptr, bytes.size(), 0);
-	bytes.clear();
-	bytes.resize(2000);
-	master.AddSentMessage(SetMTA.get());
-
-	recv_size = recv(s, (char*)&bytes[0], 2000, 0);
-	for (int i = 0; i < recv_size; i++)
-	{
-		std::cout << std::hex << (int)(bytes[i] & 0xff) << " ";
-	}
-	std::cout << "\n";
-	asd = master.DeserializeMessage(bytes);
-	bytes.clear();
 	
+	XCPMsgPtr connect_message = master.CreateConnectMessage(ConnectMode::NORMAL);
+	XCPMsgPtr disconnect_message = master.CreateDisconnectMessage();
+	XCPMsgPtr GetStatus = master.CreateGetStatusMessage();
+	XCPMsgPtr Synch = master.CreateSynchMessage();
+	XCPMsgPtr SetMTA = master.CreateSetMTAMessage(0x219020, 0);	
 
-	
-	disconnect_message->Serialize(bytes);
-	send(s, (const char*)bytes.begin()._Ptr, bytes.size(), 0);
-	bytes.clear();
-	master.AddSentMessage(disconnect_message.get());
-	bytes.resize(2000);
-	recv(s, (char*)&bytes[0], 2000, 0);
-	master.DeserializeMessage(bytes);
-	bytes.clear();
+	Send(s, std::move(connect_message));
+	Send(s, std::move(GetStatus));
+	Send(s, std::move(Synch));
+	Send(s, std::move(SetMTA));
+	Send(s, std::move(disconnect_message));
 
-	//delete connect_message;
-	//delete disconnect_message;
-
-	system("pause");
-	closesocket(s);
-	WSACleanup();
-
-
+	Cleanup(s);
 	system("pause");
 	return 0;
 }
