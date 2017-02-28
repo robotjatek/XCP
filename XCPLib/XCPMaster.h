@@ -52,7 +52,7 @@ private:
 	IIncomingMessageHandler* m_MessageHandler;
 	SlaveProperties m_SlaveProperties;
 public:
-	XCP_API SlaveProperties GetSlaveProperties();
+	XCP_API const SlaveProperties& GetSlaveProperties() const;
 	XCP_API void SetSlaveProperties(const SlaveProperties& properties);
 	XCP_API XCPMaster(TransportLayer transportlayer);
 	XCP_API virtual ~XCPMaster();
@@ -62,6 +62,7 @@ public:
 	XCP_API std::unique_ptr<IXCPMessage> CreateSynchMessage();
 	XCP_API std::unique_ptr<IXCPMessage> CreateSetMTAMessage(uint32_t address, uint8_t extension);
 	XCP_API std::unique_ptr<IXCPMessage> DeserializeMessage(std::vector<uint8_t>& data);
+	XCP_API std::unique_ptr<IXCPMessage> CreateUploadMessage(uint8_t NumberOfElements);
 	XCP_API void SendMessage(IXCPMessage* Message);
 	XCP_API IXCPMessage* ReceiveMessage(IXCPMessage* Message);
 	XCP_API void AddSentMessage(IXCPMessage* Packet);

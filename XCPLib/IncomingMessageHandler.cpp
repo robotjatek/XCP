@@ -4,6 +4,7 @@
 #include "IXCPMessage.h"
 #include "DisconnectPacket.h"
 #include "GetStatusPacket.h"
+#include "UploadPacket.h"
 
 IncomingMessageHandler::IncomingMessageHandler(XCPMaster& Master) : m_Master(Master)
 {
@@ -67,6 +68,16 @@ void IncomingMessageHandler::Handle(GetStatusResponsePacket & Packet)
 void IncomingMessageHandler::Handle(SynchResponsePacket & Packet)
 {
 	std::cout << "jott egy sync response...\n";
+}
+
+void IncomingMessageHandler::Handle(UploadResponse & Packet)
+{
+	std::cout << "Jott egy Upload response\nTartalma:\n";
+	for (uint8_t i = 0; i < Packet.GetNumberOfElements(); i++)
+	{
+		std::cout << std::hex<<(int)Packet.GetElement<uint8_t>(i,(m_Master.GetSlaveProperties().ByteOrder == 0)) << " ";
+	}
+	std::cout << "\n";
 }
 
 

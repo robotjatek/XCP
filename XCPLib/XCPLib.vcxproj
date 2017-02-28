@@ -167,6 +167,7 @@
     <ClInclude Include="TCPHeader.h" />
     <ClInclude Include="TCPMessage.h" />
     <ClInclude Include="TCPMessageFactory.h" />
+    <ClInclude Include="UploadPacket.h" />
     <ClInclude Include="XCPMaster.h" />
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +185,7 @@
     <ClCompile Include="TCPHeader.cpp" />
     <ClCompile Include="TCPMessage.cpp" />
     <ClCompile Include="TCPMessageFactory.cpp" />
+    <ClCompile Include="UploadPacket.cpp" />
     <ClCompile Include="XCPMaster.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

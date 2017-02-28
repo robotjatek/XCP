@@ -85,6 +85,7 @@ void Send(SOCKET s, XCPMsgPtr message)
 	master.AddSentMessage(message.get());
 
 	int recv_size = recv(s, (char*)&bytes[0], 2000, 0);
+	bytes.resize(recv_size);
 	for (int i = 0; i < recv_size; i++)
 	{
 		std::cout << std::hex << (int)(bytes[i] & 0xff) << " ";
@@ -107,11 +108,13 @@ int main()
 	XCPMsgPtr GetStatus = master.CreateGetStatusMessage();
 	XCPMsgPtr Synch = master.CreateSynchMessage();
 	XCPMsgPtr SetMTA = master.CreateSetMTAMessage(0x219020, 0);	
+	XCPMsgPtr Upload = master.CreateUploadMessage(1);
 
 	Send(s, std::move(connect_message));
 	Send(s, std::move(GetStatus));
 	Send(s, std::move(Synch));
 	Send(s, std::move(SetMTA));
+	Send(s, std::move(Upload));
 	Send(s, std::move(disconnect_message));
 
 	Cleanup(s);

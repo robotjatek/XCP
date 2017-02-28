@@ -2,7 +2,7 @@
 
 
 
-SetMTAPacket::SetMTAPacket()
+SetMTAPacket::SetMTAPacket() : CommandPacket()
 {
 	m_PID = CTOMasterToSlaveCommands::SET_MTA;
 	m_DataLength = 7;

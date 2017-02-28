@@ -3,7 +3,7 @@
 #include "IncomingMessageHandler.h"
 #include <vld.h>
 
-XCPMaster::SlaveProperties XCPMaster::GetSlaveProperties()
+const XCPMaster::SlaveProperties& XCPMaster::GetSlaveProperties() const
 {
 	return m_SlaveProperties;
 }
@@ -27,7 +27,7 @@ XCPMaster::XCPMaster(TransportLayer transportlayer)
 		break;
 	}
 
-	m_PacketFactory = new PacketFactory();
+	m_PacketFactory = new PacketFactory(*this);
 	m_MessageHandler = new IncomingMessageHandler(*this);
 }
 
@@ -104,6 +104,16 @@ std::unique_ptr<IXCPMessage> XCPMaster::DeserializeMessage(std::vector<uint8_t>&
 	}
 	std::cout << "couldnt deserialise the message\n";
 	return nullptr;
+}
+
+XCP_API std::unique_ptr<IXCPMessage> XCPMaster::CreateUploadMessage(uint8_t NumberOfElements)
+{
+	if (!m_MessageFactory)
+	{
+		return nullptr;
+	}
+
+	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateUploadPacket(NumberOfElements)));
 }
 
 void XCPMaster::AddSentMessage(IXCPMessage * Packet)

@@ -4,6 +4,8 @@
 #include "SynchPacket.h"
 #include "DisconnectPacket.h"
 #include "SetMTAPacket.h"
+#include "UploadPacket.h"
+#include "XCPMaster.h"
 #include <iostream>
 
 
@@ -20,6 +22,12 @@ IXCPPacket * PacketFactory::CreateResponsePacket(const std::vector<uint8_t>& Dat
 		break;
 	case CTOMasterToSlaveCommands::GET_STATUS:
 		return GetStatusResponsePacket::Deserialize(Data, HeaderSize);
+		break;
+	case CTOMasterToSlaveCommands::UPLOAD:
+		return UploadResponse::Deserialize(Data, HeaderSize, m_Master.GetSlaveProperties().AddressGranularity);
+		break;
+	case CTOMasterToSlaveCommands::SHORT_UPLOAD:
+		return UploadResponse::Deserialize(Data, HeaderSize, m_Master.GetSlaveProperties().AddressGranularity);
 		break;
 	default:
 		std::cout << "Unhandled response format\n";
@@ -44,7 +52,7 @@ IXCPPacket * PacketFactory::CreateErrorPacket(const std::vector<uint8_t>& data, 
 	}
 }
 
-PacketFactory::PacketFactory()
+PacketFactory::PacketFactory(XCPMaster& master) : m_Master(master)
 {
 }
 
@@ -79,6 +87,11 @@ IXCPPacket * PacketFactory::CreateSetMTAPacket(uint32_t address, uint8_t extensi
 	packet->SetAddress(address, LittleEndian);
 	packet->SetAddressExtension(extension);
 	return packet;
+}
+
+IXCPPacket * PacketFactory::CreateUploadPacket(uint8_t NumberOfElements)
+{
+	return new UploadPacket(NumberOfElements);
 }
 
 IXCPPacket * PacketFactory::DeserializeIncomingFromSlave(const std::vector<uint8_t>& Data, uint8_t HeaderSize, CommandPacket* LastSentCommand)
