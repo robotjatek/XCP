@@ -97,6 +97,15 @@ IXCPPacket * PacketFactory::CreateUploadPacket(uint8_t NumberOfElements)
 	return new UploadPacket(NumberOfElements);
 }
 
+IXCPPacket * PacketFactory::CreateShortUploadPacket(uint8_t NumberOfElements, uint32_t Address, uint8_t AddressExtension, bool LittleEndian)
+{
+	ShortUploadPacket* packet = new ShortUploadPacket();
+	packet->SetAddress(Address, LittleEndian);
+	packet->SetAddressExtension(AddressExtension);
+	packet->SetNumberOfDataElements(NumberOfElements);
+	return packet;
+}
+
 IXCPPacket * PacketFactory::DeserializeIncomingFromSlave(const std::vector<uint8_t>& Data, uint8_t HeaderSize, CommandPacket* LastSentCommand)
 {
 	uint8_t PID = Data[HeaderSize];

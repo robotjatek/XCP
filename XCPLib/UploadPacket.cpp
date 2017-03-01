@@ -120,3 +120,78 @@ uint32_t UploadResponse::GetElement(uint8_t id, bool LittleEndian)
 	}
 }
 */
+
+//------------------------------------------------------------------------------------------------------------------
+
+ShortUploadPacket::ShortUploadPacket() : CommandPacket()
+{
+	m_PID = CTOMasterToSlaveCommands::SHORT_UPLOAD;
+	m_DataLength = 7;
+	m_PacketSize = 8;
+	m_Data = new uint8_t[m_DataLength];
+	m_Data[BytePositions::RESERVED] = 0;
+}
+
+ShortUploadPacket::~ShortUploadPacket()
+{
+	delete[] m_Data;
+	m_Data = nullptr;
+}
+
+uint32_t ShortUploadPacket::GetAddress(bool LittleEndian)
+{
+	if (LittleEndian)
+	{
+		return  (((uint32_t)m_Data[BytePositions::ADDRESS + 3]) << 24) | (((uint32_t)m_Data[BytePositions::ADDRESS + 2]) << 16) | (((uint32_t)m_Data[BytePositions::ADDRESS + 1]) << 8) | m_Data[BytePositions::ADDRESS];
+	}
+	else
+	{
+		//do byte-swap
+		return (((uint32_t)m_Data[BytePositions::ADDRESS]) << 24) | (((uint32_t)m_Data[BytePositions::ADDRESS + 1]) << 16) | (((uint32_t)m_Data[BytePositions::ADDRESS + 2]) << 8) | m_Data[BytePositions::ADDRESS + 3];
+	}
+}
+
+void ShortUploadPacket::SetAddress(uint32_t Address, bool LittleEndian)
+{
+	uint8_t i1, i2, i3, i4;
+	i1 = Address & 0xFF;
+	i2 = (Address >> 8) & 0xFF;
+	i3 = (Address >> 16) & 0xFF;
+	i4 = (Address >> 24) & 0xFF;
+
+	if (LittleEndian)
+	{
+		m_Data[BytePositions::ADDRESS] = i1;
+		m_Data[BytePositions::ADDRESS + 1] = i2;
+		m_Data[BytePositions::ADDRESS + 2] = i3;
+		m_Data[BytePositions::ADDRESS + 3] = i4;
+	}
+	else
+	{
+		m_Data[BytePositions::ADDRESS] = i4;
+		m_Data[BytePositions::ADDRESS + 1] = i3;
+		m_Data[BytePositions::ADDRESS + 2] = i2;
+		m_Data[BytePositions::ADDRESS + 3] = i1;
+	}
+}
+
+uint8_t ShortUploadPacket::GetAddressExtension()
+{
+	return m_Data[BytePositions::ADDRESS_EXTENSION];
+}
+
+void ShortUploadPacket::SetAddressExtension(uint8_t AddressExtension)
+{
+	m_Data[BytePositions::ADDRESS_EXTENSION] = AddressExtension;
+}
+
+void ShortUploadPacket::SetNumberOfDataElements(uint8_t NumberOfDataElements)
+{
+	m_Data[BytePositions::NUMBER_OF_DATA_ELEMENTS] = NumberOfDataElements;
+}
+
+uint8_t ShortUploadPacket::GetNumberOfDataElements()
+{
+	return m_Data[BytePositions::NUMBER_OF_DATA_ELEMENTS];
+}
+

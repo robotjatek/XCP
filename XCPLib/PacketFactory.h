@@ -20,6 +20,7 @@ public:
 	IXCPPacket* CreateSynchPacket();
 	IXCPPacket* CreateSetMTAPacket(uint32_t address, uint8_t extension, bool LittleEndian);
 	IXCPPacket* CreateUploadPacket(uint8_t NumberOfElements);
+	IXCPPacket* CreateShortUploadPacket(uint8_t NumberOfElements, uint32_t Address, uint8_t AddressExtension, bool LittleEndian);
 	IXCPPacket* DeserializeIncomingFromSlave(const std::vector<uint8_t>& Data, uint8_t HeaderSize, CommandPacket* LastSentCommand);
 };
 

@@ -66,3 +66,25 @@ public:
 
 	virtual void Dispatch(IIncomingMessageHandler& Handler);
 };
+
+//-------------------------------------------------------------------------------------------------------------------------
+
+class ShortUploadPacket : public CommandPacket
+{
+	enum BytePositions
+	{
+		NUMBER_OF_DATA_ELEMENTS = 0,
+		RESERVED = 1,
+		ADDRESS_EXTENSION = 2,
+		ADDRESS = 3, //4 bytes!
+	};
+public:
+	ShortUploadPacket();
+	virtual ~ShortUploadPacket();
+	void SetAddress(uint32_t Address, bool LittleEndian);
+	uint32_t GetAddress(bool LittleEndian);
+	uint8_t GetAddressExtension();
+	void SetAddressExtension(uint8_t AddressExtension);
+	void SetNumberOfDataElements(uint8_t NumberOfDataElements);
+	uint8_t GetNumberOfDataElements();
+};

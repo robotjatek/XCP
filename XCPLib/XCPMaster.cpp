@@ -78,7 +78,7 @@ std::unique_ptr<IXCPMessage> XCPMaster::CreateSynchMessage()
 	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateSynchPacket()));
 }
 
-XCP_API std::unique_ptr<IXCPMessage> XCPMaster::CreateSetMTAMessage(uint32_t address, uint8_t extension)
+std::unique_ptr<IXCPMessage> XCPMaster::CreateSetMTAMessage(uint32_t address, uint8_t extension)
 {
 	if (!m_MessageFactory)
 	{
@@ -108,7 +108,7 @@ std::unique_ptr<IXCPMessage> XCPMaster::DeserializeMessage(std::vector<uint8_t>&
 	return nullptr;
 }
 
-XCP_API std::unique_ptr<IXCPMessage> XCPMaster::CreateUploadMessage(uint8_t NumberOfElements)
+std::unique_ptr<IXCPMessage> XCPMaster::CreateUploadMessage(uint8_t NumberOfElements)
 {
 	if (!m_MessageFactory)
 	{
@@ -116,6 +116,16 @@ XCP_API std::unique_ptr<IXCPMessage> XCPMaster::CreateUploadMessage(uint8_t Numb
 	}
 
 	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateUploadPacket(NumberOfElements)));
+}
+
+XCP_API std::unique_ptr<IXCPMessage> XCPMaster::CreateShortUploadMessage(uint8_t NumberOfElements, uint32_t Address, uint8_t AddressExtension)
+{
+	if (!m_MessageFactory)
+	{
+		return nullptr;
+	}
+
+	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateShortUploadPacket(NumberOfElements, Address, AddressExtension, m_SlaveProperties.ByteOrder == 0)));
 }
 
 void XCPMaster::AddSentMessage(IXCPMessage * Packet)
