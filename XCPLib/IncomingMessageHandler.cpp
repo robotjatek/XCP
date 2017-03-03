@@ -7,6 +7,7 @@
 #include "UploadPacket.h"
 #include "ErrorAccessLockedPacket.h"
 #include "ErrorOutOfRangePacket.h"
+#include "ErrorSequencePacket.h"
 
 IncomingMessageHandler::IncomingMessageHandler(XCPMaster& Master) : m_Master(Master)
 {
@@ -89,8 +90,12 @@ void IncomingMessageHandler::Handle(ErrorAccessLockedPacket & Packet)
 
 void IncomingMessageHandler::Handle(ErrorOutOfRangePacket & Packet)
 {
-	std::cout << "DAQ error: OUT_OF_RANGE\n";
+	std::cout << (int)Packet.GetErrorCode() << "\n";
+	std::cout << "Error: OUT_OF_RANGE\n";
 }
 
-
+void IncomingMessageHandler::Handle(ErrorSequencePacket & Packet)
+{
+	std::cout << "Error: ERR_SEQUENCE\n";
+}
 

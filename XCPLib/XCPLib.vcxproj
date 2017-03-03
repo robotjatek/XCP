@@ -153,6 +153,7 @@
     <ClInclude Include="DisconnectPacket.h" />
     <ClInclude Include="ErrorAccessLockedPacket.h" />
     <ClInclude Include="ErrorOutOfRangePacket.h" />
+    <ClInclude Include="ErrorSequencePacket.h" />
     <ClInclude Include="GetStatusPacket.h" />
     <ClInclude Include="ICTO.h" />
     <ClInclude Include="IIncomingMessageHandler.h" />
@@ -181,6 +182,7 @@
     <ClCompile Include="ErrorAccessLockedPacket.cpp" />
     <ClCompile Include="ErrorOutOfRangePacket.cpp" />
     <ClCompile Include="ErrorPacket.h" />
+    <ClCompile Include="ErrorSequencePacket.cpp" />
     <ClCompile Include="GetStatusPacket.cpp" />
     <ClCompile Include="IncomingMessageHandler.cpp" />
     <ClCompile Include="IXCPMessage.cpp" />

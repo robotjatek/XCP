@@ -18,5 +18,6 @@ public:
 	virtual void Handle(UploadResponse& Packet);
 	virtual void Handle(ErrorAccessLockedPacket& Packet);
 	virtual void Handle(ErrorOutOfRangePacket& Packet);
+	virtual void Handle(ErrorSequencePacket& Packet);
 };
 

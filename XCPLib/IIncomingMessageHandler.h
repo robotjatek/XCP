@@ -8,6 +8,7 @@ class SynchResponsePacket;
 class UploadResponse;
 class ErrorAccessLockedPacket;
 class ErrorOutOfRangePacket;
+class ErrorSequencePacket;
 
 class IIncomingMessageHandler
 {
@@ -19,5 +20,5 @@ public:
 	virtual void Handle(UploadResponse& Packet) = 0;
 	virtual void Handle(ErrorAccessLockedPacket& Packet) = 0;
 	virtual void Handle(ErrorOutOfRangePacket& Packet) = 0;
-
+	virtual void Handle(ErrorSequencePacket& Packet) = 0;
 };
