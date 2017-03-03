@@ -152,6 +152,7 @@
     <ClInclude Include="DAQPackets.h" />
     <ClInclude Include="DisconnectPacket.h" />
     <ClInclude Include="ErrorAccessLockedPacket.h" />
+    <ClInclude Include="ErrorOutOfRangePacket.h" />
     <ClInclude Include="GetStatusPacket.h" />
     <ClInclude Include="ICTO.h" />
     <ClInclude Include="IIncomingMessageHandler.h" />
@@ -178,6 +179,7 @@
     <ClCompile Include="DAQPackets.cpp" />
     <ClCompile Include="DisconnectPacket.cpp" />
     <ClCompile Include="ErrorAccessLockedPacket.cpp" />
+    <ClCompile Include="ErrorOutOfRangePacket.cpp" />
     <ClCompile Include="ErrorPacket.h" />
     <ClCompile Include="GetStatusPacket.cpp" />
     <ClCompile Include="IncomingMessageHandler.cpp" />

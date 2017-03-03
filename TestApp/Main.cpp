@@ -112,7 +112,7 @@ int main()
 	XCPMsgPtr Upload = master.CreateUploadMessage(10);
 	XCPMsgPtr ShortUpload = master.CreateShortUploadMessage(10, 0x219020, 0);
 	XCPMsgPtr FreeDaq = master.CreateFreeDaqMessage();
-	XCPMsgPtr AllocDaq = master.CreateAllocDaqMessage(1);
+	XCPMsgPtr AllocDaq = master.CreateAllocDaqMessage(65535);
 
 	Send(s, std::move(connect_message));
 	Send(s, std::move(GetStatus));

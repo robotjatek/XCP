@@ -6,6 +6,7 @@
 #include "GetStatusPacket.h"
 #include "UploadPacket.h"
 #include "ErrorAccessLockedPacket.h"
+#include "ErrorOutOfRangePacket.h"
 
 IncomingMessageHandler::IncomingMessageHandler(XCPMaster& Master) : m_Master(Master)
 {
@@ -84,6 +85,11 @@ void IncomingMessageHandler::Handle(UploadResponse & Packet)
 void IncomingMessageHandler::Handle(ErrorAccessLockedPacket & Packet)
 {
 	std::cout << "Error, Access Denied, Seed & Key is required\n";
+}
+
+void IncomingMessageHandler::Handle(ErrorOutOfRangePacket & Packet)
+{
+	std::cout << "DAQ error: OUT_OF_RANGE\n";
 }
 
 

@@ -7,6 +7,7 @@
 #include "UploadPacket.h"
 #include "DAQPackets.h"
 #include "ErrorAccessLockedPacket.h"
+#include "ErrorOutOfRangePacket.h"
 #include "XCPMaster.h"
 #include <iostream>
 
@@ -52,6 +53,9 @@ IXCPPacket * PacketFactory::CreateErrorPacket(const std::vector<uint8_t>& data, 
 		break;
 	case ErrorCodes::ERR_ACCESS_LOCKED:
 		return new ErrorAccessLockedPacket();
+		break;
+	case ErrorCodes::ERR_OUT_OF_RANGE:
+		return new ErrorOutOfRangePacket();
 		break;
 	default:
 		std::cout << "Deserialization error: Unhandled errorcode\n";
