@@ -116,6 +116,13 @@ IXCPPacket * PacketFactory::CreateFreeDaqPacket()
 	return new FreeDaqPacket();
 }
 
+IXCPPacket * PacketFactory::CreateAllocDaqPacket(uint16_t DaqCount)
+{
+	AllocDaqPacket* packet = new AllocDaqPacket();
+	packet->SetDaqCount(DaqCount, m_Master.GetSlaveProperties().ByteOrder == 0);
+	return packet;
+}
+
 IXCPPacket * PacketFactory::DeserializeIncomingFromSlave(const std::vector<uint8_t>& Data, uint8_t HeaderSize, CommandPacket* LastSentCommand)
 {
 	uint8_t PID = Data[HeaderSize];
