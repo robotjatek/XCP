@@ -111,6 +111,7 @@ int main()
 	//XCPMsgPtr SetMTA = master.CreateSetMTAMessage(0x0, 0);
 	XCPMsgPtr Upload = master.CreateUploadMessage(10);
 	XCPMsgPtr ShortUpload = master.CreateShortUploadMessage(10, 0x219020, 0);
+	XCPMsgPtr FreeDaq = master.CreateFreeDaqMessage();
 
 	Send(s, std::move(connect_message));
 	Send(s, std::move(GetStatus));
@@ -118,6 +119,7 @@ int main()
 	Send(s, std::move(SetMTA));
 	Send(s, std::move(Upload));
 	Send(s, std::move(ShortUpload));
+	Send(s, std::move(FreeDaq));
 	Send(s, std::move(disconnect_message));
 
 	Cleanup(s);

@@ -84,6 +84,9 @@
     <ClInclude Include="UploadPacket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DAQPackets.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConnectPacket.cpp">
@@ -132,6 +135,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="UploadPacket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DAQPackets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -149,6 +149,7 @@
     <ClInclude Include="CANMessage.h" />
     <ClInclude Include="ConnectPacket.h" />
     <ClInclude Include="ConnectPositivePacket.h" />
+    <ClInclude Include="DAQPackets.h" />
     <ClInclude Include="DisconnectPacket.h" />
     <ClInclude Include="GetStatusPacket.h" />
     <ClInclude Include="ICTO.h" />
@@ -173,6 +174,7 @@
   <ItemGroup>
     <ClCompile Include="ConnectPacket.cpp" />
     <ClCompile Include="ConnectPositivePacket.cpp" />
+    <ClCompile Include="DAQPackets.cpp" />
     <ClCompile Include="DisconnectPacket.cpp" />
     <ClCompile Include="ErrorPacket.h" />
     <ClCompile Include="GetStatusPacket.cpp" />

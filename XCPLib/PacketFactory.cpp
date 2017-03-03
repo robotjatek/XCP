@@ -5,6 +5,7 @@
 #include "DisconnectPacket.h"
 #include "SetMTAPacket.h"
 #include "UploadPacket.h"
+#include "DAQPackets.h"
 #include "XCPMaster.h"
 #include <iostream>
 
@@ -104,6 +105,11 @@ IXCPPacket * PacketFactory::CreateShortUploadPacket(uint8_t NumberOfElements, ui
 	packet->SetAddressExtension(AddressExtension);
 	packet->SetNumberOfDataElements(NumberOfElements);
 	return packet;
+}
+
+IXCPPacket * PacketFactory::CreateFreeDaqPacket()
+{
+	return new FreeDaqPacket();
 }
 
 IXCPPacket * PacketFactory::DeserializeIncomingFromSlave(const std::vector<uint8_t>& Data, uint8_t HeaderSize, CommandPacket* LastSentCommand)

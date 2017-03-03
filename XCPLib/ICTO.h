@@ -12,6 +12,7 @@ enum CTOSlaveToMasterPacketTypes
 
 enum CTOMasterToSlaveCommands
 {
+	//Standard Commands:
 	CONNECT = 0xFF,
 	DISCONNECT = 0xFE,
 	GET_STATUS = 0xFD,
@@ -26,7 +27,25 @@ enum CTOMasterToSlaveCommands
 	SHORT_UPLOAD = 0xF4,
 	BUILD_CHECKSUM = 0xF3,
 	TRANSPORT_LAYER_CMD = 0xF2,
-	USER_CMD = 0xF1
+	USER_CMD = 0xF1,
+
+	//Calibration commands:
+
+	//Pages witching commands:
+
+	//Basic data acquisition and stimulation commands:
+
+	//Static data acquisition and stim commands:
+
+	//Dynamic data acquisition and stim commands:
+	FREE_DAQ = 0xD6,
+	ALLOC_DAQ = 0xD5,
+	ALLOC_ODT = 0xD4,
+	ALLOC_ODT_ENTRY = 0xD3,
+
+	//Non-volatile memory programming commands:
+
+	//Time sync commands:
 };
 
 class ICTO : public IXCPPacket

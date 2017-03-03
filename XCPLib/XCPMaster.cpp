@@ -128,6 +128,16 @@ XCP_API std::unique_ptr<IXCPMessage> XCPMaster::CreateShortUploadMessage(uint8_t
 	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateShortUploadPacket(NumberOfElements, Address, AddressExtension, m_SlaveProperties.ByteOrder == 0)));
 }
 
+XCP_API std::unique_ptr<IXCPMessage> XCPMaster::CreateFreeDaqMessage()
+{
+	if (!m_MessageFactory)
+	{
+		return nullptr;
+	}
+
+	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateFreeDaqPacket()));
+}
+
 void XCPMaster::AddSentMessage(IXCPMessage * Packet)
 {
 	if (CommandPacket* ToAdd = dynamic_cast<CommandPacket*>(Packet->GetPacket()))
