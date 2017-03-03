@@ -6,6 +6,7 @@
 #include "SetMTAPacket.h"
 #include "UploadPacket.h"
 #include "DAQPackets.h"
+#include "ErrorAccessLockedPacket.h"
 #include "XCPMaster.h"
 #include <iostream>
 
@@ -48,6 +49,9 @@ IXCPPacket * PacketFactory::CreateErrorPacket(const std::vector<uint8_t>& data, 
 	{
 	case ErrorCodes::ERR_CMD_SYNCH:
 		return SynchResponsePacket::Deserialize(data, header_size);
+		break;
+	case ErrorCodes::ERR_ACCESS_LOCKED:
+		return new ErrorAccessLockedPacket();
 		break;
 	default:
 		std::cout << "Deserialization error: Unhandled errorcode\n";

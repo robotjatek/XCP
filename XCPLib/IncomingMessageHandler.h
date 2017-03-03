@@ -16,5 +16,6 @@ public:
 	virtual void Handle(GetStatusResponsePacket& Packet);
 	virtual void Handle(SynchResponsePacket& Packet);
 	virtual void Handle(UploadResponse& Packet);
+	virtual void Handle(ErrorAccessLockedPacket& Packet);
 };
 

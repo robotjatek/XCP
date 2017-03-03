@@ -1,3 +1,4 @@
+#pragma once
 #include "ICTO.h"
 
 enum ErrorCodes

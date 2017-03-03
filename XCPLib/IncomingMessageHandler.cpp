@@ -5,6 +5,7 @@
 #include "DisconnectPacket.h"
 #include "GetStatusPacket.h"
 #include "UploadPacket.h"
+#include "ErrorAccessLockedPacket.h"
 
 IncomingMessageHandler::IncomingMessageHandler(XCPMaster& Master) : m_Master(Master)
 {
@@ -78,6 +79,11 @@ void IncomingMessageHandler::Handle(UploadResponse & Packet)
 		std::cout << std::hex<<(int)Packet.GetElement<uint8_t>(i,(m_Master.GetSlaveProperties().ByteOrder == 0)) << " ";
 	}
 	std::cout << "\n";
+}
+
+void IncomingMessageHandler::Handle(ErrorAccessLockedPacket & Packet)
+{
+	std::cout << "Error, Access Denied, Seed & Key is required\n";
 }
 
 
