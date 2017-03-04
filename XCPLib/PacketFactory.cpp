@@ -124,10 +124,18 @@ IXCPPacket * PacketFactory::CreateFreeDaqPacket()
 	return new FreeDaqPacket();
 }
 
-IXCPPacket * PacketFactory::CreateAllocDaqPacket(uint16_t DaqCount)
+IXCPPacket * PacketFactory::CreateAllocDaqPacket(uint16_t DaqCount, bool LittleEndian)
 {
 	AllocDaqPacket* packet = new AllocDaqPacket();
-	packet->SetDaqCount(DaqCount, m_Master.GetSlaveProperties().ByteOrder == 0);
+	packet->SetDaqCount(DaqCount, LittleEndian);
+	return packet;
+}
+
+IXCPPacket * PacketFactory::CreateAllocOdtPacket(uint16_t DaqListNumber, uint8_t OdtCount, bool LittleEndian)
+{
+	AllocOdtPacket* packet = new AllocOdtPacket();
+	packet->SetDaqListNumber(DaqListNumber, LittleEndian);
+	packet->SetOdtCount(OdtCount);
 	return packet;
 }
 

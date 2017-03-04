@@ -23,7 +23,8 @@ public:
 	IXCPPacket* CreateUploadPacket(uint8_t NumberOfElements);
 	IXCPPacket* CreateShortUploadPacket(uint8_t NumberOfElements, uint32_t Address, uint8_t AddressExtension, bool LittleEndian);
 	IXCPPacket* CreateFreeDaqPacket();
-	IXCPPacket* CreateAllocDaqPacket(uint16_t DaqCount);
+	IXCPPacket* CreateAllocDaqPacket(uint16_t DaqCount, bool LittleEndian);
+	IXCPPacket* CreateAllocOdtPacket(uint16_t DaqListNumber, uint8_t OdtCount, bool LittleEndian);
 	IXCPPacket* DeserializeIncomingFromSlave(const std::vector<uint8_t>& Data, uint8_t HeaderSize, CommandPacket* LastSentCommand);
 };
 

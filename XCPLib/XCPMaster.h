@@ -66,6 +66,7 @@ public:
 	XCP_API std::unique_ptr<IXCPMessage> CreateShortUploadMessage(uint8_t NumberOfElements, uint32_t Address, uint8_t AddressExtension);
 	XCP_API std::unique_ptr<IXCPMessage> CreateFreeDaqMessage();
 	XCP_API std::unique_ptr<IXCPMessage> CreateAllocDaqMessage(uint16_t DaqCount);
+	XCP_API std::unique_ptr<IXCPMessage> CreateAllocOdtMessage(uint16_t DaqListNumber, uint8_t OdtCount);
 	XCP_API void SendMessage(IXCPMessage* Message);
 	XCP_API IXCPMessage* ReceiveMessage(IXCPMessage* Message);
 	XCP_API void AddSentMessage(IXCPMessage* Packet);

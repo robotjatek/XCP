@@ -145,7 +145,17 @@ XCP_API std::unique_ptr<IXCPMessage> XCPMaster::CreateAllocDaqMessage(uint16_t D
 		return nullptr;
 	}
 
-	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateAllocDaqPacket(DaqCount)));
+	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateAllocDaqPacket(DaqCount, m_SlaveProperties.ByteOrder == 0)));
+}
+
+XCP_API std::unique_ptr<IXCPMessage> XCPMaster::CreateAllocOdtMessage(uint16_t DaqListNumber, uint8_t OdtCount)
+{
+	if (!m_MessageFactory)
+	{
+		return nullptr;
+	}
+
+	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateAllocOdtPacket(DaqListNumber,OdtCount, m_SlaveProperties.ByteOrder == 0)));
 }
 
 void XCPMaster::AddSentMessage(IXCPMessage * Packet)

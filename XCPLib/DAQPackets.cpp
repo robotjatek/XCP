@@ -12,12 +12,13 @@ FreeDaqPacket::~FreeDaqPacket()
 {
 }
 
-//-----------------------------------------------------------------
+//--------------------------------------------------
 
 AllocDaqPacket::AllocDaqPacket() : CommandPacket()
 {
 	m_PID = CTOMasterToSlaveCommands::ALLOC_DAQ;
 	m_Data = new uint8_t[3];
+	m_Data[BytePositions::RESERVED] = 0;
 	m_DataLength = 3;
 	m_PacketSize = 4;
 }
@@ -63,4 +64,44 @@ uint16_t AllocDaqPacket::GetDaqCount(bool LittleEndian)
 	}
 
 	return Retval;
+}
+
+//--------------------------------------------------
+
+AllocOdtPacket::AllocOdtPacket() : CommandPacket()
+{
+	m_PID = CTOMasterToSlaveCommands::ALLOC_ODT;
+	m_Data = new uint8_t[4];
+	m_DataLength = 4;
+	m_PacketSize = 5;
+	m_Data[BytePositions::RESERVED] = 0;
+}
+
+AllocOdtPacket::~AllocOdtPacket()
+{
+	delete[] m_Data;
+	m_Data = nullptr;
+}
+
+void AllocOdtPacket::SetDaqListNumber(uint16_t DaqListNumber, bool LittleEndian)
+{
+	uint8_t t1, t2;
+	t1 = DaqListNumber & 0xFF;
+	t2 = (DaqListNumber >> 8) & 0xFF;
+
+	if (LittleEndian)
+	{
+		m_Data[BytePositions::DAQ_LIST_NUMBER] = t1;
+		m_Data[BytePositions::DAQ_LIST_NUMBER + 1] = t2;
+	}
+	else
+	{
+		m_Data[BytePositions::DAQ_LIST_NUMBER] = t2;
+		m_Data[BytePositions::DAQ_LIST_NUMBER + 1] = t1;
+	}
+}
+
+void AllocOdtPacket::SetOdtCount(uint8_t OdtCount)
+{
+	m_Data[BytePositions::ODT_COUNT] = OdtCount;
 }
