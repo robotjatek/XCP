@@ -96,6 +96,9 @@
     <ClInclude Include="ErrorSequencePacket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ErrorMemoryOverflowPacket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConnectPacket.cpp">
@@ -156,6 +159,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ErrorSequencePacket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ErrorMemoryOverflowPacket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

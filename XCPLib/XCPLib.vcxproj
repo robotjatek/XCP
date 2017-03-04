@@ -152,6 +152,7 @@
     <ClInclude Include="DAQPackets.h" />
     <ClInclude Include="DisconnectPacket.h" />
     <ClInclude Include="ErrorAccessLockedPacket.h" />
+    <ClInclude Include="ErrorMemoryOverflowPacket.h" />
     <ClInclude Include="ErrorOutOfRangePacket.h" />
     <ClInclude Include="ErrorSequencePacket.h" />
     <ClInclude Include="GetStatusPacket.h" />
@@ -180,6 +181,7 @@
     <ClCompile Include="DAQPackets.cpp" />
     <ClCompile Include="DisconnectPacket.cpp" />
     <ClCompile Include="ErrorAccessLockedPacket.cpp" />
+    <ClCompile Include="ErrorMemoryOverflowPacket.cpp" />
     <ClCompile Include="ErrorOutOfRangePacket.cpp" />
     <ClCompile Include="ErrorPacket.h" />
     <ClCompile Include="ErrorSequencePacket.cpp" />

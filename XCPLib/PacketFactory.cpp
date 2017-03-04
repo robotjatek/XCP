@@ -9,6 +9,7 @@
 #include "ErrorAccessLockedPacket.h"
 #include "ErrorOutOfRangePacket.h"
 #include "ErrorSequencePacket.h"
+#include "ErrorMemoryOverflowPacket.h"
 #include "XCPMaster.h"
 #include <iostream>
 
@@ -60,6 +61,9 @@ IXCPPacket * PacketFactory::CreateErrorPacket(const std::vector<uint8_t>& data, 
 		break;
 	case ErrorCodes::ERR_SEQUENCE:
 		return new ErrorSequencePacket();
+		break;
+	case ErrorCodes::ERR_MEMORY_OVERFLOW:
+		return new ErrorMemoryOverflowPacket();
 		break;
 	default:
 		std::cout << "Deserialization error: Unhandled errorcode\n";

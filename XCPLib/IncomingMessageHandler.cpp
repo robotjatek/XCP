@@ -8,6 +8,7 @@
 #include "ErrorAccessLockedPacket.h"
 #include "ErrorOutOfRangePacket.h"
 #include "ErrorSequencePacket.h"
+#include "ErrorMemoryOverflowPacket.h"
 
 IncomingMessageHandler::IncomingMessageHandler(XCPMaster& Master) : m_Master(Master)
 {
@@ -97,5 +98,10 @@ void IncomingMessageHandler::Handle(ErrorOutOfRangePacket & Packet)
 void IncomingMessageHandler::Handle(ErrorSequencePacket & Packet)
 {
 	std::cout << "Error: ERR_SEQUENCE\n";
+}
+
+void IncomingMessageHandler::Handle(ErrorMemoryOverflowPacket & Packet)
+{
+	std::cout << "Error: Memory overflow\n";
 }
 

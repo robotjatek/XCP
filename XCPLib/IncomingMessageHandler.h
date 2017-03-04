@@ -19,5 +19,6 @@ public:
 	virtual void Handle(ErrorAccessLockedPacket& Packet);
 	virtual void Handle(ErrorOutOfRangePacket& Packet);
 	virtual void Handle(ErrorSequencePacket& Packet);
+	virtual void Handle(ErrorMemoryOverflowPacket& Packet);
 };
 

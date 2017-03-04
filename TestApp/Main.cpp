@@ -113,7 +113,7 @@ int main()
 	XCPMsgPtr ShortUpload = master.CreateShortUploadMessage(10, 0x219020, 0);
 	XCPMsgPtr FreeDaq = master.CreateFreeDaqMessage();
 	XCPMsgPtr AllocDaq = master.CreateAllocDaqMessage(1);
-	XCPMsgPtr AllocOdt = master.CreateAllocOdtMessage(65535, 255);
+	XCPMsgPtr AllocOdt = master.CreateAllocOdtMessage(0, 1);
 
 	Send(s, std::move(connect_message));
 	Send(s, std::move(GetStatus));
@@ -122,8 +122,8 @@ int main()
 	Send(s, std::move(Upload));
 	Send(s, std::move(ShortUpload));
 	Send(s, std::move(FreeDaq));
-	Send(s, std::move(AllocOdt));
 	Send(s, std::move(AllocDaq));
+	Send(s, std::move(AllocOdt));
 	Send(s, std::move(disconnect_message));
 
 	Cleanup(s);
