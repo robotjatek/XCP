@@ -41,3 +41,22 @@ public:
 	void SetOdtCount(uint8_t OdtCount);
 };
 
+//--------------------------------------------------
+
+class AllocOdtEntryPacket : public CommandPacket
+{
+	enum BytePositions
+	{
+		RESERVED = 0x00,
+		DAQ_LIST_NUMBER = 0x01, //2bytes long!
+		ODT_NUMBER = 0x03,
+		ODT_ENTRIES_COUNT = 0x04
+	};
+public:
+	AllocOdtEntryPacket();
+	virtual ~AllocOdtEntryPacket();
+	void SetDaqListNumber(uint16_t DaqListNumber, bool LittleEndian);
+	void SetOdtNumber(uint8_t OdtNumber);
+	void SetOdtEntriesCount(uint8_t OdtEntriesCount);
+};
+

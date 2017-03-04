@@ -25,6 +25,7 @@ public:
 	IXCPPacket* CreateFreeDaqPacket();
 	IXCPPacket* CreateAllocDaqPacket(uint16_t DaqCount, bool LittleEndian);
 	IXCPPacket* CreateAllocOdtPacket(uint16_t DaqListNumber, uint8_t OdtCount, bool LittleEndian);
+	IXCPPacket* CreateAllocOdtEntryPacket(uint16_t DaqListNumber, uint8_t OdtNumber, uint8_t OdtEntriesCount, bool LittleEndian);
 	IXCPPacket* DeserializeIncomingFromSlave(const std::vector<uint8_t>& Data, uint8_t HeaderSize, CommandPacket* LastSentCommand);
 };
 

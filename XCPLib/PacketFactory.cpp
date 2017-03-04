@@ -143,6 +143,15 @@ IXCPPacket * PacketFactory::CreateAllocOdtPacket(uint16_t DaqListNumber, uint8_t
 	return packet;
 }
 
+IXCPPacket * PacketFactory::CreateAllocOdtEntryPacket(uint16_t DaqListNumber, uint8_t OdtNumber, uint8_t OdtEntriesCount, bool LittleEndian)
+{
+	AllocOdtEntryPacket* packet = new AllocOdtEntryPacket();
+	packet->SetDaqListNumber(DaqListNumber, LittleEndian);
+	packet->SetOdtNumber(OdtNumber);
+	packet->SetOdtEntriesCount(OdtEntriesCount);
+	return packet;
+}
+
 IXCPPacket * PacketFactory::DeserializeIncomingFromSlave(const std::vector<uint8_t>& Data, uint8_t HeaderSize, CommandPacket* LastSentCommand)
 {
 	uint8_t PID = Data[HeaderSize];
