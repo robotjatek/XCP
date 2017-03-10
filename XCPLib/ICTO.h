@@ -34,6 +34,19 @@ enum CTOMasterToSlaveCommands
 	//Pages witching commands:
 
 	//Basic data acquisition and stimulation commands:
+	SET_DAQ_PTR = 0xE2,
+	WRITE_DAQ = 0xE1,
+	SET_DAQ_LIST_MODE = 0xE0,
+	START_STOP_DAQ_LIST = 0xDE,
+	START_STOP_SYNCH = 0xDD,
+	WRITE_DAQ_MULTIPLE = 0xC7,
+	READ_DAQ = 0xDB,
+	GET_DAQ_CLOCK = 0xDC,
+	GET_DAQ_PROCESSOR_INFO = 0xDA,
+	GET_DAQ_RESOLUTION_INFO = 0xD9,
+	GET_DAQ_LIST_MODE = 0xDF,
+	GET_DAQ_EVENT_INFO = 0xD7,
+	DTO_CTR_PROPERTIES = 0xC5,
 
 	//Static data acquisition and stim commands:
 

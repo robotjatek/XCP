@@ -114,7 +114,8 @@ int main()
 	XCPMsgPtr FreeDaq = master.CreateFreeDaqMessage();
 	XCPMsgPtr AllocDaq = master.CreateAllocDaqMessage(1);
 	XCPMsgPtr AllocOdt = master.CreateAllocOdtMessage(0, 1);
-	XCPMsgPtr AllocOdtEntry = master.CreateAllocOdtEntryMessage(0, 0, 10);
+	XCPMsgPtr AllocOdtEntry = master.CreateAllocOdtEntryMessage(0, 0, 1);
+	XCPMsgPtr SetDaqPtr = master.CreateSetDaqPtrMessage(0, 0, 0);
 
 	Send(s, std::move(connect_message));
 	Send(s, std::move(GetStatus));
@@ -126,6 +127,7 @@ int main()
 	Send(s, std::move(AllocDaq));
 	Send(s, std::move(AllocOdt));
 	Send(s, std::move(AllocOdtEntry));
+	Send(s, std::move(SetDaqPtr));
 	Send(s, std::move(disconnect_message));
 
 	Cleanup(s);

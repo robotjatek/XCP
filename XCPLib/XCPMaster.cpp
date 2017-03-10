@@ -168,6 +168,16 @@ XCP_API std::unique_ptr<IXCPMessage> XCPMaster::CreateAllocOdtEntryMessage(uint1
 	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateAllocOdtEntryPacket(DaqListNumber, OdtNumber, OdtEntryCount, m_SlaveProperties.ByteOrder == 0)));
 }
 
+XCP_API std::unique_ptr<IXCPMessage> XCPMaster::CreateSetDaqPtrMessage(uint16_t DaqListNumber, uint8_t OdtNumber, uint8_t OdtEntryNumber)
+{
+	if (!m_MessageFactory)
+	{
+		return nullptr;
+	}
+
+	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateSetDaqPtrPacket(DaqListNumber, OdtNumber, OdtEntryNumber, m_SlaveProperties.ByteOrder == 0)));
+}
+
 void XCPMaster::AddSentMessage(IXCPMessage * Packet)
 {
 	if (CommandPacket* ToAdd = dynamic_cast<CommandPacket*>(Packet->GetPacket()))
