@@ -120,6 +120,7 @@ int main()
 	using ModeFieldBits = SetDaqListModePacket::ModeFieldBits;
 	XCPMsgPtr SetDaqListMode = master.CreateSetDaqListModeMessage(ModeFieldBits::TIMESTAMP,0,1,1,1); //DAQ direction; Timestamp on; do not use ctr field; Disabled alternating display; Transmit DTO WITH identification field;
 	XCPMsgPtr StartStopDaqList = master.CreateStartStopDaqListMessage(StartStopDaqListPacket::Mode::SELECT, 0);
+	XCPMsgPtr StartStopSynch = master.CreateStartStopSynchMessage(StartStopSynchPacket::Mode::START_SELECTED);
 
 	Send(s, std::move(connect_message));
 	Send(s, std::move(GetStatus));
@@ -135,6 +136,7 @@ int main()
 	Send(s, std::move(WriteDaq));
 	Send(s, std::move(SetDaqListMode));
 	Send(s, std::move(StartStopDaqList));
+	Send(s, std::move(StartStopSynch));
 	Send(s, std::move(disconnect_message));
 
 	Cleanup(s);

@@ -208,6 +208,15 @@ XCP_API std::unique_ptr<IXCPMessage> XCPMaster::CreateStartStopDaqListMessage(St
 	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateStartStopDaqListPacket(Mode, DaqListNumber, m_SlaveProperties.ByteOrder == 0)));
 }
 
+XCP_API std::unique_ptr<IXCPMessage> XCPMaster::CreateStartStopSynchMessage(StartStopSynchPacket::Mode Mode)
+{
+	if (!m_MessageFactory)
+	{
+		return nullptr;
+	}
+	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateStartStopSyncPacket(Mode)));
+}
+
 void XCPMaster::AddSentMessage(IXCPMessage * Packet)
 {
 	if (CommandPacket* ToAdd = dynamic_cast<CommandPacket*>(Packet->GetPacket()))

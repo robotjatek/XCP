@@ -177,3 +177,24 @@ public:
 	virtual void Dispatch(IIncomingMessageHandler& Handler);
 	static StartStopDaqListPositiveResponse* Deserialize(const std::vector<uint8_t>& Data, uint8_t HeaderSize);
 };
+
+//--------------------------------------------------
+
+class StartStopSynchPacket : public CommandPacket
+{
+private:
+	enum BytePositions
+	{
+		MODE = 0x00,
+	};
+public:
+	enum Mode
+	{
+		STOP_ALL = 0x00,
+		START_SELECTED = 0x01,
+		STOP_SELECTED = 0x02,
+	};
+	StartStopSynchPacket(Mode Mode);
+	virtual ~StartStopSynchPacket();
+	void SetMode(uint8_t Mode);
+};

@@ -3,6 +3,7 @@
 #include "CommandPacket.h"
 #include "ICTO.h"
 #include "ConnectPacket.h"
+#include "DAQPackets.h"
 
 class XCPMaster;
 
@@ -30,6 +31,7 @@ public:
 	IXCPPacket* CreateWriteDaqPacket(uint8_t BitOffset, uint8_t Size, uint8_t AddressExtension, uint32_t Address, bool LittleEndian);
 	IXCPPacket* CreateSetDaqListModePacket(uint8_t Mode, uint16_t DaqListNumber, uint16_t EventChannel, uint8_t Prescaler, uint8_t Priority, bool LittleEndian);
 	IXCPPacket* CreateStartStopDaqListPacket(uint8_t Mode, uint16_t DaqListNumber, bool LittleEndian);
+	IXCPPacket* CreateStartStopSyncPacket(StartStopSynchPacket::Mode Mode);
 	IXCPPacket* DeserializeIncomingFromSlave(const std::vector<uint8_t>& Data, uint8_t HeaderSize, CommandPacket* LastSentCommand);
 };
 

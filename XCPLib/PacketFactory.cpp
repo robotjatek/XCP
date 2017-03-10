@@ -185,6 +185,11 @@ IXCPPacket * PacketFactory::CreateStartStopDaqListPacket(uint8_t Mode, uint16_t 
 	return new StartStopDaqListPacket(Mode, DaqListNumber, LittleEndian);
 }
 
+IXCPPacket * PacketFactory::CreateStartStopSyncPacket(StartStopSynchPacket::Mode Mode)
+{
+	return new StartStopSynchPacket(Mode);
+}
+
 IXCPPacket * PacketFactory::DeserializeIncomingFromSlave(const std::vector<uint8_t>& Data, uint8_t HeaderSize, CommandPacket* LastSentCommand)
 {
 	uint8_t PID = Data[HeaderSize];

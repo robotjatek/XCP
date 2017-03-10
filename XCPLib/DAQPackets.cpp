@@ -403,3 +403,25 @@ StartStopDaqListPositiveResponse * StartStopDaqListPositiveResponse::Deserialize
 {
 	return new StartStopDaqListPositiveResponse(Data,HeaderSize);
 }
+
+//--------------------------------------------------
+
+StartStopSynchPacket::StartStopSynchPacket(Mode Mode) : CommandPacket()
+{
+	m_DataLength = 1;
+	m_PacketSize = 2;
+	m_Data = new uint8_t[m_DataLength];
+	SetMode(Mode);
+}
+
+StartStopSynchPacket::~StartStopSynchPacket()
+{
+	delete[] m_Data;
+}
+
+void StartStopSynchPacket::SetMode(uint8_t Mode)
+{
+	m_Data[BytePositions::MODE] = Mode;
+}
+
+//--------------------------------------------------

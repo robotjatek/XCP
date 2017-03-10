@@ -73,6 +73,7 @@ public:
 	XCP_API std::unique_ptr<IXCPMessage> CreateWriteDaqMessage(uint8_t BitOffset, uint8_t ElementSize, uint8_t AddressExtension, uint32_t Address);
 	XCP_API std::unique_ptr<IXCPMessage> CreateSetDaqListModeMessage(uint8_t Mode, uint16_t DaqListNumber, uint16_t EventChannel, uint8_t Prescaler, uint8_t Priority);
 	XCP_API std::unique_ptr<IXCPMessage> CreateStartStopDaqListMessage(StartStopDaqListPacket::Mode Mode, uint16_t DaqListNumber);
+	XCP_API std::unique_ptr<IXCPMessage> CreateStartStopSynchMessage(StartStopSynchPacket::Mode Mode);
 	XCP_API void SendMessage(IXCPMessage* Message);
 	XCP_API IXCPMessage* ReceiveMessage(IXCPMessage* Message);
 	XCP_API void AddSentMessage(IXCPMessage* Packet);
