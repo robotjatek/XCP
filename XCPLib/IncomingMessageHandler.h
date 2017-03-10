@@ -20,5 +20,6 @@ public:
 	virtual void Handle(ErrorOutOfRangePacket& Packet);
 	virtual void Handle(ErrorSequencePacket& Packet);
 	virtual void Handle(ErrorMemoryOverflowPacket& Packet);
+	virtual void Handle(StartStopDaqListPositiveResponse& Packet);
 };
 

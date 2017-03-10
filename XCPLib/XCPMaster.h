@@ -5,6 +5,7 @@
 #include "DisconnectPacket.h"
 #include "PacketFactory.h"
 #include "TCPMessage.h"
+#include "DAQPackets.h"
 #include "IIncomingMessageHandler.h"
 #include <queue>
 #include <memory>
@@ -56,7 +57,7 @@ public:
 	XCP_API void SetSlaveProperties(const SlaveProperties& properties);
 	XCP_API XCPMaster(TransportLayer transportlayer);
 	XCP_API virtual ~XCPMaster();
-	XCP_API std::unique_ptr<IXCPMessage> CreateConnectMessage(ConnectMode mode);
+	XCP_API std::unique_ptr<IXCPMessage> CreateConnectMessage(ConnectPacket::ConnectMode mode);
 	XCP_API std::unique_ptr<IXCPMessage> CreateDisconnectMessage();
 	XCP_API std::unique_ptr<IXCPMessage> CreateGetStatusMessage();
 	XCP_API std::unique_ptr<IXCPMessage> CreateSynchMessage();
@@ -69,6 +70,9 @@ public:
 	XCP_API std::unique_ptr<IXCPMessage> CreateAllocOdtMessage(uint16_t DaqListNumber, uint8_t OdtCount);
 	XCP_API std::unique_ptr<IXCPMessage> CreateAllocOdtEntryMessage(uint16_t DaqListNumber, uint8_t OdtNumber, uint8_t OdtEntryCount);
 	XCP_API std::unique_ptr<IXCPMessage> CreateSetDaqPtrMessage(uint16_t DaqListNumber, uint8_t OdtNumber, uint8_t OdtEntryNumber);
+	XCP_API std::unique_ptr<IXCPMessage> CreateWriteDaqMessage(uint8_t BitOffset, uint8_t ElementSize, uint8_t AddressExtension, uint32_t Address);
+	XCP_API std::unique_ptr<IXCPMessage> CreateSetDaqListModeMessage(uint8_t Mode, uint16_t DaqListNumber, uint16_t EventChannel, uint8_t Prescaler, uint8_t Priority);
+	XCP_API std::unique_ptr<IXCPMessage> CreateStartStopDaqListMessage(StartStopDaqListPacket::Mode Mode, uint16_t DaqListNumber);
 	XCP_API void SendMessage(IXCPMessage* Message);
 	XCP_API IXCPMessage* ReceiveMessage(IXCPMessage* Message);
 	XCP_API void AddSentMessage(IXCPMessage* Packet);

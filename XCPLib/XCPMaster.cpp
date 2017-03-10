@@ -20,8 +20,8 @@ XCPMaster::XCPMaster(TransportLayer transportlayer)
 	case TransportLayer::ETHERNET:
 		m_MessageFactory = new TCPMessageFactory();
 		break;
-	//case TransportLayer::CAN:
-	//	break;
+		//case TransportLayer::CAN:
+		//	break;
 	default:
 		m_MessageFactory = nullptr;
 		break;
@@ -38,7 +38,7 @@ XCPMaster::~XCPMaster()
 	delete m_MessageHandler;
 }
 
-std::unique_ptr<IXCPMessage> XCPMaster::CreateConnectMessage(ConnectMode mode)
+std::unique_ptr<IXCPMessage> XCPMaster::CreateConnectMessage(ConnectPacket::ConnectMode mode)
 {
 	if (!m_MessageFactory)
 	{
@@ -85,7 +85,7 @@ std::unique_ptr<IXCPMessage> XCPMaster::CreateSetMTAMessage(uint32_t address, ui
 		return nullptr;
 	}
 
-	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateSetMTAPacket(address,extension,m_SlaveProperties.ByteOrder==0)));
+	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateSetMTAPacket(address, extension, m_SlaveProperties.ByteOrder == 0)));
 }
 
 std::unique_ptr<IXCPMessage> XCPMaster::DeserializeMessage(std::vector<uint8_t>& data)
@@ -155,7 +155,7 @@ XCP_API std::unique_ptr<IXCPMessage> XCPMaster::CreateAllocOdtMessage(uint16_t D
 		return nullptr;
 	}
 
-	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateAllocOdtPacket(DaqListNumber,OdtCount, m_SlaveProperties.ByteOrder == 0)));
+	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateAllocOdtPacket(DaqListNumber, OdtCount, m_SlaveProperties.ByteOrder == 0)));
 }
 
 XCP_API std::unique_ptr<IXCPMessage> XCPMaster::CreateAllocOdtEntryMessage(uint16_t DaqListNumber, uint8_t OdtNumber, uint8_t OdtEntryCount)
@@ -176,6 +176,36 @@ XCP_API std::unique_ptr<IXCPMessage> XCPMaster::CreateSetDaqPtrMessage(uint16_t 
 	}
 
 	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateSetDaqPtrPacket(DaqListNumber, OdtNumber, OdtEntryNumber, m_SlaveProperties.ByteOrder == 0)));
+}
+
+XCP_API std::unique_ptr<IXCPMessage> XCPMaster::CreateWriteDaqMessage(uint8_t BitOffset, uint8_t ElementSize, uint8_t AddressExtension, uint32_t Address)
+{
+	if (!m_MessageFactory)
+	{
+		return nullptr;
+	}
+
+	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateWriteDaqPacket(BitOffset, ElementSize, AddressExtension, Address, m_SlaveProperties.ByteOrder == 0)));
+}
+
+XCP_API std::unique_ptr<IXCPMessage> XCPMaster::CreateSetDaqListModeMessage(uint8_t Mode, uint16_t DaqListNumber, uint16_t EventChannel, uint8_t Prescaler, uint8_t Priority)
+{
+	if (!m_MessageFactory)
+	{
+		return nullptr;
+	}
+
+	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateSetDaqListModePacket(Mode, DaqListNumber, EventChannel, Prescaler, Priority, m_SlaveProperties.ByteOrder == 0)));
+}
+
+XCP_API std::unique_ptr<IXCPMessage> XCPMaster::CreateStartStopDaqListMessage(StartStopDaqListPacket::Mode Mode, uint16_t DaqListNumber)
+{
+	if (!m_MessageFactory)
+	{
+		return nullptr;
+	}
+
+	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateStartStopDaqListPacket(Mode, DaqListNumber, m_SlaveProperties.ByteOrder == 0)));
 }
 
 void XCPMaster::AddSentMessage(IXCPMessage * Packet)

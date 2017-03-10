@@ -37,6 +37,9 @@ IXCPPacket * PacketFactory::CreateResponsePacket(const std::vector<uint8_t>& Dat
 	case CTOMasterToSlaveCommands::SET_MTA:
 		return new ResponsePacket();
 		break;
+	case CTOMasterToSlaveCommands::START_STOP_DAQ_LIST:
+		return StartStopDaqListPositiveResponse::Deserialize(Data, HeaderSize);
+		break;
 	default:
 		std::cout << "Unhandled response format\n";
 		return new ResponsePacket();
@@ -81,7 +84,7 @@ PacketFactory::~PacketFactory()
 {
 }
 
-IXCPPacket * PacketFactory::CreateConnectPacket(ConnectMode mode)
+IXCPPacket * PacketFactory::CreateConnectPacket(ConnectPacket::ConnectMode mode)
 {
 	return new ConnectPacket(mode);
 }
@@ -159,6 +162,27 @@ IXCPPacket * PacketFactory::CreateSetDaqPtrPacket(uint16_t DaqListNumber, uint8_
 	packet->SetOdtNumber(OdtNumber);
 	packet->SetOdtEntryNumber(OdtEntryNumber);
 	return packet;
+}
+
+IXCPPacket * PacketFactory::CreateWriteDaqPacket(uint8_t BitOffset, uint8_t Size, uint8_t AddressExtension, uint32_t Address, bool LittleEndian)
+{
+	WriteDaqPacket* packet = new WriteDaqPacket();
+	packet->SetBitOffset(BitOffset);
+	packet->SetElementSize(Size);
+	packet->SetAddressExtension(AddressExtension);
+	packet->SetAddress(Address, LittleEndian);
+	return packet;
+}
+
+IXCPPacket * PacketFactory::CreateSetDaqListModePacket(uint8_t Mode, uint16_t DaqListNumber, uint16_t EventChannel, uint8_t Prescaler, uint8_t Priority, bool LittleEndian)
+{
+	SetDaqListModePacket* packet = new SetDaqListModePacket(Mode, DaqListNumber, EventChannel, Prescaler, Priority, LittleEndian);
+	return packet;
+}
+
+IXCPPacket * PacketFactory::CreateStartStopDaqListPacket(uint8_t Mode, uint16_t DaqListNumber, bool LittleEndian)
+{
+	return new StartStopDaqListPacket(Mode, DaqListNumber, LittleEndian);
 }
 
 IXCPPacket * PacketFactory::DeserializeIncomingFromSlave(const std::vector<uint8_t>& Data, uint8_t HeaderSize, CommandPacket* LastSentCommand)

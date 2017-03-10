@@ -15,7 +15,7 @@ private:
 public:
 	PacketFactory(XCPMaster& master);
 	virtual ~PacketFactory();
-	IXCPPacket* CreateConnectPacket(ConnectMode Mode);
+	IXCPPacket* CreateConnectPacket(ConnectPacket::ConnectMode Mode);
 	IXCPPacket* CreateDisconnectPacket();
 	IXCPPacket* CreateGetStatusPacket();
 	IXCPPacket* CreateSynchPacket();
@@ -27,6 +27,9 @@ public:
 	IXCPPacket* CreateAllocOdtPacket(uint16_t DaqListNumber, uint8_t OdtCount, bool LittleEndian);
 	IXCPPacket* CreateAllocOdtEntryPacket(uint16_t DaqListNumber, uint8_t OdtNumber, uint8_t OdtEntriesCount, bool LittleEndian);
 	IXCPPacket* CreateSetDaqPtrPacket(uint16_t DaqListNumber, uint8_t OdtNumber, uint8_t OdtEntryNumber, bool LittleEndian);
+	IXCPPacket* CreateWriteDaqPacket(uint8_t BitOffset, uint8_t Size, uint8_t AddressExtension, uint32_t Address, bool LittleEndian);
+	IXCPPacket* CreateSetDaqListModePacket(uint8_t Mode, uint16_t DaqListNumber, uint16_t EventChannel, uint8_t Prescaler, uint8_t Priority, bool LittleEndian);
+	IXCPPacket* CreateStartStopDaqListPacket(uint8_t Mode, uint16_t DaqListNumber, bool LittleEndian);
 	IXCPPacket* DeserializeIncomingFromSlave(const std::vector<uint8_t>& Data, uint8_t HeaderSize, CommandPacket* LastSentCommand);
 };
 

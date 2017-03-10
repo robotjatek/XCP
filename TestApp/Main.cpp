@@ -103,7 +103,7 @@ int main()
 		return 1;
 	}
 	
-	XCPMsgPtr connect_message = master.CreateConnectMessage(ConnectMode::NORMAL);
+	XCPMsgPtr connect_message = master.CreateConnectMessage(ConnectPacket::ConnectMode::NORMAL);
 	XCPMsgPtr disconnect_message = master.CreateDisconnectMessage();
 	XCPMsgPtr GetStatus = master.CreateGetStatusMessage();
 	XCPMsgPtr Synch = master.CreateSynchMessage();
@@ -116,6 +116,10 @@ int main()
 	XCPMsgPtr AllocOdt = master.CreateAllocOdtMessage(0, 1);
 	XCPMsgPtr AllocOdtEntry = master.CreateAllocOdtEntryMessage(0, 0, 1);
 	XCPMsgPtr SetDaqPtr = master.CreateSetDaqPtrMessage(0, 0, 0);
+	XCPMsgPtr WriteDaq = master.CreateWriteDaqMessage(0xFF, 1, 0, 0x21A08D); //ubyte square signal
+	using ModeFieldBits = SetDaqListModePacket::ModeFieldBits;
+	XCPMsgPtr SetDaqListMode = master.CreateSetDaqListModeMessage(ModeFieldBits::TIMESTAMP,0,1,1,1); //DAQ direction; Timestamp on; do not use ctr field; Disabled alternating display; Transmit DTO WITH identification field;
+	XCPMsgPtr StartStopDaqList = master.CreateStartStopDaqListMessage(StartStopDaqListPacket::Mode::SELECT, 0);
 
 	Send(s, std::move(connect_message));
 	Send(s, std::move(GetStatus));
@@ -128,6 +132,9 @@ int main()
 	Send(s, std::move(AllocOdt));
 	Send(s, std::move(AllocOdtEntry));
 	Send(s, std::move(SetDaqPtr));
+	Send(s, std::move(WriteDaq));
+	Send(s, std::move(SetDaqListMode));
+	Send(s, std::move(StartStopDaqList));
 	Send(s, std::move(disconnect_message));
 
 	Cleanup(s);

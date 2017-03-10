@@ -105,3 +105,8 @@ void IncomingMessageHandler::Handle(ErrorMemoryOverflowPacket & Packet)
 	std::cout << "Error: Memory overflow\n";
 }
 
+void IncomingMessageHandler::Handle(StartStopDaqListPositiveResponse & Packet)
+{
+	std::cout << "Start/Stop Daq list response | FIRST PID: " << std::hex << (int)Packet.GetFirstPid()<<"\n";
+}
+
