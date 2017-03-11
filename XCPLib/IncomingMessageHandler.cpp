@@ -129,7 +129,7 @@ void IncomingMessageHandler::Handle(GetSeedResponsePacket & Packet)
 
 	m_ProcessedSeedLength += SeedPartSize;
 	m_RemainingSeedLength -= SeedPartSize;
-	GetSeedPacket* LastPacket = m_Master.GetLastSentMessage<GetSeedPacket*>();
+	GetSeedPacket* LastPacket = m_Master.GetLastSentPacket<GetSeedPacket*>();
 	if (m_RemainingSeedLength == 0)
 	{
 		m_Master.GetComputeKeyPtr()(LastPacket->GetResource(), Packet.GetLengthField(), &m_SeedBytes[0], &m_KeyLength, &key[0]);

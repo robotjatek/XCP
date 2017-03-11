@@ -90,11 +90,11 @@ public:
 	XCP_ComputeKeyFromSeedPtr_t GetComputeKeyPtr();
 	XCP_GetAvailablePrivilegesPtr_t GetAvailablePrivilegesPtr();
 	template<class PacketType>
-	PacketType GetLastSentMessage();
+	PacketType GetLastSentPacket();
 };
 
 template<class PacketType>
-inline PacketType XCPMaster::GetLastSentMessage()
+inline PacketType XCPMaster::GetLastSentPacket()
 {
 	return dynamic_cast<PacketType>(m_SentCommandQueue.front());
 }
