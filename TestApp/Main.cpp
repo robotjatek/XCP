@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include <Windows.h>
+#include <tchar.h>
 #include <WinSock2.h>
 #include <ws2tcpip.h>
 #include <vector>
@@ -95,18 +96,51 @@ void Send(SOCKET s, XCPMsgPtr message)
 	bytes.clear();
 }
 
+typedef uint32_t (*XCP_GetAvailablePrivilegesPtr_t)(uint8_t* AvailablePrivilege);
+typedef uint32_t (*XCP_ComputeKeyFromSeedPtr_t)(uint8_t RequestedPrivilege, uint8_t ByteLenghtSeed, uint8_t* PointerToSeed, uint8_t* ByteLengthKey, uint8_t* PointerToKey);
+
+XCP_GetAvailablePrivilegesPtr_t GetAvailablePrivileges = nullptr;
+XCP_ComputeKeyFromSeedPtr_t ComputeKeyFromSeed = nullptr;
+
+int LoadDLL()
+{
+	HINSTANCE hGetProcIDDLL = LoadLibrary(_T("SeedNKeyXcp.dll"));
+	if (!hGetProcIDDLL) {
+		std::cout << "could not load the dynamic library" << std::endl;
+		return -1;
+	}
+
+	GetAvailablePrivileges = (XCP_GetAvailablePrivilegesPtr_t)GetProcAddress(hGetProcIDDLL, "XCP_GetAvailablePrivileges");
+	if (!GetAvailablePrivileges) {
+		std::cout << "could not locate the function" << std::endl;
+		return -1;
+	}
+	
+	ComputeKeyFromSeed = (XCP_ComputeKeyFromSeedPtr_t)GetProcAddress(hGetProcIDDLL, "XCP_ComputeKeyFromSeed");
+	if (!GetAvailablePrivileges) {
+		std::cout << "could not locate the function" << std::endl;
+		return -1;
+	}
+
+	return 0;
+}
+
 int main()
 {
 	SOCKET s;
-	if (SetupConnection(s))
+	if (SetupConnection(s) || LoadDLL())
 	{
 		return 1;
 	}
+
+	master.SetSeedAndKeyFunctionPointers(GetAvailablePrivileges, ComputeKeyFromSeed);
 	
 	XCPMsgPtr connect_message = master.CreateConnectMessage(ConnectPacket::ConnectMode::NORMAL);
 	XCPMsgPtr disconnect_message = master.CreateDisconnectMessage();
 	XCPMsgPtr GetStatus = master.CreateGetStatusMessage();
 	XCPMsgPtr Synch = master.CreateSynchMessage();
+	XCPMsgPtr GetSeed1 = master.CreateGetSeedMessage(GetSeedPacket::Mode::FIRST_PART, GetSeedPacket::Resource::DAQ);
+	XCPMsgPtr GetSeed2 = master.CreateGetSeedMessage(GetSeedPacket::Mode::REMAINING_PART, GetSeedPacket::Resource::DAQ);
 	XCPMsgPtr SetMTA = master.CreateSetMTAMessage(0x219020, 0);	
 	//XCPMsgPtr SetMTA = master.CreateSetMTAMessage(0x0, 0);
 	XCPMsgPtr Upload = master.CreateUploadMessage(10);
@@ -125,6 +159,10 @@ int main()
 	Send(s, std::move(connect_message));
 	Send(s, std::move(GetStatus));
 	Send(s, std::move(Synch));
+
+	Send(s, std::move(GetSeed1));
+	Send(s, std::move(GetSeed2));
+
 	Send(s, std::move(SetMTA));
 	Send(s, std::move(Upload));
 	Send(s, std::move(ShortUpload));
@@ -138,6 +176,10 @@ int main()
 	Send(s, std::move(StartStopDaqList));
 	Send(s, std::move(StartStopSynch));
 	Send(s, std::move(disconnect_message));
+
+	/*uint8_t priv;
+	GetAvailablePrivileges(&priv);
+	std::cout << std::hex << (int)priv << " ";*/
 
 	Cleanup(s);
 	system("pause");

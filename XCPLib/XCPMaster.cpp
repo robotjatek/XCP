@@ -90,8 +90,8 @@ std::unique_ptr<IXCPMessage> XCPMaster::CreateSetMTAMessage(uint32_t address, ui
 
 std::unique_ptr<IXCPMessage> XCPMaster::DeserializeMessage(std::vector<uint8_t>& data)
 {
-	IXCPPacket* Packet = m_PacketFactory->DeserializeIncomingFromSlave(data, m_MessageFactory->GetHeaderSize(), m_SentCommandQueue.front());
-	m_SentCommandQueue.pop();
+	IXCPPacket* Packet = m_PacketFactory->DeserializeIncomingFromSlave(data, m_MessageFactory->GetHeaderSize(), m_MessageFactory->GetTailSize(), m_SentCommandQueue.front());
+	
 	if (Packet)
 	{
 		IXCPMessage* MessageFrame = m_MessageFactory->CreateMessage(Packet);
@@ -101,10 +101,12 @@ std::unique_ptr<IXCPMessage> XCPMaster::DeserializeMessage(std::vector<uint8_t>&
 			Packet->Dispatch(*m_MessageHandler);
 			std::cout << "---------------------------------------------\n";
 		}
+		m_SentCommandQueue.pop();
 		return std::unique_ptr<IXCPMessage>(MessageFrame);
 	}
 	std::cout << "couldnt deserialise the message\n";
 	std::cout << "---------------------------------------------\n";
+	m_SentCommandQueue.pop();
 	return nullptr;
 }
 
@@ -217,6 +219,15 @@ XCP_API std::unique_ptr<IXCPMessage> XCPMaster::CreateStartStopSynchMessage(Star
 	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateStartStopSyncPacket(Mode)));
 }
 
+XCP_API std::unique_ptr<IXCPMessage> XCPMaster::CreateGetSeedMessage(GetSeedPacket::Mode Mode, GetSeedPacket::Resource Resource)
+{
+	if (!m_MessageFactory)
+	{
+		return nullptr;
+	}
+	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateGetSeedPacket(Mode, Resource)));
+}
+
 void XCPMaster::AddSentMessage(IXCPMessage * Packet)
 {
 	if (CommandPacket* ToAdd = dynamic_cast<CommandPacket*>(Packet->GetPacket()))
@@ -227,4 +238,20 @@ void XCPMaster::AddSentMessage(IXCPMessage * Packet)
 	{
 		std::cout << "XCPMaster::AddSentMessage: This is not a CMD packet.";
 	}
+}
+
+XCP_API void XCPMaster::SetSeedAndKeyFunctionPointers(XCP_GetAvailablePrivilegesPtr_t GetAvailablePrivilegesPtr, XCP_ComputeKeyFromSeedPtr_t ComputeKeyPtr)
+{
+	m_GetAvailablePrivileges = GetAvailablePrivilegesPtr;
+	m_ComputeKeyFromSeed = ComputeKeyPtr;
+}
+
+XCP_ComputeKeyFromSeedPtr_t XCPMaster::GetComputeKeyPtr()
+{
+	return m_ComputeKeyFromSeed;
+}
+
+XCP_GetAvailablePrivilegesPtr_t XCPMaster::GetAvailablePrivilegesPtr()
+{
+	return m_GetAvailablePrivileges;
 }

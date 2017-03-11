@@ -155,6 +155,7 @@
     <ClInclude Include="ErrorMemoryOverflowPacket.h" />
     <ClInclude Include="ErrorOutOfRangePacket.h" />
     <ClInclude Include="ErrorSequencePacket.h" />
+    <ClInclude Include="GetSeedPacket.h" />
     <ClInclude Include="GetStatusPacket.h" />
     <ClInclude Include="ICTO.h" />
     <ClInclude Include="IIncomingMessageHandler.h" />
@@ -185,6 +186,7 @@
     <ClCompile Include="ErrorOutOfRangePacket.cpp" />
     <ClCompile Include="ErrorPacket.h" />
     <ClCompile Include="ErrorSequencePacket.cpp" />
+    <ClCompile Include="GetSeedPacket.cpp" />
     <ClCompile Include="GetStatusPacket.cpp" />
     <ClCompile Include="IncomingMessageHandler.cpp" />
     <ClCompile Include="IXCPMessage.cpp" />

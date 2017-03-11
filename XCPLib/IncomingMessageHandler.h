@@ -8,6 +8,11 @@ class IncomingMessageHandler :
 {
 private:
 	XCPMaster& m_Master;
+	uint32_t m_ProcessedSeedLength;
+	int32_t m_RemainingSeedLength;
+	std::vector<uint8_t> m_SeedBytes;
+	uint8_t m_KeyLength;
+	uint8_t key[255];
 public:
 	IncomingMessageHandler(XCPMaster& Master);
 	virtual ~IncomingMessageHandler();
@@ -21,5 +26,6 @@ public:
 	virtual void Handle(ErrorSequencePacket& Packet);
 	virtual void Handle(ErrorMemoryOverflowPacket& Packet);
 	virtual void Handle(StartStopDaqListPositiveResponse& Packet);
+	virtual void Handle(GetSeedResponsePacket& Packet);
 };
 

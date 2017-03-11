@@ -10,11 +10,12 @@
 #include "ErrorOutOfRangePacket.h"
 #include "ErrorSequencePacket.h"
 #include "ErrorMemoryOverflowPacket.h"
+#include "GetSeedPacket.h"
 #include "XCPMaster.h"
 #include <iostream>
 
 
-IXCPPacket * PacketFactory::CreateResponsePacket(const std::vector<uint8_t>& Data, uint8_t HeaderSize, CommandPacket * LastSentCommand)
+IXCPPacket * PacketFactory::CreateResponsePacket(const std::vector<uint8_t>& Data, uint8_t HeaderSize, uint8_t TailSize, CommandPacket * LastSentCommand)
 {
 	uint8_t LastCommandPID = LastSentCommand->GetPid();
 	switch (LastCommandPID)
@@ -40,6 +41,9 @@ IXCPPacket * PacketFactory::CreateResponsePacket(const std::vector<uint8_t>& Dat
 	case CTOMasterToSlaveCommands::START_STOP_DAQ_LIST:
 		return StartStopDaqListPositiveResponse::Deserialize(Data, HeaderSize);
 		break;
+	case CTOMasterToSlaveCommands::GET_SEED:
+		return GetSeedResponsePacket::Deserialize(Data, HeaderSize, TailSize);
+		break;
 	default:
 		std::cout << "Unhandled response format\n";
 		return new ResponsePacket();
@@ -47,7 +51,7 @@ IXCPPacket * PacketFactory::CreateResponsePacket(const std::vector<uint8_t>& Dat
 	}
 }
 
-IXCPPacket * PacketFactory::CreateErrorPacket(const std::vector<uint8_t>& data, uint8_t header_size, CommandPacket * LastSentCommand)
+IXCPPacket * PacketFactory::CreateErrorPacket(const std::vector<uint8_t>& data, uint8_t header_size, uint8_t TailSize, CommandPacket * LastSentCommand)
 {
 	uint8_t ErrorCode = data[header_size + 1];
 	uint8_t LastCommandPID = LastSentCommand->GetPid();
@@ -190,18 +194,23 @@ IXCPPacket * PacketFactory::CreateStartStopSyncPacket(StartStopSynchPacket::Mode
 	return new StartStopSynchPacket(Mode);
 }
 
-IXCPPacket * PacketFactory::DeserializeIncomingFromSlave(const std::vector<uint8_t>& Data, uint8_t HeaderSize, CommandPacket* LastSentCommand)
+IXCPPacket * PacketFactory::CreateGetSeedPacket(GetSeedPacket::Mode Mode, GetSeedPacket::Resource Resource)
+{
+	return new GetSeedPacket(Mode,Resource);
+}
+
+IXCPPacket * PacketFactory::DeserializeIncomingFromSlave(const std::vector<uint8_t>& Data, uint8_t HeaderSize, uint8_t TailSize, CommandPacket* LastSentCommand)
 {
 	uint8_t PID = Data[HeaderSize];
 	switch (PID)
 	{
 	case CTOSlaveToMasterPacketTypes::RES:
-		return CreateResponsePacket(Data, HeaderSize, LastSentCommand);
+		return CreateResponsePacket(Data, HeaderSize, TailSize, LastSentCommand);
 		break;
 	case CTOSlaveToMasterPacketTypes::EV:
 		break;
 	case CTOSlaveToMasterPacketTypes::ERR:
-		return CreateErrorPacket(Data, HeaderSize, LastSentCommand);
+		return CreateErrorPacket(Data, HeaderSize, TailSize, LastSentCommand);
 		break;
 	case CTOSlaveToMasterPacketTypes::SERV:
 		break;

@@ -25,6 +25,10 @@ enum TransportLayer
 	FLEXRAY
 };
 
+
+typedef uint32_t(*XCP_GetAvailablePrivilegesPtr_t)(uint8_t* AvailablePrivilege);
+typedef uint32_t(*XCP_ComputeKeyFromSeedPtr_t)(uint8_t RequestedPrivilege, uint8_t ByteLenghtSeed, uint8_t* PointerToSeed, uint8_t* ByteLengthKey, uint8_t* PointerToKey);
+
 class XCPMaster
 {
 public:
@@ -51,7 +55,11 @@ private:
 	PacketFactory* m_PacketFactory;
 	std::queue<CommandPacket*> m_SentCommandQueue;
 	IIncomingMessageHandler* m_MessageHandler;
-	SlaveProperties m_SlaveProperties;
+	SlaveProperties m_SlaveProperties;	
+
+	XCP_GetAvailablePrivilegesPtr_t m_GetAvailablePrivileges = nullptr;
+	XCP_ComputeKeyFromSeedPtr_t m_ComputeKeyFromSeed = nullptr;
+
 public:
 	XCP_API const SlaveProperties& GetSlaveProperties() const;
 	XCP_API void SetSlaveProperties(const SlaveProperties& properties);
@@ -74,8 +82,19 @@ public:
 	XCP_API std::unique_ptr<IXCPMessage> CreateSetDaqListModeMessage(uint8_t Mode, uint16_t DaqListNumber, uint16_t EventChannel, uint8_t Prescaler, uint8_t Priority);
 	XCP_API std::unique_ptr<IXCPMessage> CreateStartStopDaqListMessage(StartStopDaqListPacket::Mode Mode, uint16_t DaqListNumber);
 	XCP_API std::unique_ptr<IXCPMessage> CreateStartStopSynchMessage(StartStopSynchPacket::Mode Mode);
+	XCP_API std::unique_ptr<IXCPMessage> CreateGetSeedMessage(GetSeedPacket::Mode Mode, GetSeedPacket::Resource Resource);
 	XCP_API void SendMessage(IXCPMessage* Message);
 	XCP_API IXCPMessage* ReceiveMessage(IXCPMessage* Message);
 	XCP_API void AddSentMessage(IXCPMessage* Packet);
+	XCP_API void SetSeedAndKeyFunctionPointers(XCP_GetAvailablePrivilegesPtr_t GetAvailablePrivilegesPtr, XCP_ComputeKeyFromSeedPtr_t ComputeKeyPtr);
+	XCP_ComputeKeyFromSeedPtr_t GetComputeKeyPtr();
+	XCP_GetAvailablePrivilegesPtr_t GetAvailablePrivilegesPtr();
+	template<class PacketType>
+	PacketType GetLastSentMessage();
 };
 
+template<class PacketType>
+inline PacketType XCPMaster::GetLastSentMessage()
+{
+	return dynamic_cast<PacketType>(m_SentCommandQueue.front());
+}

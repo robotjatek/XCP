@@ -20,7 +20,7 @@ class GetStatusResponsePacket : public ResponsePacket
 		SESSION_CONFIGURATION_ID = 0x03, //2 bytes long!
 	};
 public:
-	enum CurrenSessionStatusBits
+	enum CurrentSessionStatusBits
 	{
 		STORE_CAL_REQ = 0x01, //Pending request to store data into non-volatile memory
 		STORE_DAQ_REQ = 0x04, //Pending request to save daq list into non-volatile memory

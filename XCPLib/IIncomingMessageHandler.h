@@ -11,6 +11,7 @@ class ErrorOutOfRangePacket;
 class ErrorSequencePacket;
 class ErrorMemoryOverflowPacket;
 class StartStopDaqListPositiveResponse;
+class GetSeedResponsePacket;
 
 class IIncomingMessageHandler
 {
@@ -25,4 +26,6 @@ public:
 	virtual void Handle(ErrorSequencePacket& Packet) = 0;
 	virtual void Handle(ErrorMemoryOverflowPacket& Packet) = 0;
 	virtual void Handle(StartStopDaqListPositiveResponse& Packet) = 0;
+	virtual void Handle(GetSeedResponsePacket& Packet) = 0;
+	virtual ~IIncomingMessageHandler() {};
 };

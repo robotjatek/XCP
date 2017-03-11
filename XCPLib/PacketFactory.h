@@ -4,14 +4,15 @@
 #include "ICTO.h"
 #include "ConnectPacket.h"
 #include "DAQPackets.h"
+#include "GetSeedPacket.h"
 
 class XCPMaster;
 
 class PacketFactory
 {
 private:
-	IXCPPacket* CreateResponsePacket(const std::vector<uint8_t>& data, uint8_t header_size, CommandPacket* LastSentCommand);
-	IXCPPacket* CreateErrorPacket(const std::vector<uint8_t>& data, uint8_t header_size, CommandPacket* LastSentCommand);
+	IXCPPacket* CreateResponsePacket(const std::vector<uint8_t>& data, uint8_t header_size, uint8_t TailSize, CommandPacket* LastSentCommand);
+	IXCPPacket* CreateErrorPacket(const std::vector<uint8_t>& data, uint8_t header_size, uint8_t TailSize, CommandPacket* LastSentCommand);
 	XCPMaster& m_Master;
 public:
 	PacketFactory(XCPMaster& master);
@@ -32,6 +33,7 @@ public:
 	IXCPPacket* CreateSetDaqListModePacket(uint8_t Mode, uint16_t DaqListNumber, uint16_t EventChannel, uint8_t Prescaler, uint8_t Priority, bool LittleEndian);
 	IXCPPacket* CreateStartStopDaqListPacket(uint8_t Mode, uint16_t DaqListNumber, bool LittleEndian);
 	IXCPPacket* CreateStartStopSyncPacket(StartStopSynchPacket::Mode Mode);
-	IXCPPacket* DeserializeIncomingFromSlave(const std::vector<uint8_t>& Data, uint8_t HeaderSize, CommandPacket* LastSentCommand);
+	IXCPPacket* CreateGetSeedPacket(GetSeedPacket::Mode Mode, GetSeedPacket::Resource Resource);
+	IXCPPacket* DeserializeIncomingFromSlave(const std::vector<uint8_t>& Data, uint8_t HeaderSize, uint8_t TailSize, CommandPacket* LastSentCommand);
 };
 

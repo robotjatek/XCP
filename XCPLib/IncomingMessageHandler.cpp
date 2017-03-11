@@ -12,6 +12,9 @@
 
 IncomingMessageHandler::IncomingMessageHandler(XCPMaster& Master) : m_Master(Master)
 {
+	m_ProcessedSeedLength = 0;
+	m_RemainingSeedLength = -1;
+	m_KeyLength = 255;
 }
 
 
@@ -37,7 +40,7 @@ void IncomingMessageHandler::Handle(ConnectPositivePacket & Packet)
 	properties.MaxDto = Packet.GetMaxDto(properties.ByteOrder); //at this point we have already set the ByteOrder
 	properties.TransportLayerVersion = Packet.GetTransportLayerVersion();
 	properties.ProtocolLayerVersion = Packet.GetProtocolLayerVersion();
-	
+
 	m_Master.SetSlaveProperties(properties); //write back Slave properties to the Master
 
 	std::cout << std::hex << std::setw(2)
@@ -61,7 +64,7 @@ void IncomingMessageHandler::Handle(ConnectPositivePacket & Packet)
 
 void IncomingMessageHandler::Handle(ResponsePacket & Packet)
 {
-	std::cout << "General Ack packet received (or an unhandled packet format) PID: "<<(int)Packet.GetPid()<<"\n";
+	std::cout << "General Ack packet received (or an unhandled packet format) PID: " << (int)Packet.GetPid() << "\n";
 }
 
 void IncomingMessageHandler::Handle(GetStatusResponsePacket & Packet)
@@ -79,7 +82,7 @@ void IncomingMessageHandler::Handle(UploadResponse & Packet)
 	std::cout << "Jott egy Upload response\nTartalma:\n";
 	for (uint8_t i = 0; i < Packet.GetNumberOfElements(); i++)
 	{
-		std::cout << std::hex<<(int)Packet.GetElement<uint8_t>(i,(m_Master.GetSlaveProperties().ByteOrder == 0)) << " ";
+		std::cout << std::hex << (int)Packet.GetElement<uint8_t>(i, (m_Master.GetSlaveProperties().ByteOrder == 0)) << " ";
 	}
 	std::cout << "\n";
 }
@@ -107,6 +110,29 @@ void IncomingMessageHandler::Handle(ErrorMemoryOverflowPacket & Packet)
 
 void IncomingMessageHandler::Handle(StartStopDaqListPositiveResponse & Packet)
 {
-	std::cout << "Start/Stop Daq list response | FIRST PID: " << std::hex << (int)Packet.GetFirstPid()<<"\n";
+	std::cout << "Start/Stop Daq list response | FIRST PID: " << std::hex << (int)Packet.GetFirstPid() << "\n";
+}
+
+void IncomingMessageHandler::Handle(GetSeedResponsePacket & Packet)
+{
+	std::cout << "GetSeedResponse\n";
+	if (m_SeedBytes.size() == 0) //Mode 0
+	{
+		m_RemainingSeedLength = Packet.GetLengthField();
+	}
+
+	unsigned int SeedPartSize = Packet.GetSeedPartSize();
+	for (unsigned int i = 0; i < SeedPartSize; i++)
+	{
+		m_SeedBytes.push_back(Packet.GetSeedPart(i));
+	}
+
+	m_ProcessedSeedLength += SeedPartSize;
+	m_RemainingSeedLength -= SeedPartSize;
+	GetSeedPacket* LastPacket = m_Master.GetLastSentMessage<GetSeedPacket*>();
+	if (m_RemainingSeedLength == 0)
+	{
+		m_Master.GetComputeKeyPtr()(LastPacket->GetResource(), Packet.GetLengthField(), &m_SeedBytes[0], &m_KeyLength, &key[0]);
+	}
 }
 
