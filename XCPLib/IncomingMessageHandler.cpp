@@ -9,6 +9,7 @@
 #include "ErrorOutOfRangePacket.h"
 #include "ErrorSequencePacket.h"
 #include "ErrorMemoryOverflowPacket.h"
+#include "UnlockPacket.h"
 
 IncomingMessageHandler::IncomingMessageHandler(XCPMaster& Master) : m_Master(Master)
 {
@@ -134,6 +135,32 @@ void IncomingMessageHandler::Handle(GetSeedResponsePacket & Packet)
 	if (m_RemainingSeedLength == 0)
 	{
 		m_Master.GetComputeKeyPtr()(LastPacket->GetResource(), Packet.GetLengthField(), &m_SeedBytes[0], &m_KeyLength, &m_Key[0]);
+		m_Key.resize(m_KeyLength);
 	}
+}
+
+void IncomingMessageHandler::Handle(UnlockResponsePacket & Packet)
+{
+	std::cout << "UnlockResponse packet\n";
+	XCPMaster::SlaveProperties properties = m_Master.GetSlaveProperties();
+	properties.CAL_PG = ((Packet.GetCurrentResourceProtection()&ConnectPositivePacket::ResourceParameterBits::CAL_PG) != 0);
+	properties.DAQ = ((Packet.GetCurrentResourceProtection()&ConnectPositivePacket::ResourceParameterBits::DAQ) != 0);
+	properties.PGM = ((Packet.GetCurrentResourceProtection()&ConnectPositivePacket::ResourceParameterBits::PGM) != 0);
+	properties.STIM = ((Packet.GetCurrentResourceProtection()&ConnectPositivePacket::ResourceParameterBits::STIM) != 0);
+	m_Master.SetSlaveProperties(properties);
+
+	std::cout << "(CAL/PG: " << properties.CAL_PG << ", "
+		<< "DAQ: " << properties.DAQ << ", "
+		<< "STIM: " << properties.STIM << ", "
+		<< "PGM: " << properties.PGM << ") \n";
+	m_Key.clear();
+	m_Key.resize(255);
+	m_KeyLength = 255;
+	m_SeedBytes.clear();
+}
+
+const std::vector<uint8_t>& IncomingMessageHandler::GetUnlockKey() const
+{
+	return m_Key;
 }
 

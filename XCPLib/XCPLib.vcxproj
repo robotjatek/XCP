@@ -173,6 +173,7 @@
     <ClInclude Include="TCPHeader.h" />
     <ClInclude Include="TCPMessage.h" />
     <ClInclude Include="TCPMessageFactory.h" />
+    <ClInclude Include="UnlockPacket.h" />
     <ClInclude Include="UploadPacket.h" />
     <ClInclude Include="XCPMaster.h" />
   </ItemGroup>
@@ -197,6 +198,7 @@
     <ClCompile Include="TCPHeader.cpp" />
     <ClCompile Include="TCPMessage.cpp" />
     <ClCompile Include="TCPMessageFactory.cpp" />
+    <ClCompile Include="UnlockPacket.cpp" />
     <ClCompile Include="UploadPacket.cpp" />
     <ClCompile Include="XCPMaster.cpp" />
   </ItemGroup>

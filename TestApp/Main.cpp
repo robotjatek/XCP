@@ -136,45 +136,76 @@ int main()
 	master.SetSeedAndKeyFunctionPointers(GetAvailablePrivileges, ComputeKeyFromSeed);
 	
 	XCPMsgPtr connect_message = master.CreateConnectMessage(ConnectPacket::ConnectMode::NORMAL);
-	XCPMsgPtr disconnect_message = master.CreateDisconnectMessage();
-	XCPMsgPtr GetStatus = master.CreateGetStatusMessage();
-	XCPMsgPtr Synch = master.CreateSynchMessage();
-	XCPMsgPtr GetSeed1 = master.CreateGetSeedMessage(GetSeedPacket::Mode::FIRST_PART, GetSeedPacket::Resource::DAQ);
-	XCPMsgPtr GetSeed2 = master.CreateGetSeedMessage(GetSeedPacket::Mode::REMAINING_PART, GetSeedPacket::Resource::DAQ);
-	XCPMsgPtr SetMTA = master.CreateSetMTAMessage(0x219020, 0);	
-	//XCPMsgPtr SetMTA = master.CreateSetMTAMessage(0x0, 0);
-	XCPMsgPtr Upload = master.CreateUploadMessage(10);
-	XCPMsgPtr ShortUpload = master.CreateShortUploadMessage(10, 0x219020, 0);
-	XCPMsgPtr FreeDaq = master.CreateFreeDaqMessage();
-	XCPMsgPtr AllocDaq = master.CreateAllocDaqMessage(1);
-	XCPMsgPtr AllocOdt = master.CreateAllocOdtMessage(0, 1);
-	XCPMsgPtr AllocOdtEntry = master.CreateAllocOdtEntryMessage(0, 0, 1);
-	XCPMsgPtr SetDaqPtr = master.CreateSetDaqPtrMessage(0, 0, 0);
-	XCPMsgPtr WriteDaq = master.CreateWriteDaqMessage(0xFF, 1, 0, 0x21A08D); //ubyte square signal
-	using ModeFieldBits = SetDaqListModePacket::ModeFieldBits;
-	XCPMsgPtr SetDaqListMode = master.CreateSetDaqListModeMessage(ModeFieldBits::TIMESTAMP,0,1,1,1); //DAQ direction; Timestamp on; do not use ctr field; Disabled alternating display; Transmit DTO WITH identification field;
-	XCPMsgPtr StartStopDaqList = master.CreateStartStopDaqListMessage(StartStopDaqListPacket::Mode::SELECT, 0);
-	XCPMsgPtr StartStopSynch = master.CreateStartStopSynchMessage(StartStopSynchPacket::Mode::START_SELECTED);
-
 	Send(s, std::move(connect_message));
+
+	XCPMsgPtr GetStatus = master.CreateGetStatusMessage();
 	Send(s, std::move(GetStatus));
+
+	XCPMsgPtr Synch = master.CreateSynchMessage();
 	Send(s, std::move(Synch));
 
+	XCPMsgPtr GetSeed1 = master.CreateGetSeedMessage(GetSeedPacket::Mode::FIRST_PART, GetSeedPacket::Resource::DAQ);
 	Send(s, std::move(GetSeed1));
-	Send(s, std::move(GetSeed2));
+	std::vector<XCPMsgPtr> UnlockMessages = master.CreateUnlockMessages();
+	Send(s, std::move(UnlockMessages[0]));
 
+	XCPMsgPtr GetSeed2 = master.CreateGetSeedMessage(GetSeedPacket::Mode::FIRST_PART, GetSeedPacket::Resource::CAL_PG);
+	Send(s, std::move(GetSeed2));
+	std::vector<XCPMsgPtr> UnlockMessages1 = master.CreateUnlockMessages();
+	Send(s, std::move(UnlockMessages1[0]));
+
+	XCPMsgPtr GetSeed3 = master.CreateGetSeedMessage(GetSeedPacket::Mode::FIRST_PART, GetSeedPacket::Resource::PGM);
+	Send(s, std::move(GetSeed3));
+	std::vector<XCPMsgPtr> UnlockMessages2 = master.CreateUnlockMessages();
+	Send(s, std::move(UnlockMessages2[0]));
+
+	XCPMsgPtr GetSeed4 = master.CreateGetSeedMessage(GetSeedPacket::Mode::FIRST_PART, GetSeedPacket::Resource::STIM);
+	Send(s, std::move(GetSeed4));
+	std::vector<XCPMsgPtr> UnlockMessages4 = master.CreateUnlockMessages();
+	Send(s, std::move(UnlockMessages4[0]));
+
+	//XCPMsgPtr GetSeed2 = master.CreateGetSeedMessage(GetSeedPacket::Mode::REMAINING_PART, GetSeedPacket::Resource::DAQ);
+	//Send(s, std::move(GetSeed2));
+
+	XCPMsgPtr SetMTA = master.CreateSetMTAMessage(0x219020, 0);
 	Send(s, std::move(SetMTA));
+	//XCPMsgPtr SetMTA = master.CreateSetMTAMessage(0x0, 0);
+
+	XCPMsgPtr Upload = master.CreateUploadMessage(10);
 	Send(s, std::move(Upload));
+
+	XCPMsgPtr ShortUpload = master.CreateShortUploadMessage(10, 0x219020, 0);
 	Send(s, std::move(ShortUpload));
+
+	XCPMsgPtr FreeDaq = master.CreateFreeDaqMessage();
 	Send(s, std::move(FreeDaq));
+
+	XCPMsgPtr AllocDaq = master.CreateAllocDaqMessage(1);
 	Send(s, std::move(AllocDaq));
+
+	XCPMsgPtr AllocOdt = master.CreateAllocOdtMessage(0, 1);
 	Send(s, std::move(AllocOdt));
+
+	XCPMsgPtr AllocOdtEntry = master.CreateAllocOdtEntryMessage(0, 0, 1);
 	Send(s, std::move(AllocOdtEntry));
+
+	XCPMsgPtr SetDaqPtr = master.CreateSetDaqPtrMessage(0, 0, 0);
 	Send(s, std::move(SetDaqPtr));
+
+	XCPMsgPtr WriteDaq = master.CreateWriteDaqMessage(0xFF, 1, 0, 0x21A08D); //ubyte square signal
 	Send(s, std::move(WriteDaq));
+
+	using ModeFieldBits = SetDaqListModePacket::ModeFieldBits;
+	XCPMsgPtr SetDaqListMode = master.CreateSetDaqListModeMessage(ModeFieldBits::TIMESTAMP, 0, 1, 1, 1); //DAQ direction; Timestamp on; do not use ctr field; Disabled alternating display; Transmit DTO WITH identification field;
 	Send(s, std::move(SetDaqListMode));
+
+	XCPMsgPtr StartStopDaqList = master.CreateStartStopDaqListMessage(StartStopDaqListPacket::Mode::SELECT, 0);
 	Send(s, std::move(StartStopDaqList));
-	Send(s, std::move(StartStopSynch));
+
+	XCPMsgPtr StartStopSynch = master.CreateStartStopSynchMessage(StartStopSynchPacket::Mode::START_SELECTED);
+	//Send(s, std::move(StartStopSynch));
+
+	XCPMsgPtr disconnect_message = master.CreateDisconnectMessage();
 	Send(s, std::move(disconnect_message));
 
 	/*uint8_t priv;

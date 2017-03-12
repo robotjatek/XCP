@@ -12,6 +12,7 @@
 #include "ErrorMemoryOverflowPacket.h"
 #include "GetSeedPacket.h"
 #include "XCPMaster.h"
+#include "UnlockPacket.h"
 #include <iostream>
 
 
@@ -43,6 +44,9 @@ IXCPPacket * PacketFactory::CreateResponsePacket(const std::vector<uint8_t>& Dat
 		break;
 	case CTOMasterToSlaveCommands::GET_SEED:
 		return GetSeedResponsePacket::Deserialize(Data, HeaderSize, TailSize);
+		break;
+	case CTOMasterToSlaveCommands::UNLOCK:
+		return UnlockResponsePacket::Deserialize(Data, HeaderSize, TailSize);
 		break;
 	default:
 		std::cout << "Unhandled response format\n";
@@ -197,6 +201,11 @@ IXCPPacket * PacketFactory::CreateStartStopSyncPacket(StartStopSynchPacket::Mode
 IXCPPacket * PacketFactory::CreateGetSeedPacket(GetSeedPacket::Mode Mode, GetSeedPacket::Resource Resource)
 {
 	return new GetSeedPacket(Mode,Resource);
+}
+
+std::vector<IXCPPacket*> PacketFactory::CreateUnlockPackets(const std::vector<uint8_t>& Key)
+{
+	return UnlockPacket::CreateUnlockPackets(Key, m_Master.GetSlaveProperties().MaxCto);
 }
 
 IXCPPacket * PacketFactory::DeserializeIncomingFromSlave(const std::vector<uint8_t>& Data, uint8_t HeaderSize, uint8_t TailSize, CommandPacket* LastSentCommand)

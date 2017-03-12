@@ -27,5 +27,8 @@ public:
 	virtual void Handle(ErrorMemoryOverflowPacket& Packet);
 	virtual void Handle(StartStopDaqListPositiveResponse& Packet);
 	virtual void Handle(GetSeedResponsePacket& Packet);
+	virtual void Handle(UnlockResponsePacket& Packet);
+
+	virtual const std::vector<uint8_t>& GetUnlockKey() const;
 };
 

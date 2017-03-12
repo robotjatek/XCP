@@ -228,6 +228,18 @@ XCP_API std::unique_ptr<IXCPMessage> XCPMaster::CreateGetSeedMessage(GetSeedPack
 	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateGetSeedPacket(Mode, Resource)));
 }
 
+XCP_API std::vector<std::unique_ptr<IXCPMessage>> XCPMaster::CreateUnlockMessages()
+{
+	std::vector<std::unique_ptr<IXCPMessage>> ret;
+	const std::vector<IXCPPacket*>& packets = m_PacketFactory->CreateUnlockPackets(m_MessageHandler->GetUnlockKey());
+	for (const auto& a : packets)
+	{
+		ret.push_back(std::move(std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(a))));
+	}
+
+	return ret;
+}
+
 void XCPMaster::AddSentMessage(IXCPMessage * Packet)
 {
 	if (CommandPacket* ToAdd = dynamic_cast<CommandPacket*>(Packet->GetPacket()))
