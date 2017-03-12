@@ -11,12 +11,19 @@
 #include "ErrorMemoryOverflowPacket.h"
 #include "UnlockPacket.h"
 
-IncomingMessageHandler::IncomingMessageHandler(XCPMaster& Master) : m_Master(Master)
+void IncomingMessageHandler::ResetSeedAndKey()
 {
 	m_ProcessedSeedLength = 0;
 	m_RemainingSeedLength = -1;
+	m_Key.clear();
+	m_Key.resize(255);
 	m_KeyLength = 255;
-	m_Key.resize(m_KeyLength);
+	m_SeedBytes.clear();
+}
+
+IncomingMessageHandler::IncomingMessageHandler(XCPMaster& Master) : m_Master(Master)
+{
+	ResetSeedAndKey();
 }
 
 
@@ -153,10 +160,7 @@ void IncomingMessageHandler::Handle(UnlockResponsePacket & Packet)
 		<< "DAQ: " << properties.DAQ << ", "
 		<< "STIM: " << properties.STIM << ", "
 		<< "PGM: " << properties.PGM << ") \n";
-	m_Key.clear();
-	m_Key.resize(255);
-	m_KeyLength = 255;
-	m_SeedBytes.clear();
+	ResetSeedAndKey();
 }
 
 const std::vector<uint8_t>& IncomingMessageHandler::GetUnlockKey() const

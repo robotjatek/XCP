@@ -13,6 +13,8 @@ private:
 	std::vector<uint8_t> m_SeedBytes;
 	uint8_t m_KeyLength;
 	std::vector<uint8_t> m_Key;
+
+	void ResetSeedAndKey();
 public:
 	IncomingMessageHandler(XCPMaster& Master);
 	virtual ~IncomingMessageHandler();
