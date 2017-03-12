@@ -35,7 +35,7 @@
 
 using XCPMsgPtr = std::unique_ptr<IXCPMessage>;
 XCPMaster master(TransportLayer::ETHERNET);
-int MaxRecvsize = 0xdc05;
+int MaxRecvsize = 0xff;
 
 int SetupConnection(SOCKET& s)
 {
@@ -138,6 +138,7 @@ int main()
 	
 	XCPMsgPtr connect_message = master.CreateConnectMessage(ConnectPacket::ConnectMode::NORMAL);
 	Send(s, std::move(connect_message));
+	MaxRecvsize = master.GetSlaveProperties().MaxDto;
 
 	XCPMsgPtr GetStatus = master.CreateGetStatusMessage();
 	Send(s, std::move(GetStatus));

@@ -55,7 +55,7 @@ IXCPPacket * PacketFactory::CreateResponsePacket(const std::vector<uint8_t>& Dat
 			break;
 		}
 	}
-	std::cout << "Internal error: Last sent command is a nullptr\n";
+	std::cout << "Internal error: Last sent command is a nullptr\a\n";
 	return nullptr;
 }
 
@@ -88,7 +88,7 @@ IXCPPacket * PacketFactory::CreateErrorPacket(const std::vector<uint8_t>& data, 
 			break;
 		}
 	}
-	std::cout << "Internal error: Last sent command is a nullptr\n";
+	std::cout << "Internal error: Last sent command is a nullptr\a\n";
 	return nullptr;
 }
 

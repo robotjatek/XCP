@@ -7,6 +7,9 @@ public:
 	ResponsePacket() : ICTO()
 	{
 		m_PID = CTOSlaveToMasterPacketTypes::RES;
+		m_PacketSize = 1;
+		m_DataLength = 0;
+		m_Data = nullptr;
 	}
 
 	virtual ~ResponsePacket() {}
