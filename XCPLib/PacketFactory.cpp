@@ -49,7 +49,6 @@ IXCPPacket * PacketFactory::CreateResponsePacket(const std::vector<uint8_t>& Dat
 		return UnlockResponsePacket::Deserialize(Data, HeaderSize, TailSize);
 		break;
 	default:
-		std::cout << "Unhandled response format\n";
 		return new ResponsePacket();
 		break;
 	}
