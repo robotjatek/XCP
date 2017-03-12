@@ -94,7 +94,7 @@ void Send(SOCKET s, XCPMsgPtr message)
 	}
 	std::cout << "\n";
 	XCPMsgPtr asd = master.DeserializeMessage(bytes);
-	bytes.clear();
+	//bytes.clear();
 }
 
 typedef uint32_t (*XCP_GetAvailablePrivilegesPtr_t)(uint8_t* AvailablePrivilege);
@@ -208,7 +208,7 @@ int main()
 
 	std::vector<uint8_t> bytes;
 	int i = 0;
-	while (i < 10)
+	while (i < 20)
 	{
 		bytes.resize(MaxRecvsize);
 		int recv_size = recv(s, (char*)&bytes[0], MaxRecvsize, 0);
@@ -219,7 +219,7 @@ int main()
 		}
 		std::cout << "\n";
 		XCPMsgPtr asd = master.DeserializeMessage(bytes);
-		bytes.clear();
+		//bytes.clear();
 		i++;
 	}
 

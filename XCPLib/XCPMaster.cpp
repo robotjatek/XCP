@@ -97,7 +97,9 @@ std::unique_ptr<IXCPMessage> XCPMaster::DeserializeMessage(std::vector<uint8_t>&
 	}
 
 	IXCPPacket* Packet = m_PacketFactory->DeserializeIncomingFromSlave(data, m_MessageFactory->GetHeaderSize(), m_MessageFactory->GetTailSize(), LastCommand);
-	
+	if(Packet)
+		std::vector<uint8_t>(data.begin() +m_MessageFactory->GetHeaderSize() + Packet->GetPacketSize() + m_MessageFactory->GetTailSize(), data.end()).swap(data);
+
 	if (Packet)
 	{
 		IXCPMessage* MessageFrame = m_MessageFactory->CreateMessage(Packet);
