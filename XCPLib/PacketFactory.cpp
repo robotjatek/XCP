@@ -18,68 +18,78 @@
 
 IXCPPacket * PacketFactory::CreateResponsePacket(const std::vector<uint8_t>& Data, uint8_t HeaderSize, uint8_t TailSize, CommandPacket * LastSentCommand)
 {
-	uint8_t LastCommandPID = LastSentCommand->GetPid();
-	switch (LastCommandPID)
+	if (LastSentCommand)
 	{
-	case CTOMasterToSlaveCommands::CONNECT:
-		return ConnectPositivePacket::Deserialize(Data, HeaderSize);
-		break;
-	case CTOMasterToSlaveCommands::DISCONNECT:
-		return new ResponsePacket();
-		break;
-	case CTOMasterToSlaveCommands::GET_STATUS:
-		return GetStatusResponsePacket::Deserialize(Data, HeaderSize);
-		break;
-	case CTOMasterToSlaveCommands::UPLOAD:
-		return UploadResponse::Deserialize(Data, HeaderSize, m_Master.GetSlaveProperties().AddressGranularity);
-		break;
-	case CTOMasterToSlaveCommands::SHORT_UPLOAD:
-		return UploadResponse::Deserialize(Data, HeaderSize, m_Master.GetSlaveProperties().AddressGranularity);
-		break;
-	case CTOMasterToSlaveCommands::SET_MTA:
-		return new ResponsePacket();
-		break;
-	case CTOMasterToSlaveCommands::START_STOP_DAQ_LIST:
-		return StartStopDaqListPositiveResponse::Deserialize(Data, HeaderSize);
-		break;
-	case CTOMasterToSlaveCommands::GET_SEED:
-		return GetSeedResponsePacket::Deserialize(Data, HeaderSize, TailSize);
-		break;
-	case CTOMasterToSlaveCommands::UNLOCK:
-		return UnlockResponsePacket::Deserialize(Data, HeaderSize, TailSize);
-		break;
-	default:
-		return new ResponsePacket();
-		break;
+		uint8_t LastCommandPID = LastSentCommand->GetPid();
+		switch (LastCommandPID)
+		{
+		case CTOMasterToSlaveCommands::CONNECT:
+			return ConnectPositivePacket::Deserialize(Data, HeaderSize);
+			break;
+		case CTOMasterToSlaveCommands::DISCONNECT:
+			return new ResponsePacket();
+			break;
+		case CTOMasterToSlaveCommands::GET_STATUS:
+			return GetStatusResponsePacket::Deserialize(Data, HeaderSize);
+			break;
+		case CTOMasterToSlaveCommands::UPLOAD:
+			return UploadResponse::Deserialize(Data, HeaderSize, m_Master.GetSlaveProperties().AddressGranularity);
+			break;
+		case CTOMasterToSlaveCommands::SHORT_UPLOAD:
+			return UploadResponse::Deserialize(Data, HeaderSize, m_Master.GetSlaveProperties().AddressGranularity);
+			break;
+		case CTOMasterToSlaveCommands::SET_MTA:
+			return new ResponsePacket();
+			break;
+		case CTOMasterToSlaveCommands::START_STOP_DAQ_LIST:
+			return StartStopDaqListPositiveResponse::Deserialize(Data, HeaderSize);
+			break;
+		case CTOMasterToSlaveCommands::GET_SEED:
+			return GetSeedResponsePacket::Deserialize(Data, HeaderSize, TailSize);
+			break;
+		case CTOMasterToSlaveCommands::UNLOCK:
+			return UnlockResponsePacket::Deserialize(Data, HeaderSize, TailSize);
+			break;
+		default:
+			return new ResponsePacket();
+			break;
+		}
 	}
+	std::cout << "Internal error: Last sent command is a nullptr\n";
+	return nullptr;
 }
 
 IXCPPacket * PacketFactory::CreateErrorPacket(const std::vector<uint8_t>& data, uint8_t header_size, uint8_t TailSize, CommandPacket * LastSentCommand)
 {
-	uint8_t ErrorCode = data[header_size + 1];
-	uint8_t LastCommandPID = LastSentCommand->GetPid();
-	switch (ErrorCode)
+	if (LastSentCommand)
 	{
-	case ErrorCodes::ERR_CMD_SYNCH:
-		return SynchResponsePacket::Deserialize(data, header_size);
-		break;
-	case ErrorCodes::ERR_ACCESS_LOCKED:
-		return new ErrorAccessLockedPacket();
-		break;
-	case ErrorCodes::ERR_OUT_OF_RANGE:
-		return new ErrorOutOfRangePacket();
-		break;
-	case ErrorCodes::ERR_SEQUENCE:
-		return new ErrorSequencePacket();
-		break;
-	case ErrorCodes::ERR_MEMORY_OVERFLOW:
-		return new ErrorMemoryOverflowPacket();
-		break;
-	default:
-		std::cout << "Deserialization error: Unhandled errorcode\n";
-		return nullptr;
-		break;
+		uint8_t ErrorCode = data[header_size + 1];
+		uint8_t LastCommandPID = LastSentCommand->GetPid();
+		switch (ErrorCode)
+		{
+		case ErrorCodes::ERR_CMD_SYNCH:
+			return SynchResponsePacket::Deserialize(data, header_size);
+			break;
+		case ErrorCodes::ERR_ACCESS_LOCKED:
+			return new ErrorAccessLockedPacket();
+			break;
+		case ErrorCodes::ERR_OUT_OF_RANGE:
+			return new ErrorOutOfRangePacket();
+			break;
+		case ErrorCodes::ERR_SEQUENCE:
+			return new ErrorSequencePacket();
+			break;
+		case ErrorCodes::ERR_MEMORY_OVERFLOW:
+			return new ErrorMemoryOverflowPacket();
+			break;
+		default:
+			std::cout << "Deserialization error: Unhandled errorcode\n";
+			return nullptr;
+			break;
+		}
 	}
+	std::cout << "Internal error: Last sent command is a nullptr\n";
+	return nullptr;
 }
 
 PacketFactory::PacketFactory(XCPMaster& master) : m_Master(master)

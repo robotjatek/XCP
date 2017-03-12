@@ -35,6 +35,7 @@
 
 using XCPMsgPtr = std::unique_ptr<IXCPMessage>;
 XCPMaster master(TransportLayer::ETHERNET);
+int MaxRecvsize = 0xdc05;
 
 int SetupConnection(SOCKET& s)
 {
@@ -82,10 +83,10 @@ void Send(SOCKET s, XCPMsgPtr message)
 	message->Serialize(bytes);
 	send(s, (const char*)bytes.begin()._Ptr, bytes.size(), 0);
 	bytes.clear();
-	bytes.resize(2000);
+	bytes.resize(MaxRecvsize);
 	master.AddSentMessage(message.get());
 
-	int recv_size = recv(s, (char*)&bytes[0], 2000, 0);
+	int recv_size = recv(s, (char*)&bytes[0], MaxRecvsize, 0);
 	bytes.resize(recv_size);
 	for (int i = 0; i < recv_size; i++)
 	{
@@ -174,7 +175,7 @@ int main()
 	XCPMsgPtr Upload = master.CreateUploadMessage(10);
 	Send(s, std::move(Upload));
 
-	XCPMsgPtr ShortUpload = master.CreateShortUploadMessage(10, 0x219020, 0);
+	XCPMsgPtr ShortUpload = master.CreateShortUploadMessage(10, 0x21A08D, 0);
 	Send(s, std::move(ShortUpload));
 
 	XCPMsgPtr FreeDaq = master.CreateFreeDaqMessage();
@@ -203,7 +204,27 @@ int main()
 	Send(s, std::move(StartStopDaqList));
 
 	XCPMsgPtr StartStopSynch = master.CreateStartStopSynchMessage(StartStopSynchPacket::Mode::START_SELECTED);
-	//Send(s, std::move(StartStopSynch));
+	Send(s, std::move(StartStopSynch));
+
+	std::vector<uint8_t> bytes;
+	int i = 0;
+	while (i < 10)
+	{
+		bytes.resize(MaxRecvsize);
+		int recv_size = recv(s, (char*)&bytes[0], MaxRecvsize, 0);
+		bytes.resize(recv_size);
+		for (int i = 0; i < recv_size; i++)
+		{
+			std::cout << std::hex << (int)(bytes[i] & 0xff) << " ";
+		}
+		std::cout << "\n";
+		XCPMsgPtr asd = master.DeserializeMessage(bytes);
+		bytes.clear();
+		i++;
+	}
+
+	XCPMsgPtr Stop = master.CreateStartStopSynchMessage(StartStopSynchPacket::Mode::STOP_ALL);
+	Send(s, std::move(Stop));
 
 	XCPMsgPtr disconnect_message = master.CreateDisconnectMessage();
 	Send(s, std::move(disconnect_message));

@@ -408,6 +408,7 @@ StartStopDaqListPositiveResponse * StartStopDaqListPositiveResponse::Deserialize
 
 StartStopSynchPacket::StartStopSynchPacket(Mode Mode) : CommandPacket()
 {
+	m_PID = CTOMasterToSlaveCommands::START_STOP_SYNCH;
 	m_DataLength = 1;
 	m_PacketSize = 2;
 	m_Data = new uint8_t[m_DataLength];
