@@ -15,6 +15,7 @@ IncomingMessageHandler::IncomingMessageHandler(XCPMaster& Master) : m_Master(Mas
 	m_ProcessedSeedLength = 0;
 	m_RemainingSeedLength = -1;
 	m_KeyLength = 255;
+	m_Key.resize(m_KeyLength);
 }
 
 
@@ -132,7 +133,7 @@ void IncomingMessageHandler::Handle(GetSeedResponsePacket & Packet)
 	GetSeedPacket* LastPacket = m_Master.GetLastSentPacket<GetSeedPacket*>();
 	if (m_RemainingSeedLength == 0)
 	{
-		m_Master.GetComputeKeyPtr()(LastPacket->GetResource(), Packet.GetLengthField(), &m_SeedBytes[0], &m_KeyLength, &key[0]);
+		m_Master.GetComputeKeyPtr()(LastPacket->GetResource(), Packet.GetLengthField(), &m_SeedBytes[0], &m_KeyLength, &m_Key[0]);
 	}
 }
 

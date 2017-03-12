@@ -12,7 +12,7 @@ private:
 	int32_t m_RemainingSeedLength;
 	std::vector<uint8_t> m_SeedBytes;
 	uint8_t m_KeyLength;
-	uint8_t key[255];
+	std::vector<uint8_t> m_Key;
 public:
 	IncomingMessageHandler(XCPMaster& Master);
 	virtual ~IncomingMessageHandler();
