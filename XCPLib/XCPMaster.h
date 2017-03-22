@@ -48,6 +48,24 @@ public:
 		uint8_t MaxCto;
 		uint8_t ProtocolLayerVersion;
 		uint8_t TransportLayerVersion;
+
+		struct DAQ_PROPERTIES
+		{
+			bool ConfigType;
+			bool PrescalerSupported;
+			bool ResumeSupported;
+			bool BitStimSupported;
+			bool TimeStampSupported;
+			bool PidOffSupported;
+			uint8_t OverloadIndicationMode;
+			uint8_t OptimisationType;
+			uint8_t AddressExtensionType;
+			uint8_t IdentificationFieldType;
+			uint16_t MaxDaq;
+			uint16_t MaxEventChannel;
+			uint8_t MinDaq;
+			
+		}DaqProperies;
 	};
 
 private:
@@ -83,6 +101,7 @@ public:
 	XCP_API std::unique_ptr<IXCPMessage> CreateStartStopDaqListMessage(StartStopDaqListPacket::Mode Mode, uint16_t DaqListNumber);
 	XCP_API std::unique_ptr<IXCPMessage> CreateStartStopSynchMessage(StartStopSynchPacket::Mode Mode);
 	XCP_API std::unique_ptr<IXCPMessage> CreateGetSeedMessage(GetSeedPacket::Mode Mode, GetSeedPacket::Resource Resource);
+	XCP_API std::unique_ptr<IXCPMessage> CreateGetDaqProcessorInfoMessage();
 	XCP_API std::vector<std::unique_ptr<IXCPMessage>> CreateUnlockMessages();
 	XCP_API void SendMessage(IXCPMessage* Message);
 	XCP_API IXCPMessage* ReceiveMessage(IXCPMessage* Message);

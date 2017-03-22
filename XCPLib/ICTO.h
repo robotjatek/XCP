@@ -31,7 +31,7 @@ enum CTOMasterToSlaveCommands
 
 	//Calibration commands:
 
-	//Pages witching commands:
+	//Page switching commands:
 
 	//Basic data acquisition and stimulation commands:
 	SET_DAQ_PTR = 0xE2,

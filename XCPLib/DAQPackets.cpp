@@ -426,3 +426,85 @@ void StartStopSynchPacket::SetMode(uint8_t Mode)
 }
 
 //--------------------------------------------------
+
+GetDaqProcessorInfo::GetDaqProcessorInfo() : CommandPacket()
+{
+	m_PID = CTOMasterToSlaveCommands::GET_DAQ_PROCESSOR_INFO;
+	m_DataLength = 0;
+	m_Data = nullptr;
+	m_PacketSize = 1;
+}
+
+GetDaqProcessorInfo::~GetDaqProcessorInfo()
+{
+}
+
+//--------------------------------------------------
+
+GetDaqProcessorInfoResponse::GetDaqProcessorInfoResponse(const std::vector<uint8_t>& Data, uint8_t HeaderSize, uint8_t TailSize)
+{
+	m_PacketSize = 8;
+	m_DataLength = 7;
+	m_Data = new uint8_t[m_DataLength];
+	for (unsigned int i = 0; i < m_DataLength; i++)
+	{
+		m_Data[i] = Data[HeaderSize + i + 1];
+	}
+}
+
+GetDaqProcessorInfoResponse::~GetDaqProcessorInfoResponse()
+{
+	delete[] m_Data;
+	m_Data = nullptr;
+}
+
+void GetDaqProcessorInfoResponse::Dispatch(IIncomingMessageHandler & Handler)
+{
+	Handler.Handle(*this);
+}
+
+GetDaqProcessorInfoResponse * GetDaqProcessorInfoResponse::Deserialize(const std::vector<uint8_t>& Data, uint8_t HeaderSize, uint8_t TailSize)
+{
+	return new GetDaqProcessorInfoResponse(Data,HeaderSize, TailSize);
+}
+
+uint8_t GetDaqProcessorInfoResponse::GetDaqProperties()
+{
+	return m_Data[BytePositions::DAQ_PROPERTIES];
+}
+
+uint16_t GetDaqProcessorInfoResponse::GetMaxDaq(bool LittleEndian)
+{
+	if (LittleEndian)
+	{
+		return (((uint16_t)m_Data[BytePositions::MAX_DAQ + 1]) << 8) | m_Data[BytePositions::MAX_DAQ];
+	}
+	else
+	{
+		//do byte-swap
+		return (((uint16_t)m_Data[BytePositions::MAX_DAQ]) << 8) | m_Data[BytePositions::MAX_DAQ + 1];
+	}
+}
+
+uint16_t GetDaqProcessorInfoResponse::GetMaxEventChannel(bool LittleEndian)
+{
+	if (LittleEndian)
+	{
+		return (((uint16_t)m_Data[BytePositions::MAX_EVENT_CHANNEL + 1]) << 8) | m_Data[BytePositions::MAX_EVENT_CHANNEL];
+	}
+	else
+	{
+		//do byte-swap
+		return (((uint16_t)m_Data[BytePositions::MAX_EVENT_CHANNEL]) << 8) | m_Data[BytePositions::MAX_EVENT_CHANNEL + 1];
+	}
+}
+
+uint8_t GetDaqProcessorInfoResponse::GetMinDaq()
+{
+	return m_Data[BytePositions::MIN_DAQ];
+}
+
+uint8_t GetDaqProcessorInfoResponse::GetDaqKeyByte()
+{
+	return m_Data[BytePositions::DAQ_KEY_BYTE];
+}

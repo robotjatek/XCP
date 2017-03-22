@@ -50,6 +50,9 @@ IXCPPacket * PacketFactory::CreateResponsePacket(const std::vector<uint8_t>& Dat
 		case CTOMasterToSlaveCommands::UNLOCK:
 			return UnlockResponsePacket::Deserialize(Data, HeaderSize, TailSize);
 			break;
+		case CTOMasterToSlaveCommands::GET_DAQ_PROCESSOR_INFO:
+			return GetDaqProcessorInfoResponse::Deserialize(Data, HeaderSize, TailSize);
+			break;
 		default:
 			return new ResponsePacket();
 			break;
@@ -210,6 +213,11 @@ IXCPPacket * PacketFactory::CreateStartStopSyncPacket(StartStopSynchPacket::Mode
 IXCPPacket * PacketFactory::CreateGetSeedPacket(GetSeedPacket::Mode Mode, GetSeedPacket::Resource Resource)
 {
 	return new GetSeedPacket(Mode,Resource);
+}
+
+IXCPPacket * PacketFactory::CreateGetDaqProcessorInfoPacket()
+{
+	return new GetDaqProcessorInfo();
 }
 
 std::vector<IXCPPacket*> PacketFactory::CreateUnlockPackets(const std::vector<uint8_t>& Key)

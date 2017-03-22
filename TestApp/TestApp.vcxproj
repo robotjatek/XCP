@@ -71,11 +71,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\atisz\Documents\Visual Studio 2015\Projects\XCP\XCPLib;$(IncludePath)</IncludePath>
+    <IncludePath>D:\Dev\wxWidgets-3.1.0\include\msvc;D:\Dev\wxWidgets-3.1.0\include;C:\Users\atisz\Documents\Visual Studio 2015\Projects\XCP\XCPLib;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Dev\wxWidgets-3.1.0\lib\vc_lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\atisz\Documents\Visual Studio 2015\Projects\XCP\XCPLib;$(IncludePath)</IncludePath>
+    <IncludePath>D:\Dev\wxWidgets-3.1.0\include\msvc;D:\Dev\wxWidgets-3.1.0\include;C:\Users\atisz\Documents\Visual Studio 2015\Projects\XCP\XCPLib;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Dev\wxWidgets-3.1.0\lib\vc_lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -155,7 +157,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="LineChartFrame.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MainWindow.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="LineChartFrame.h" />
+    <ClInclude Include="MainWindow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

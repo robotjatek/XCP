@@ -163,6 +163,128 @@ void IncomingMessageHandler::Handle(UnlockResponsePacket & Packet)
 	ResetSeedAndKey();
 }
 
+void IncomingMessageHandler::Handle(GetDaqProcessorInfoResponse & Packet)
+{
+	std::cout << "GetDaqProcessorInfoResponsePacket\n";
+	XCPMaster::SlaveProperties properties = m_Master.GetSlaveProperties();
+	properties.DaqProperies.ConfigType = ((Packet.GetDaqProperties()&GetDaqProcessorInfoResponse::DaqPropertiesBits::DAQ_CONFIG_TYPE) != 0);
+	properties.DaqProperies.PrescalerSupported = ((Packet.GetDaqProperties()&GetDaqProcessorInfoResponse::DaqPropertiesBits::PRESCALER_SUPPORTED) != 0);
+	properties.DaqProperies.ResumeSupported = ((Packet.GetDaqProperties()&GetDaqProcessorInfoResponse::DaqPropertiesBits::RESUME_SUPPORTED) != 0);
+	properties.DaqProperies.BitStimSupported = ((Packet.GetDaqProperties()&GetDaqProcessorInfoResponse::DaqPropertiesBits::BIT_STIM_SUPPORTED) != 0);
+	properties.DaqProperies.TimeStampSupported = ((Packet.GetDaqProperties()&GetDaqProcessorInfoResponse::DaqPropertiesBits::TIMESTAMP_SUPPORTED) != 0);
+	properties.DaqProperies.PidOffSupported = ((Packet.GetDaqProperties()&GetDaqProcessorInfoResponse::DaqPropertiesBits::PID_OFF_SUPPORTED) != 0);
+
+	properties.DaqProperies.OverloadIndicationMode = Packet.GetDaqProperties()&GetDaqProcessorInfoResponse::DaqPropertiesBits::OVERLOAD_INDICATION_MODE;
+	properties.DaqProperies.OptimisationType = Packet.GetDaqKeyByte()&GetDaqProcessorInfoResponse::DaqKeyByteBits::OPTIMISATION_TYPE;
+	properties.DaqProperies.AddressExtensionType = Packet.GetDaqKeyByte()&GetDaqProcessorInfoResponse::DaqKeyByteBits::ADDRESS_EXTENSION;
+	properties.DaqProperies.IdentificationFieldType = Packet.GetDaqKeyByte()&GetDaqProcessorInfoResponse::DaqKeyByteBits::IDENTIFICATION_FIELD_TYPE;
+
+	properties.DaqProperies.MaxDaq = Packet.GetMaxDaq(properties.ByteOrder);
+	properties.DaqProperies.MinDaq = Packet.GetMinDaq();
+	properties.DaqProperies.MaxEventChannel = Packet.GetMaxEventChannel(properties.ByteOrder);
+
+	m_Master.SetSlaveProperties(properties);
+
+	std::cout << "Config type: ";
+	if (properties.DaqProperies.ConfigType == 0)
+	{
+		std::cout << "Static DAQ\n";
+	}
+	else
+	{
+		std::cout << "Dynamic DAQ\n";
+	}
+	std::cout << "Prescaler supported: " << properties.DaqProperies.PrescalerSupported << "\n";
+	std::cout << "Resume supported: " << properties.DaqProperies.ResumeSupported << "\n";
+	std::cout << "BitStim supported: " << properties.DaqProperies.BitStimSupported << "\n";
+	std::cout << "Timestamp supported: " << properties.DaqProperies.TimeStampSupported << "\n";
+	std::cout << "Pid off supported: " << properties.DaqProperies.PidOffSupported << "\n";
+	std::cout << "Overload indication mode: ";
+	if (properties.DaqProperies.OverloadIndicationMode == GetDaqProcessorInfoResponse::OverloadIndicationMode::EVENT_PACKET)
+	{
+		std::cout << "Event Packet";
+	}
+	else if (properties.DaqProperies.OverloadIndicationMode == GetDaqProcessorInfoResponse::OverloadIndicationMode::MSB_PID)
+	{
+		std::cout << "MSB PID";
+	}
+	else if (properties.DaqProperies.OverloadIndicationMode == GetDaqProcessorInfoResponse::OverloadIndicationMode::NO_INDICATION)
+	{
+		std::cout << "No indication";
+	}
+	std::cout << "\n";
+	std::cout << "Optimisation type: ";
+	if (properties.DaqProperies.OptimisationType == GetDaqProcessorInfoResponse::OptimisationMode::OM_DEFAULT)
+	{
+		std::cout << "Default";
+	}
+	else if (properties.DaqProperies.OptimisationType == GetDaqProcessorInfoResponse::OptimisationMode::OM_ODT_TYPE_16)
+	{
+		std::cout << "OM_ODT_TYPE_16";
+	}
+	else if (properties.DaqProperies.OptimisationType == GetDaqProcessorInfoResponse::OptimisationMode::OM_ODT_TYPE_32)
+	{
+		std::cout << "OM_ODT_TYPE_32";
+	}
+	else if (properties.DaqProperies.OptimisationType == GetDaqProcessorInfoResponse::OptimisationMode::OM_ODT_TYPE_64)
+	{
+		std::cout << "OM_ODT_TYPE_64";
+	}
+	else if (properties.DaqProperies.OptimisationType == GetDaqProcessorInfoResponse::OptimisationMode::OM_MAX_ENTRY_SIZE)
+	{
+		std::cout << "OM_MAX_ENTRY_SIZE";
+	}
+	else if (properties.DaqProperies.OptimisationType == GetDaqProcessorInfoResponse::OptimisationMode::OM_ODT_TYPE_ALIGNMENT)
+	{
+		std::cout << "OM_ODT_TYPE_ALIGNMENT";
+	}
+	else
+	{
+		std::cout << "Unknown mode: " <<std::hex <<(int)properties.DaqProperies.OptimisationType;
+	}
+	std::cout << "\n";
+
+	std::cout << "Address Extension type: ";
+	if (properties.DaqProperies.AddressExtensionType == GetDaqProcessorInfoResponse::AddressExtensionType::CAN_BE_DIFFERENT)
+	{
+		std::cout << "address extension can be different within one and the same ODT";
+	}
+	else if (properties.DaqProperies.AddressExtensionType == GetDaqProcessorInfoResponse::AddressExtensionType::SAME_FOR_ALL_ENTRIES_ODT)
+	{
+		std::cout << "address extension to be the same for all entries within one ODT";
+	}
+	else if (properties.DaqProperies.AddressExtensionType == GetDaqProcessorInfoResponse::AddressExtensionType::SAME_FOR_ALL_ENTRIES_DAQ)
+	{
+		std::cout << "address extension to be the same for all entries within one DAQ";
+	}
+	else
+	{
+		std::cout << "unknown: " << std::hex << (int)properties.DaqProperies.AddressExtensionType;
+	}
+	std::cout << "\n";
+	std::cout << "Identification field type: ";
+	if (properties.DaqProperies.IdentificationFieldType == GetDaqProcessorInfoResponse::IdentificationFieldType::ABSOLUTE_ODT_NUMBER)
+	{
+		std::cout << "Absolute ODT number";
+	}
+	else if (properties.DaqProperies.IdentificationFieldType == GetDaqProcessorInfoResponse::IdentificationFieldType::RELATIVE_ODT_ABSOLUTE_DAQ_BYTE)
+	{
+		std::cout << "Relative ODT number, absolute DAQ list number (byte)";
+	}
+	else if (properties.DaqProperies.IdentificationFieldType == GetDaqProcessorInfoResponse::IdentificationFieldType::RELATIVE_ODT_ABSOLUTE_DAQ_WORD)
+	{
+		std::cout << "Relative ODT number, absolute DAQ list number (word)";
+	}
+	else if (properties.DaqProperies.IdentificationFieldType == GetDaqProcessorInfoResponse::IdentificationFieldType::RELATIVE_ODT_ABSOLUTE_DAQ_WORD_ALIGNED)
+	{
+		std::cout << "Relative ODT number, absolute DAQ list number (word-aligned)";
+	}
+	std::cout << "\n";
+	std::cout << "Max DAQ: " << (int)properties.DaqProperies.MaxDaq<<"\n";
+	std::cout << "Max Event channel: " << (int)properties.DaqProperies.MaxEventChannel<<"\n";
+	std::cout << "Min DAQ: " << (int)properties.DaqProperies.MinDaq << "\n";
+}
+
 const std::vector<uint8_t>& IncomingMessageHandler::GetUnlockKey() const
 {
 	return m_Key;

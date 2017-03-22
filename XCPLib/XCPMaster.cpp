@@ -242,6 +242,15 @@ XCP_API std::unique_ptr<IXCPMessage> XCPMaster::CreateGetSeedMessage(GetSeedPack
 	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateGetSeedPacket(Mode, Resource)));
 }
 
+XCP_API std::unique_ptr<IXCPMessage> XCPMaster::CreateGetDaqProcessorInfoMessage()
+{
+	if (!m_MessageFactory)
+	{
+		return nullptr;
+	}
+	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateGetDaqProcessorInfoPacket()));
+}
+
 XCP_API std::vector<std::unique_ptr<IXCPMessage>> XCPMaster::CreateUnlockMessages()
 {
 	std::vector<std::unique_ptr<IXCPMessage>> ret;

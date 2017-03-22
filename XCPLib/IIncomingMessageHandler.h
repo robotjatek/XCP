@@ -13,6 +13,7 @@ class ErrorMemoryOverflowPacket;
 class StartStopDaqListPositiveResponse;
 class GetSeedResponsePacket;
 class UnlockResponsePacket;
+class GetDaqProcessorInfoResponse;
 #include <vector>
 
 class IIncomingMessageHandler
@@ -30,6 +31,7 @@ public:
 	virtual void Handle(StartStopDaqListPositiveResponse& Packet) = 0;
 	virtual void Handle(GetSeedResponsePacket& Packet) = 0;
 	virtual void Handle(UnlockResponsePacket& Packet) = 0;
+	virtual void Handle(GetDaqProcessorInfoResponse& Packet) = 0;
 	virtual const std::vector<uint8_t>& GetUnlockKey() const = 0;
 	virtual ~IIncomingMessageHandler() {};
 };
