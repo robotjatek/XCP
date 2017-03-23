@@ -13,6 +13,7 @@ class PacketFactory
 private:
 	IXCPPacket* CreateResponsePacket(const std::vector<uint8_t>& data, uint8_t header_size, uint8_t TailSize, CommandPacket* LastSentCommand);
 	IXCPPacket* CreateErrorPacket(const std::vector<uint8_t>& data, uint8_t header_size, uint8_t TailSize, CommandPacket* LastSentCommand);
+	IXCPPacket* DeserializeIncomingDaq(const std::vector<uint8_t>& Data, uint8_t HeaderSize, uint8_t TailSize);
 	XCPMaster& m_Master;
 public:
 	PacketFactory(XCPMaster& master);

@@ -29,6 +29,7 @@ XCPMaster::XCPMaster(TransportLayer transportlayer)
 
 	m_PacketFactory = new PacketFactory(*this);
 	m_MessageHandler = new IncomingMessageHandler(*this);
+	m_ExternalHandler = nullptr;
 }
 
 XCPMaster::~XCPMaster()
@@ -96,9 +97,12 @@ std::unique_ptr<IXCPMessage> XCPMaster::DeserializeMessage(std::vector<uint8_t>&
 		LastCommand = m_SentCommandQueue.front();
 	}
 
+	//TODO: deserialize while Data != 0
 	IXCPPacket* Packet = m_PacketFactory->DeserializeIncomingFromSlave(data, m_MessageFactory->GetHeaderSize(), m_MessageFactory->GetTailSize(), LastCommand);
-	if(Packet)
-		std::vector<uint8_t>(data.begin() +m_MessageFactory->GetHeaderSize() + Packet->GetPacketSize() + m_MessageFactory->GetTailSize(), data.end()).swap(data);
+	if (Packet)
+	{
+		std::vector<uint8_t>(data.begin() + m_MessageFactory->GetHeaderSize() + Packet->GetPacketSize() + m_MessageFactory->GetTailSize(), data.end()).swap(data);
+	}
 
 	if (Packet)
 	{
@@ -107,9 +111,13 @@ std::unique_ptr<IXCPMessage> XCPMaster::DeserializeMessage(std::vector<uint8_t>&
 		if (m_MessageHandler)
 		{
 			Packet->Dispatch(*m_MessageHandler);
+			if (m_ExternalHandler)
+			{
+				Packet->Dispatch(*m_ExternalHandler);
+			}
 			std::cout << "---------------------------------------------\n";
 		}
-		if (m_SentCommandQueue.size() > 0)
+		if (m_SentCommandQueue.size() > 0) //TODO: do not pop if this was a DAQ packet
 		{
 			m_SentCommandQueue.pop();
 		}
@@ -279,6 +287,11 @@ XCP_API void XCPMaster::SetSeedAndKeyFunctionPointers(XCP_GetAvailablePrivileges
 {
 	m_GetAvailablePrivileges = GetAvailablePrivilegesPtr;
 	m_ComputeKeyFromSeed = ComputeKeyPtr;
+}
+
+XCP_API void XCPMaster::SetExternalMessageHandler(IIncomingMessageHandler * Handler)
+{
+	m_ExternalHandler = Handler;
 }
 
 XCP_ComputeKeyFromSeedPtr_t XCPMaster::GetComputeKeyPtr()

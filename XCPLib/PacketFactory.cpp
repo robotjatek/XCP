@@ -13,6 +13,7 @@
 #include "GetSeedPacket.h"
 #include "XCPMaster.h"
 #include "UnlockPacket.h"
+#include "DTO.h"
 #include <iostream>
 
 
@@ -93,6 +94,14 @@ IXCPPacket * PacketFactory::CreateErrorPacket(const std::vector<uint8_t>& data, 
 	}
 	std::cout << "Internal error: Last sent command is a nullptr\a\n";
 	return nullptr;
+}
+
+IXCPPacket * PacketFactory::DeserializeIncomingDaq(const std::vector<uint8_t>& Data, uint8_t HeaderSize, uint8_t TailSize)
+{
+	uint8_t Mode = SetDaqListModePacket::ModeFieldBits::TIMESTAMP; //TODO: get DAQList mode from a global container
+	uint8_t TimestampSize = 4; //TODO: get timestamp size from master (GetDaqResoultionInfo)
+	bool FirstODT = true; //TODO: get if the packet is a first odt or not from a global container
+	return new DTO(Data, HeaderSize, TailSize, Mode, TimestampSize, false, m_Master.GetSlaveProperties().DaqProperies.IdentificationFieldType, FirstODT);
 }
 
 PacketFactory::PacketFactory(XCPMaster& master) : m_Master(master)
@@ -241,6 +250,10 @@ IXCPPacket * PacketFactory::DeserializeIncomingFromSlave(const std::vector<uint8
 	case CTOSlaveToMasterPacketTypes::SERV:
 		break;
 	default:
+		if (PID >= 0x00 && PID <= 0xFB)
+		{
+			return DeserializeIncomingDaq(Data, HeaderSize, TailSize);
+		}
 		break;
 	}
 	return nullptr;

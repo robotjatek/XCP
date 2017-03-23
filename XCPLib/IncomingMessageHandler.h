@@ -31,6 +31,7 @@ public:
 	virtual void Handle(GetSeedResponsePacket& Packet);
 	virtual void Handle(UnlockResponsePacket& Packet);
 	virtual void Handle(GetDaqProcessorInfoResponse& Packet);
+	virtual void Handle(DTO& Packet);
 
 	virtual const std::vector<uint8_t>& GetUnlockKey() const;
 };

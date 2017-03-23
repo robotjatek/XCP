@@ -49,7 +49,7 @@ public:
 		uint8_t ProtocolLayerVersion;
 		uint8_t TransportLayerVersion;
 
-		struct DAQ_PROPERTIES
+		struct
 		{
 			bool ConfigType;
 			bool PrescalerSupported;
@@ -73,6 +73,7 @@ private:
 	PacketFactory* m_PacketFactory;
 	std::queue<CommandPacket*> m_SentCommandQueue;
 	IIncomingMessageHandler* m_MessageHandler;
+	IIncomingMessageHandler* m_ExternalHandler;
 	SlaveProperties m_SlaveProperties;	
 
 	XCP_GetAvailablePrivilegesPtr_t m_GetAvailablePrivileges = nullptr;
@@ -107,6 +108,7 @@ public:
 	XCP_API IXCPMessage* ReceiveMessage(IXCPMessage* Message);
 	XCP_API void AddSentMessage(IXCPMessage* Packet);
 	XCP_API void SetSeedAndKeyFunctionPointers(XCP_GetAvailablePrivilegesPtr_t GetAvailablePrivilegesPtr, XCP_ComputeKeyFromSeedPtr_t ComputeKeyPtr);
+	XCP_API void SetExternalMessageHandler(IIncomingMessageHandler* Handler);
 	XCP_ComputeKeyFromSeedPtr_t GetComputeKeyPtr();
 	XCP_GetAvailablePrivilegesPtr_t GetAvailablePrivilegesPtr();
 	template<class PacketType>

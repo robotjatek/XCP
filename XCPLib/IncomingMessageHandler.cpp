@@ -10,6 +10,7 @@
 #include "ErrorSequencePacket.h"
 #include "ErrorMemoryOverflowPacket.h"
 #include "UnlockPacket.h"
+#include "DTO.h"
 
 void IncomingMessageHandler::ResetSeedAndKey()
 {
@@ -283,6 +284,18 @@ void IncomingMessageHandler::Handle(GetDaqProcessorInfoResponse & Packet)
 	std::cout << "Max DAQ: " << (int)properties.DaqProperies.MaxDaq<<"\n";
 	std::cout << "Max Event channel: " << (int)properties.DaqProperies.MaxEventChannel<<"\n";
 	std::cout << "Min DAQ: " << (int)properties.DaqProperies.MinDaq << "\n";
+}
+
+void IncomingMessageHandler::Handle(DTO & Packet)
+{
+	std::cout << "DAQ packet:\n";
+	std::cout << Packet.GetDAQField()<<"\n";
+	std::cout << Packet.GetTimestamp() << "\n";
+	for (int i = 0; i < Packet.GetDataLength(); i++)
+	{
+		std::cout << std::hex << (int)Packet.GetByteElement(i) << " ";
+	}
+	std::cout << "\n";
 }
 
 const std::vector<uint8_t>& IncomingMessageHandler::GetUnlockKey() const

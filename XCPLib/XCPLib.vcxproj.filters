@@ -105,6 +105,9 @@
     <ClInclude Include="UnlockPacket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DTO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConnectPacket.cpp">
@@ -174,6 +177,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="UnlockPacket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DTO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

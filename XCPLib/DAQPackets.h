@@ -303,3 +303,5 @@ public:
 	uint8_t GetMinDaq();
 	uint8_t GetDaqKeyByte();
 };
+
+//--------------------------------------------------

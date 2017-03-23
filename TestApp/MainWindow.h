@@ -7,6 +7,8 @@
 
 #include <XCPMaster.h>
 #include <ResponsePacket.h>
+#include "IncomingHandlerExternal.h"
+#include "LineChartFrame.h"
 
 class MainWindow :
 	public wxApp
@@ -25,10 +27,16 @@ class MainWindow :
 	void Cleanup(SOCKET s);
 	int SetupConnection(SOCKET& s);
 
-	void TestXCP();
+	
+
+	IncomingHandlerExternal* Handler;
+	LineChartFrame* mainFrame;
 public:
+	void TestXCP();
 	MainWindow();
 	virtual ~MainWindow();
 	virtual bool OnInit() override;
+	void AddPoint(double point);
+	wxVector<wxDouble> asd;
 };
 

@@ -1,5 +1,4 @@
 #include "MainWindow.h"
-#include "LineChartFrame.h"
 
 #ifdef _UNICODE
 #ifdef _DEBUG
@@ -33,7 +32,7 @@
 //#include <ws2tcpip.h>
 #include <vector>
 #include <memory>
-
+#include "IncomingHandlerExternal.h"
 #include <vld.h>
 
 #pragma comment (lib, "Ws2_32.lib")
@@ -47,7 +46,8 @@ MainWindow::MainWindow()
 	master = new XCPMaster(TransportLayer::ETHERNET);
 	master->SetSeedAndKeyFunctionPointers(GetAvailablePrivileges, ComputeKeyFromSeed);
 	SetupConnection(s);
-	TestXCP();
+	Handler = new IncomingHandlerExternal(this);
+	master->SetExternalMessageHandler(Handler);
 }
 
 MainWindow::~MainWindow()
@@ -58,9 +58,15 @@ MainWindow::~MainWindow()
 
 bool MainWindow::OnInit()
 {
-	LineChartFrame* mainFrame = new LineChartFrame("MyProject");
+	TestXCP();
+	mainFrame = new LineChartFrame("Conti XCP Measurement Test",*this);
 	mainFrame->Show(true);
 	return true;
+}
+
+void MainWindow::AddPoint(double point)
+{
+	asd.push_back(point);
 }
 
 int MainWindow::LoadDLL()
@@ -203,17 +209,23 @@ void MainWindow::TestXCP()
 		XCPMsgPtr AllocOdt = master->CreateAllocOdtMessage(0, 1);
 		Send(s, std::move(AllocOdt));
 	
-		XCPMsgPtr AllocOdtEntry = master->CreateAllocOdtEntryMessage(0, 0, 1);
+		XCPMsgPtr AllocOdtEntry = master->CreateAllocOdtEntryMessage(0, 0, 2);
 		Send(s, std::move(AllocOdtEntry));
 	
-		XCPMsgPtr SetDaqPtr = master->CreateSetDaqPtrMessage(0, 0, 0);
-		Send(s, std::move(SetDaqPtr));
+		XCPMsgPtr SetDaqPtr1 = master->CreateSetDaqPtrMessage(0, 0, 0);
+		Send(s, std::move(SetDaqPtr1));
 	
-		XCPMsgPtr WriteDaq = master->CreateWriteDaqMessage(0xFF, 1, 0, 0x21A1BD); //sbyte triangle signal
-		Send(s, std::move(WriteDaq));
+		XCPMsgPtr WriteDaq1 = master->CreateWriteDaqMessage(0xFF, 1, 0, 0x21A1BD); //sbyte triangle signal
+		Send(s, std::move(WriteDaq1));
+
+		/*XCPMsgPtr SetDaqPtr2 = master->CreateSetDaqPtrMessage(0, 0, 1);
+		Send(s, std::move(SetDaqPtr2));
+
+		XCPMsgPtr WriteDaq2 = master->CreateWriteDaqMessage(0xFF, 1, 0, 0x21A1BD); //sbyte triangle signal
+		Send(s, std::move(WriteDaq2));*/
 	
 		using ModeFieldBits = SetDaqListModePacket::ModeFieldBits;
-		XCPMsgPtr SetDaqListMode = master->CreateSetDaqListModeMessage(0, 0, 1, 1, 1); //DAQ direction; Timestamp on; do not use ctr field; Disabled alternating display; Transmit DTO WITH identification field;
+		XCPMsgPtr SetDaqListMode = master->CreateSetDaqListModeMessage(ModeFieldBits::TIMESTAMP, 0, 1, 1, 1); //DAQ direction; Timestamp on; do not use ctr field; Disabled alternating display; Transmit DTO WITH identification field;
 		Send(s, std::move(SetDaqListMode));
 	
 		XCPMsgPtr StartStopDaqList = master->CreateStartStopDaqListMessage(StartStopDaqListPacket::Mode::SELECT, 0);
@@ -224,7 +236,7 @@ void MainWindow::TestXCP()
 	
 		std::vector<uint8_t> bytes;
 		int i = 0;
-		while (i < 10)
+		while (i < 300)
 		{
 			bytes.resize(MaxRecvsize);
 			int recv_size = recv(s, (char*)&bytes[0], MaxRecvsize, 0);
@@ -234,7 +246,10 @@ void MainWindow::TestXCP()
 				std::cout << std::hex << (int)(bytes[i] & 0xff) << " ";
 			}
 			std::cout << "\n";
-			XCPMsgPtr asd = master->DeserializeMessage(bytes);
+			while (bytes.size())
+			{
+				XCPMsgPtr asd = master->DeserializeMessage(bytes);
+			}
 			//bytes.clear();
 			i++;
 		}

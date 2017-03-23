@@ -1,4 +1,7 @@
 #pragma once
+class MainWindow;
+
+
 #include <wx/frame.h>
 #include <wx/panel.h>
 #include <wx/sizer.h>
@@ -17,10 +20,13 @@ class LineChartFrame :
 	wxPanel* panel;
 	wxMenu* MenuFile;
 	wxMenuBar* MenuBar;
-
+	MainWindow& wnd;
 	wxLineChartDataset* dataset;
+	wxLineChartData* chartData;
+	void CreateChartFromData();
 public:
-	LineChartFrame(const std::string& title);
+	LineChartFrame(const std::string& title, MainWindow& wnd);
 	virtual ~LineChartFrame();
+
 };
 
