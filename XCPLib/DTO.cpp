@@ -11,6 +11,10 @@ DTO::DTO(const std::vector<uint8_t>& Data, uint8_t HeadSize, uint8_t TailSize, u
 	m_CTR = 0;
 	m_Fill = 0;
 	m_DAQ = 0;
+	if (Mode&ModeFieldBits::DTO_CTR)
+	{
+		IsCTRed = true;
+	}
 
 	uint32_t ptr = HeadSize;
 	if (Mode&ModeFieldBits::PID_OFF)
@@ -26,6 +30,7 @@ DTO::DTO(const std::vector<uint8_t>& Data, uint8_t HeadSize, uint8_t TailSize, u
 			if (FirstODT && (ModeFieldBits::DTO_CTR&Mode))
 			{
 				m_CTR = Data[ptr];
+
 				ptr++;
 			}
 		}
