@@ -5,6 +5,7 @@
 #include "ConnectPacket.h"
 #include "DAQPackets.h"
 #include "GetSeedPacket.h"
+#include "SlaveMemory.h"
 
 class XCPMaster;
 

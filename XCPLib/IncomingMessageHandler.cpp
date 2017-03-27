@@ -121,6 +121,15 @@ void IncomingMessageHandler::Handle(ErrorMemoryOverflowPacket & Packet)
 void IncomingMessageHandler::Handle(StartStopDaqListPositiveResponse & Packet)
 {
 	std::cout << "Start/Stop Daq list response | FIRST PID: " << std::hex << (int)Packet.GetFirstPid() << "\n";
+	StartStopDaqListPacket* command = m_Master.GetLastSentPacket<StartStopDaqListPacket*>();
+	if (command)
+	{
+		m_Master.GetDaqLayout().GetDAQ(command->GetDaqListNumber(m_Master.GetSlaveProperties().ByteOrder == 0)).SetFirstPid(Packet.GetFirstPid());
+	}
+	else
+	{
+		std::cout << "There was an error while setting the first PID on the DAQListDescriptor\a\n";
+	}
 }
 
 void IncomingMessageHandler::Handle(GetSeedResponsePacket & Packet)
@@ -291,7 +300,7 @@ void IncomingMessageHandler::Handle(DTO & Packet)
 	std::cout << "DAQ packet:\n";
 	std::cout << Packet.GetDAQField()<<"\n";
 	std::cout << Packet.GetTimestamp() << "\n";
-	for (int i = 0; i < Packet.GetDataLength(); i++)
+	for (unsigned int i = 0; i < Packet.GetDataLength(); i++)
 	{
 		std::cout << std::hex << (int)Packet.GetByteElement(i) << " ";
 	}

@@ -98,10 +98,8 @@ IXCPPacket * PacketFactory::CreateErrorPacket(const std::vector<uint8_t>& data, 
 
 IXCPPacket * PacketFactory::DeserializeIncomingDaq(const std::vector<uint8_t>& Data, uint8_t HeaderSize, uint8_t TailSize)
 {
-	uint8_t Mode = SetDaqListModePacket::ModeFieldBits::TIMESTAMP; //TODO: get DAQList mode from a global container
 	uint8_t TimestampSize = 4; //TODO: get timestamp size from master (GetDaqResoultionInfo)
-	bool FirstODT = true; //TODO: get if the packet is a first odt or not from a global container
-	return new DTO(Data, HeaderSize, TailSize, Mode, TimestampSize, false, m_Master.GetSlaveProperties().DaqProperies.IdentificationFieldType, FirstODT);
+	return new DTO(Data, HeaderSize, TailSize, TimestampSize, false, m_Master.GetSlaveProperties().DaqProperies.IdentificationFieldType, m_Master.GetDaqLayout());
 }
 
 PacketFactory::PacketFactory(XCPMaster& master) : m_Master(master)

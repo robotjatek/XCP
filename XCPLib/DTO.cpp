@@ -2,8 +2,9 @@
 #include "DAQPackets.h"
 using ModeFieldBits = SetDaqListModePacket::ModeFieldBits;
 using IdFieldBits = GetDaqProcessorInfoResponse::DaqKeyByteBits;
+//TODO: support PID_OFF
 
-DTO::DTO(const std::vector<uint8_t>& Data, uint8_t HeadSize, uint8_t TailSize, uint8_t Mode, uint8_t TimestampSize, bool TimestampFixed, uint8_t IdentificationFieldType, bool FirstODT) : IXCPPacket()
+DTO::DTO(const std::vector<uint8_t>& Data, uint8_t HeadSize, uint8_t TailSize, uint8_t TimestampSize, bool TimestampFixed, uint8_t IdentificationFieldType, DAQLayout& DaqLayout) : IXCPPacket()
 {
 	IsTimestamped = false;
 	m_Timestamp = 0;
@@ -11,67 +12,71 @@ DTO::DTO(const std::vector<uint8_t>& Data, uint8_t HeadSize, uint8_t TailSize, u
 	m_CTR = 0;
 	m_Fill = 0;
 	m_DAQ = 0;
+	uint8_t Mode = 0;
+	ODT CurrentOdtLayout;
+	//bool FirstODT;
+
+	uint32_t ptr = HeadSize;
+	m_PID = Data[ptr]; //between 0x00-0xFB
+	ptr++;
+	if (IdentificationFieldType == GetDaqProcessorInfoResponse::IdentificationFieldType::ABSOLUTE_ODT_NUMBER)
+	{
+		Mode = DaqLayout.GetDAQ(DaqLayout.CalculateDAQNumberFromAbsolutePID(m_PID)).GetMode();
+		CurrentOdtLayout = DaqLayout.GetODTFromAbsolutePID(m_PID);
+		if (CurrentOdtLayout.IsFirst() && (ModeFieldBits::DTO_CTR&Mode))
+		{
+			m_CTR = Data[ptr];
+			ptr++;
+		}
+	}
+	else if (IdentificationFieldType == GetDaqProcessorInfoResponse::IdentificationFieldType::RELATIVE_ODT_ABSOLUTE_DAQ_BYTE)
+	{
+		m_DAQ = Data[ptr];
+		ptr++;
+		Mode = DaqLayout.GetDAQ(m_DAQ).GetMode();
+		CurrentOdtLayout = DaqLayout.GetDAQ(m_DAQ).GetOdt(m_PID);
+		if (CurrentOdtLayout.IsFirst() && (ModeFieldBits::DTO_CTR&Mode))
+		{
+			m_CTR = Data[ptr];
+			ptr++;
+		}
+	}
+	else if (IdentificationFieldType == GetDaqProcessorInfoResponse::IdentificationFieldType::RELATIVE_ODT_ABSOLUTE_DAQ_WORD)
+	{
+		uint16_t t1 = Data[ptr];
+		uint16_t t2 = Data[ptr + 1];
+		m_DAQ = t1 & 0xFF;
+		m_DAQ |= (t2 << 8) & 0xFF00;
+		Mode = DaqLayout.GetDAQ(m_DAQ).GetMode();
+		CurrentOdtLayout = DaqLayout.GetDAQ(m_DAQ).GetOdt(m_PID);
+		if (CurrentOdtLayout.IsFirst() && (ModeFieldBits::DTO_CTR&Mode))
+		{
+			m_CTR = Data[ptr];
+			ptr += 3;
+		}
+		else
+		{
+			ptr += 2;
+		}
+	}
+	else if (IdentificationFieldType == GetDaqProcessorInfoResponse::IdentificationFieldType::RELATIVE_ODT_ABSOLUTE_DAQ_WORD_ALIGNED)
+	{
+		m_Fill = Data[ptr];
+		uint16_t t1 = Data[ptr + 1];
+		uint16_t t2 = Data[ptr + 2];
+		m_DAQ = t1 & 0xFF;
+		m_DAQ |= (t2 << 8) & 0xFF00;
+		Mode = DaqLayout.GetDAQ(m_DAQ).GetMode();
+		ptr += 3;
+	}
+
+
 	if (Mode&ModeFieldBits::DTO_CTR)
 	{
 		IsCTRed = true;
 	}
 
-	uint32_t ptr = HeadSize;
-	if (Mode&ModeFieldBits::PID_OFF)
-	{
-		throw 0; //TODO: support PID_OFF
-	}
-	else
-	{
-		m_PID = Data[ptr]; //between 0x00-0xFB
-		ptr++;
-		if (IdentificationFieldType == GetDaqProcessorInfoResponse::IdentificationFieldType::ABSOLUTE_ODT_NUMBER)
-		{
-			if (FirstODT && (ModeFieldBits::DTO_CTR&Mode))
-			{
-				m_CTR = Data[ptr];
-
-				ptr++;
-			}
-		}
-		else if (IdentificationFieldType == GetDaqProcessorInfoResponse::IdentificationFieldType::RELATIVE_ODT_ABSOLUTE_DAQ_BYTE)
-		{
-			m_DAQ = Data[ptr];
-			ptr++;
-			if (FirstODT && (ModeFieldBits::DTO_CTR&Mode))
-			{
-				m_CTR = Data[ptr];
-				ptr++;
-			}
-		}
-		else if (IdentificationFieldType == GetDaqProcessorInfoResponse::IdentificationFieldType::RELATIVE_ODT_ABSOLUTE_DAQ_WORD)
-		{
-			uint16_t t1 = Data[ptr];
-			uint16_t t2 = Data[ptr + 1];
-			m_DAQ = t1 & 0xFF;
-			m_DAQ |= (t2 << 8) & 0xFF00;
-			if (FirstODT && (ModeFieldBits::DTO_CTR&Mode))
-			{
-				m_CTR = Data[ptr];
-				ptr += 3;
-			}
-			else
-			{
-				ptr += 2;
-			}
-		}
-		else if (IdentificationFieldType == GetDaqProcessorInfoResponse::IdentificationFieldType::RELATIVE_ODT_ABSOLUTE_DAQ_WORD_ALIGNED)
-		{
-			m_Fill = Data[ptr];
-			uint16_t t1 = Data[ptr + 1];
-			uint16_t t2 = Data[ptr + 2];
-			m_DAQ = t1 & 0xFF;
-			m_DAQ |= (t2 << 8) & 0xFF00;
-			ptr += 3;
-		}
-	}
-
-	if ((Mode&ModeFieldBits::TIMESTAMP || TimestampFixed) && FirstODT)
+	if ((Mode&ModeFieldBits::TIMESTAMP || TimestampFixed) && CurrentOdtLayout.IsFirst())
 	{
 		IsTimestamped = true;
 		if (TimestampSize == 1)
@@ -103,7 +108,7 @@ DTO::DTO(const std::vector<uint8_t>& Data, uint8_t HeadSize, uint8_t TailSize, u
 		}
 	}
 
-	m_DataLength = Data.size() - TailSize - ptr;
+	m_DataLength = CurrentOdtLayout.GetODTSize();
 	m_Data = new uint8_t[m_DataLength];
 	for (uint32_t i = 0; i < m_DataLength; i++)
 	{

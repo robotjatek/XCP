@@ -170,6 +170,7 @@
     <ClInclude Include="PacketFactory.h" />
     <ClInclude Include="ResponsePacket.h" />
     <ClInclude Include="SetMTAPacket.h" />
+    <ClInclude Include="SlaveMemory.h" />
     <ClInclude Include="SynchPacket.h" />
     <ClInclude Include="TCPHeader.h" />
     <ClInclude Include="TCPMessage.h" />
@@ -196,6 +197,7 @@
     <ClCompile Include="IXCPPacket.cpp" />
     <ClCompile Include="PacketFactory.cpp" />
     <ClCompile Include="SetMTAPacket.cpp" />
+    <ClCompile Include="SlaveMemory.cpp" />
     <ClCompile Include="SynchPacket.cpp" />
     <ClCompile Include="TCPHeader.cpp" />
     <ClCompile Include="TCPMessage.cpp" />

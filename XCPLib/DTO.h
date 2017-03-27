@@ -1,5 +1,6 @@
 #pragma once
 #include "IXCPPacket.h"
+#include "SlaveMemory.h"
 
 #ifdef XCPLIB_EXPORTS //XCPLIB_EXPORTS macro is defined in the project settings
 #define XCP_API    __declspec(dllexport)
@@ -18,7 +19,7 @@ private:
 	bool IsTimestamped;
 	bool IsCTRed;
 public:
-	DTO(const std::vector<uint8_t>& Data, uint8_t HeadSize, uint8_t TailSize, uint8_t Mode, uint8_t TimestampSize, bool TimestampFixed, uint8_t IdentificationFieldType, bool FirstPacket);
+	DTO(const std::vector<uint8_t>& Data, uint8_t HeadSize, uint8_t TailSize, uint8_t TimestampSize, bool TimestampFixed, uint8_t IdentificationFieldType, DAQLayout& DaqLayout);
 	virtual ~DTO();
 	XCP_API uint16_t GetDAQField();
 	XCP_API uint8_t GetCTRField();

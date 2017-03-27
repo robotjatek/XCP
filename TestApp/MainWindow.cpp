@@ -202,6 +202,21 @@ void MainWindow::TestXCP()
 	
 		XCPMsgPtr FreeDaq = master->CreateFreeDaqMessage();
 		Send(s, std::move(FreeDaq));
+
+		//Using the low level DAQ APIs, it is the programmer's responsibilty to maintain the DAQ layout descriptor:
+		using ModeFieldBits = SetDaqListModePacket::ModeFieldBits;
+		DAQLayout daqlayout;
+		DAQ daq0;
+		ODT daq0odt0;
+		ODTEntry daq0odt0entry0(0x21A08D, 0, 1);
+		daq0odt0.AddEntry(daq0odt0entry0);
+		daq0.AddODT(daq0odt0);
+		daq0.SetEventChannel(0);
+		daq0.SetMode(ModeFieldBits::TIMESTAMP);
+		daq0.SetPrescaler(1);
+		daq0.SetPriority(1);
+		daqlayout.AddDAQ(daq0);
+		master->SetDaqLayout(daqlayout);
 	
 		XCPMsgPtr AllocDaq = master->CreateAllocDaqMessage(1);
 		Send(s, std::move(AllocDaq));
@@ -209,22 +224,16 @@ void MainWindow::TestXCP()
 		XCPMsgPtr AllocOdt = master->CreateAllocOdtMessage(0, 1);
 		Send(s, std::move(AllocOdt));
 	
-		XCPMsgPtr AllocOdtEntry = master->CreateAllocOdtEntryMessage(0, 0, 2);
+		XCPMsgPtr AllocOdtEntry = master->CreateAllocOdtEntryMessage(0, 0, 1);
 		Send(s, std::move(AllocOdtEntry));
-	
+
 		XCPMsgPtr SetDaqPtr1 = master->CreateSetDaqPtrMessage(0, 0, 0);
 		Send(s, std::move(SetDaqPtr1));
 	
-		XCPMsgPtr WriteDaq1 = master->CreateWriteDaqMessage(0xFF, 1, 0, 0x21A1BD); //sbyte triangle signal
+		XCPMsgPtr WriteDaq1 = master->CreateWriteDaqMessage(0xFF, 1, 0, 0x21A08D); //sbyte triangle signal
 		Send(s, std::move(WriteDaq1));
-
-		/*XCPMsgPtr SetDaqPtr2 = master->CreateSetDaqPtrMessage(0, 0, 1);
-		Send(s, std::move(SetDaqPtr2));
-
-		XCPMsgPtr WriteDaq2 = master->CreateWriteDaqMessage(0xFF, 1, 0, 0x21A1BD); //sbyte triangle signal
-		Send(s, std::move(WriteDaq2));*/
 	
-		using ModeFieldBits = SetDaqListModePacket::ModeFieldBits;
+	
 		XCPMsgPtr SetDaqListMode = master->CreateSetDaqListModeMessage(ModeFieldBits::TIMESTAMP, 0, 1, 1, 1); //DAQ direction; Timestamp on; do not use ctr field; Disabled alternating display; Transmit DTO WITH identification field;
 		Send(s, std::move(SetDaqListMode));
 	
@@ -236,7 +245,7 @@ void MainWindow::TestXCP()
 	
 		std::vector<uint8_t> bytes;
 		int i = 0;
-		while (i < 300)
+		while (i < 500)
 		{
 			bytes.resize(MaxRecvsize);
 			int recv_size = recv(s, (char*)&bytes[0], MaxRecvsize, 0);

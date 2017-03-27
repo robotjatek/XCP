@@ -97,7 +97,6 @@ std::unique_ptr<IXCPMessage> XCPMaster::DeserializeMessage(std::vector<uint8_t>&
 		LastCommand = m_SentCommandQueue.front();
 	}
 
-	//TODO: deserialize while Data != 0
 	IXCPPacket* Packet = m_PacketFactory->DeserializeIncomingFromSlave(data, m_MessageFactory->GetHeaderSize(), m_MessageFactory->GetTailSize(), LastCommand);
 	if (Packet)
 	{
@@ -117,7 +116,7 @@ std::unique_ptr<IXCPMessage> XCPMaster::DeserializeMessage(std::vector<uint8_t>&
 			}
 			std::cout << "---------------------------------------------\n";
 		}
-		if (m_SentCommandQueue.size() > 0) //TODO: do not pop if this was a DAQ packet
+		if (m_SentCommandQueue.size() > 0 && Packet->GetPid() > 0xFB) //do not pop if this was a DAQ packet
 		{
 			m_SentCommandQueue.pop();
 		}
@@ -287,6 +286,16 @@ XCP_API void XCPMaster::SetSeedAndKeyFunctionPointers(XCP_GetAvailablePrivileges
 {
 	m_GetAvailablePrivileges = GetAvailablePrivilegesPtr;
 	m_ComputeKeyFromSeed = ComputeKeyPtr;
+}
+
+XCP_API DAQLayout XCPMaster::GetDaqLayout()
+{
+	return m_DAQLayout;
+}
+
+XCP_API void XCPMaster::SetDaqLayout(DAQLayout layout)
+{
+	m_DAQLayout = layout;
 }
 
 XCP_API void XCPMaster::SetExternalMessageHandler(IIncomingMessageHandler * Handler)

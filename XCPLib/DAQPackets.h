@@ -160,6 +160,7 @@ public:
 	virtual ~StartStopDaqListPacket();
 	void SetMode(uint8_t Mode);
 	void SetDaqListNumber(uint16_t DaqListNumber, bool LittleEndian);
+	uint16_t GetDaqListNumber(bool LittleEndian);
 };
 
 //--------------------------------------------------

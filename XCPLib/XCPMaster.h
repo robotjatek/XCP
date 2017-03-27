@@ -7,6 +7,7 @@
 #include "TCPMessage.h"
 #include "DAQPackets.h"
 #include "IIncomingMessageHandler.h"
+#include "SlaveMemory.h"
 #include <queue>
 #include <memory>
 
@@ -75,6 +76,7 @@ private:
 	IIncomingMessageHandler* m_MessageHandler;
 	IIncomingMessageHandler* m_ExternalHandler;
 	SlaveProperties m_SlaveProperties;	
+	DAQLayout m_DAQLayout;
 
 	XCP_GetAvailablePrivilegesPtr_t m_GetAvailablePrivileges = nullptr;
 	XCP_ComputeKeyFromSeedPtr_t m_ComputeKeyFromSeed = nullptr;
@@ -108,6 +110,8 @@ public:
 	XCP_API IXCPMessage* ReceiveMessage(IXCPMessage* Message);
 	XCP_API void AddSentMessage(IXCPMessage* Packet);
 	XCP_API void SetSeedAndKeyFunctionPointers(XCP_GetAvailablePrivilegesPtr_t GetAvailablePrivilegesPtr, XCP_ComputeKeyFromSeedPtr_t ComputeKeyPtr);
+	XCP_API DAQLayout GetDaqLayout();
+	XCP_API void SetDaqLayout(DAQLayout layout);
 	XCP_API void SetExternalMessageHandler(IIncomingMessageHandler* Handler);
 	XCP_ComputeKeyFromSeedPtr_t GetComputeKeyPtr();
 	XCP_GetAvailablePrivilegesPtr_t GetAvailablePrivilegesPtr();

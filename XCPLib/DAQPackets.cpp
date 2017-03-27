@@ -371,6 +371,22 @@ void StartStopDaqListPacket::SetDaqListNumber(uint16_t DaqListNumber, bool Littl
 	}
 }
 
+uint16_t StartStopDaqListPacket::GetDaqListNumber(bool LittleEndian)
+{
+	uint16_t retval;
+	if (LittleEndian)
+	{
+		retval = m_Data[BytePositions::DAQ_LIST_NUMBER];
+		retval |= (((uint16_t)m_Data[BytePositions::DAQ_LIST_NUMBER+1])<<8);
+	}
+	else
+	{
+		retval = m_Data[BytePositions::DAQ_LIST_NUMBER+1];
+		retval |= (((uint16_t)m_Data[BytePositions::DAQ_LIST_NUMBER]) << 8);
+	}
+	return retval;
+}
+
 //--------------------------------------------------
 
 StartStopDaqListPositiveResponse::StartStopDaqListPositiveResponse(const std::vector<uint8_t>& Data, uint8_t HeaderSize) : ResponsePacket()

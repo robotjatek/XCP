@@ -44,14 +44,14 @@ LineChartFrame::LineChartFrame(const std::string & title, MainWindow& wnd) : wxF
 
 	// Add the first dataset
 	wxVector<wxDouble> points1;
-	for (int i = 0; i < wnd.asd.size(); i++)
+	for (unsigned int i = 0; i < wnd.asd.size(); i++)
 	{
 		points1.push_back((wnd.asd)[i]);
 	}
 
 
 	wxVector<wxString> labels;
-	for (int i = 0; i < points1.size(); i++)
+	for (unsigned int i = 0; i < points1.size(); i++)
 	{
 		labels.push_back("");
 	}
