@@ -106,25 +106,24 @@ std::unique_ptr<IXCPMessage> XCPMaster::DeserializeMessage(std::vector<uint8_t>&
 	if (Packet)
 	{
 		IXCPMessage* MessageFrame = m_MessageFactory->CreateMessage(Packet);
-		MessageFrame->SetPacket(Packet);
 		if (m_MessageHandler)
 		{
 			Packet->Dispatch(*m_MessageHandler);
-			if (m_ExternalHandler)
-			{
-				Packet->Dispatch(*m_ExternalHandler);
-			}
-			std::cout << "---------------------------------------------\n";
 		}
+		if (m_ExternalHandler)
+		{
+			Packet->Dispatch(*m_ExternalHandler);
+		}
+		std::cout << "---------------------------------------------\n";
 		if (m_SentCommandQueue.size() > 0 && Packet->GetPid() > 0xFB) //do not pop if this was a DAQ packet
 		{
 			m_SentCommandQueue.pop();
 		}
 		return std::unique_ptr<IXCPMessage>(MessageFrame);
 	}
-	std::cout << "couldnt deserialise the message\n";
+	std::cout << "couldnt deserialise the message\a\n";
 	std::cout << "---------------------------------------------\n";
-	if (m_SentCommandQueue.size() > 0)
+	if (m_SentCommandQueue.size() > 0) //TODO: delete this after all packet types are handled correctly...
 	{
 		m_SentCommandQueue.pop();
 	}

@@ -14,7 +14,6 @@ DTO::DTO(const std::vector<uint8_t>& Data, uint8_t HeadSize, uint8_t TailSize, u
 	m_DAQ = 0;
 	uint8_t Mode = 0;
 	ODT CurrentOdtLayout;
-	//bool FirstODT;
 
 	uint32_t ptr = HeadSize;
 	m_PID = Data[ptr]; //between 0x00-0xFB

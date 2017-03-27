@@ -10,5 +10,4 @@ private:
 public:
 	TCPMessage(IXCPPacket*  packet, uint16_t ctr);
 	~TCPMessage();
-	//virtual uint32_t* GetRawBytes();
 };

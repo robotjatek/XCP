@@ -10,7 +10,6 @@ private:
 public:
 	TCPHeader(uint16_t len, uint16_t ctr);
 	virtual ~TCPHeader();
-	//virtual uint8_t* GetRawBytes();
 	void SetLength(uint16_t len);
 	uint16_t GetLength();
 	void SetCtr(uint16_t ctr);
