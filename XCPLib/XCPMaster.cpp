@@ -98,14 +98,12 @@ std::unique_ptr<IXCPMessage> XCPMaster::DeserializeMessage(std::vector<uint8_t>&
 	}
 
 	IXCPPacket* Packet = m_PacketFactory->DeserializeIncomingFromSlave(data, m_MessageFactory->GetHeaderSize(), m_MessageFactory->GetTailSize(), LastCommand);
-	if (Packet)
-	{
-		std::vector<uint8_t>(data.begin() + m_MessageFactory->GetHeaderSize() + Packet->GetPacketSize() + m_MessageFactory->GetTailSize(), data.end()).swap(data);
-	}
 
 	if (Packet)
 	{
+		std::vector<uint8_t>(data.begin() + m_MessageFactory->GetHeaderSize() + Packet->GetPacketSize() + m_MessageFactory->GetTailSize(), data.end()).swap(data); //Clear packet data from the buffer. Leaves the not-yet-deserialized data intact.
 		IXCPMessage* MessageFrame = m_MessageFactory->CreateMessage(Packet);
+		//Pass decoded packets to the internal and external handlers.
 		if (m_MessageHandler)
 		{
 			Packet->Dispatch(*m_MessageHandler);
@@ -126,6 +124,7 @@ std::unique_ptr<IXCPMessage> XCPMaster::DeserializeMessage(std::vector<uint8_t>&
 	if (m_SentCommandQueue.size() > 0) //TODO: delete this after all packet types are handled correctly...
 	{
 		m_SentCommandQueue.pop();
+		data.clear();
 	}
 	return nullptr;
 }

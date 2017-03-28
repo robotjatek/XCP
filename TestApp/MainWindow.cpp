@@ -234,7 +234,7 @@ void MainWindow::TestXCP()
 		Send(s, std::move(WriteDaq1));
 	
 	
-		XCPMsgPtr SetDaqListMode = master->CreateSetDaqListModeMessage(ModeFieldBits::TIMESTAMP, 0, 1, 1, 1); //DAQ direction; Timestamp on; do not use ctr field; Disabled alternating display; Transmit DTO WITH identification field;
+		XCPMsgPtr SetDaqListMode = master->CreateSetDaqListModeMessage(ModeFieldBits::TIMESTAMP, 0, 2, 1, 1); //DAQ direction; Timestamp on; do not use ctr field; Disabled alternating display; Transmit DTO WITH identification field;
 		Send(s, std::move(SetDaqListMode));
 	
 		XCPMsgPtr StartStopDaqList = master->CreateStartStopDaqListMessage(StartStopDaqListPacket::Mode::SELECT, 0);
@@ -245,7 +245,7 @@ void MainWindow::TestXCP()
 	
 		std::vector<uint8_t> bytes;
 		int i = 0;
-		while (i < 500)
+		while (i < 100)
 		{
 			bytes.resize(MaxRecvsize);
 			int recv_size = recv(s, (char*)&bytes[0], MaxRecvsize, 0);
