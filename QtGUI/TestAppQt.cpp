@@ -46,7 +46,7 @@ TestAppQt::TestAppQt(QWidget *parent)
 	chart->addSeries(series);
 	chart->createDefaultAxes();
 	chart->setTitle("Measurement");
-	chart->axisX()->setRange(0, 400);
+	chart->axisX()->setRange(0, 1000);
 	chart->axisY()->setRange(-60, 60);
 	
 	QChartView* chartView = new QChartView(chart);

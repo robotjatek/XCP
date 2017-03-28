@@ -125,10 +125,8 @@ void XCPWorkerThread::TestXCP()
 	XCPMsgPtr StartStopSynch = master->CreateStartStopSynchMessage(StartStopSynchPacket::Mode::START_SELECTED);
 	Send(s, std::move(StartStopSynch));
 
-
-	//std::vector<uint8_t> bytes;
 	int i = 0;
-	while (i < 400)
+	while (i < 1000)
 	{
 		if (s->waitForReadyRead(-1))
 		{
