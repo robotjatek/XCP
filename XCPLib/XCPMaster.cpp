@@ -1,7 +1,7 @@
 #include "XCPMaster.h"
 #include "TCPMessageFactory.h"
 #include "IncomingMessageHandler.h"
-#include <vld.h>
+//#include <vld.h>
 
 const XCPMaster::SlaveProperties& XCPMaster::GetSlaveProperties() const
 {

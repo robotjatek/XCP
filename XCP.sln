@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestApp", "TestApp\TestApp.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FakeECU", "FakeECU\FakeECU.vcxproj", "{1295E1A1-9D97-401F-A999-7E4377E6C526}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QtGUI", "QtGUI\QtGUI.vcxproj", "{63009FE1-E47B-4A4E-9937-42B562105D0E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -41,6 +43,12 @@ Global
 		{1295E1A1-9D97-401F-A999-7E4377E6C526}.Release|x64.Build.0 = Release|x64
 		{1295E1A1-9D97-401F-A999-7E4377E6C526}.Release|x86.ActiveCfg = Release|Win32
 		{1295E1A1-9D97-401F-A999-7E4377E6C526}.Release|x86.Build.0 = Release|Win32
+		{63009FE1-E47B-4A4E-9937-42B562105D0E}.Debug|x64.ActiveCfg = Debug|Win32
+		{63009FE1-E47B-4A4E-9937-42B562105D0E}.Debug|x86.ActiveCfg = Debug|Win32
+		{63009FE1-E47B-4A4E-9937-42B562105D0E}.Debug|x86.Build.0 = Debug|Win32
+		{63009FE1-E47B-4A4E-9937-42B562105D0E}.Release|x64.ActiveCfg = Release|Win32
+		{63009FE1-E47B-4A4E-9937-42B562105D0E}.Release|x86.ActiveCfg = Release|Win32
+		{63009FE1-E47B-4A4E-9937-42B562105D0E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
