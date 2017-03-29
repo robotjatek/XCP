@@ -1,6 +1,6 @@
 #pragma once
 #include "CommandPacket.h"
-class SetMTAPacket :
+class SetMTAPacket final :
 	public CommandPacket
 {
 	enum BytePositions

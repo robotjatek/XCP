@@ -1,6 +1,6 @@
 #pragma once
 #include "ErrorPacket.h"
-class ErrorOutOfRangePacket :
+class ErrorOutOfRangePacket final :
 	public ErrorPacket
 {
 public:

@@ -1,6 +1,6 @@
 #pragma once
 #include "ErrorPacket.h"
-class ErrorMemoryOverflowPacket :
+class ErrorMemoryOverflowPacket final :
 	public ErrorPacket
 {
 public:

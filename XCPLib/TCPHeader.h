@@ -2,7 +2,7 @@
 #include <cstdint>
 #include "IXCPHeader.h"
 
-class TCPHeader : public IXCPHeader
+class TCPHeader final : public IXCPHeader
 {
 private:
 	uint16_t m_Length;

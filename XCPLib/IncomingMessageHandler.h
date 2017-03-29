@@ -3,7 +3,7 @@
 #include "ConnectPositivePacket.h"
 #include "XCPMaster.h"
 
-class IncomingMessageHandler :
+class IncomingMessageHandler final :
 	public IIncomingMessageHandler
 {
 private:

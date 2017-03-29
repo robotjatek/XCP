@@ -2,7 +2,7 @@
 #include "CommandPacket.h"
 #include "ResponsePacket.h"
 
-class GetStatusPacket :
+class GetStatusPacket final :
 	public CommandPacket
 {
 public:
@@ -10,7 +10,7 @@ public:
 	virtual ~GetStatusPacket();
 };
 
-class GetStatusResponsePacket : public ResponsePacket
+class GetStatusResponsePacket final : public ResponsePacket
 {
 	enum BytePositions //Byte offsets in m_Data
 	{

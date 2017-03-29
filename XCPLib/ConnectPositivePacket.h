@@ -1,6 +1,6 @@
 #pragma once
 #include "ResponsePacket.h"
-class ConnectPositivePacket :
+class ConnectPositivePacket final :
 	public ResponsePacket
 {
 private:

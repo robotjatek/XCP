@@ -2,7 +2,7 @@
 #include "CommandPacket.h"
 #include "ErrorPacket.h"
 
-class SynchPacket :
+class SynchPacket final :
 	public CommandPacket
 {
 public:
@@ -10,7 +10,7 @@ public:
 	virtual ~SynchPacket();
 };
 
-class SynchResponsePacket : public ErrorPacket
+class SynchResponsePacket final : public ErrorPacket
 {
 	enum BytePositions
 	{

@@ -3,7 +3,7 @@
 
 
 
-class ConnectPacket : public CommandPacket
+class ConnectPacket final : public CommandPacket
 {
 public:
 	enum ConnectMode

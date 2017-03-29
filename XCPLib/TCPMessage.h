@@ -1,7 +1,7 @@
 #pragma once
 #include "IXCPMessage.h"
 
-class TCPMessage : public IXCPMessage
+class TCPMessage final : public IXCPMessage
 {
 private:
 	//XCPPacket from the parent class

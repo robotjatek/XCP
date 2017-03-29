@@ -2,7 +2,7 @@
 #include "IMessageFactory.h"
 #include "TCPMessage.h"
 
-class TCPMessageFactory : public IMessageFactory
+class TCPMessageFactory final : public IMessageFactory
 {
 private:
 	uint16_t m_NumberOfCreatedMessages;

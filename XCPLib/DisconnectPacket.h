@@ -1,6 +1,6 @@
 #pragma once
 #include "CommandPacket.h"
-class DisconnectPacket : public CommandPacket
+class DisconnectPacket final : public CommandPacket
 {
 public:
 	DisconnectPacket();

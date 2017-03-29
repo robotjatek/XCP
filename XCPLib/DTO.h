@@ -8,7 +8,7 @@
 #define XCP_API    __declspec(dllimport)
 #endif
 
-class DTO :
+class DTO final :
 	public IXCPPacket
 {
 private:

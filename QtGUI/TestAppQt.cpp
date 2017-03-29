@@ -77,6 +77,7 @@ void TestAppQt::AddPoint(double point)
 void TestAppQt::MeasurementFinished()
 {
 	ui.TestSend->setDisabled(false);
+	std::cout << "num of points: " << std::dec<<i << "\n";
 }
 
 int TestAppQt::LoadDLL()

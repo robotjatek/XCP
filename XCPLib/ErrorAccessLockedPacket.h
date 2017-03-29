@@ -1,6 +1,6 @@
 #pragma once
 #include "ErrorPacket.h"
-class ErrorAccessLockedPacket :
+class ErrorAccessLockedPacket final :
 	public ErrorPacket
 {
 private:

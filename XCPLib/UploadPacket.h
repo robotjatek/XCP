@@ -3,7 +3,7 @@
 #include "ResponsePacket.h"
 
 //Upload from slave to master
-class UploadPacket :
+class UploadPacket final :
 	public CommandPacket
 {
 public:
@@ -16,7 +16,7 @@ public:
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------
 
-class UploadResponse : public ResponsePacket
+class UploadResponse final : public ResponsePacket
 {
 private:
 	uint8_t m_AG;
@@ -69,7 +69,7 @@ public:
 
 //-------------------------------------------------------------------------------------------------------------------------
 
-class ShortUploadPacket : public CommandPacket
+class ShortUploadPacket final : public CommandPacket
 {
 	enum BytePositions
 	{

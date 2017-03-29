@@ -1,7 +1,7 @@
 #pragma once
 #include "CommandPacket.h"
 #include "ResponsePacket.h"
-class GetSeedPacket :
+class GetSeedPacket final :
 	public CommandPacket
 {
 private:
@@ -34,7 +34,7 @@ public:
 
 //--------------------------------------------------------
 
-class GetSeedResponsePacket : public ResponsePacket
+class GetSeedResponsePacket final : public ResponsePacket
 {
 	enum BytePositions
 	{

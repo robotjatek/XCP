@@ -1,6 +1,6 @@
 #pragma once
 #include "ErrorPacket.h"
-class ErrorSequencePacket :
+class ErrorSequencePacket final :
 	public ErrorPacket
 {
 public:

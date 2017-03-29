@@ -1,7 +1,7 @@
 #pragma once
 #include "IXCPMessage.h"
 
-class CANMessage : public IXCPMessage
+class CANMessage final : public IXCPMessage
 {
 public:
 	virtual ~CANMessage() {};

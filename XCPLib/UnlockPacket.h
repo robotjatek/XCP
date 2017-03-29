@@ -2,7 +2,7 @@
 #include "CommandPacket.h"
 #include "ResponsePacket.h"
 
-class UnlockPacket :
+class UnlockPacket final :
 	public CommandPacket
 {
 private:
@@ -18,7 +18,7 @@ public:
 	uint8_t GetRemainingKeyLength();
 };
 
-class UnlockResponsePacket : public ResponsePacket
+class UnlockResponsePacket final : public ResponsePacket
 {
 	enum BytePositions
 	{

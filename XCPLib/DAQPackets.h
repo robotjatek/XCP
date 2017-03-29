@@ -2,7 +2,7 @@
 #include "CommandPacket.h"
 #include "ResponsePacket.h"
 
-class FreeDaqPacket : public CommandPacket
+class FreeDaqPacket final : public CommandPacket
 {
 public:
 	FreeDaqPacket();
@@ -11,7 +11,7 @@ public:
 
 //--------------------------------------------------
 
-class AllocDaqPacket : public CommandPacket
+class AllocDaqPacket final : public CommandPacket
 {
 	enum BytePositions
 	{
@@ -27,7 +27,7 @@ public:
 
 //--------------------------------------------------
 
-class AllocOdtPacket : public CommandPacket
+class AllocOdtPacket final : public CommandPacket
 {
 	enum BytePositions
 	{
@@ -44,7 +44,7 @@ public:
 
 //--------------------------------------------------
 
-class AllocOdtEntryPacket : public CommandPacket
+class AllocOdtEntryPacket final : public CommandPacket
 {
 	enum BytePositions
 	{
@@ -63,7 +63,7 @@ public:
 
 //--------------------------------------------------
 
-class SetDaqPtrPacket : public CommandPacket
+class SetDaqPtrPacket final : public CommandPacket
 {
 private:
 	enum BytePositions
@@ -83,7 +83,7 @@ public:
 
 //--------------------------------------------------
 
-class WriteDaqPacket : public CommandPacket
+class WriteDaqPacket final : public CommandPacket
 {
 private:
 	enum BytePositions
@@ -105,7 +105,7 @@ public:
 
 //--------------------------------------------------
 
-class SetDaqListModePacket : public CommandPacket
+class SetDaqListModePacket final : public CommandPacket
 {
 public:
 	enum ModeFieldBits
@@ -138,7 +138,7 @@ public:
 
 //--------------------------------------------------
 
-class StartStopDaqListPacket : public CommandPacket
+class StartStopDaqListPacket final : public CommandPacket
 {
 public:
 	enum Mode
@@ -165,7 +165,7 @@ public:
 
 //--------------------------------------------------
 
-class StartStopDaqListPositiveResponse : public ResponsePacket
+class StartStopDaqListPositiveResponse final : public ResponsePacket
 {
 	enum BytePositions
 	{
@@ -181,7 +181,7 @@ public:
 
 //--------------------------------------------------
 
-class StartStopSynchPacket : public CommandPacket
+class StartStopSynchPacket final : public CommandPacket
 {
 private:
 	enum BytePositions
@@ -202,7 +202,7 @@ public:
 
 //--------------------------------------------------
 
-class GetDaqProcessorInfo : public CommandPacket
+class GetDaqProcessorInfo final : public CommandPacket
 {
 public:
 	GetDaqProcessorInfo();
@@ -211,7 +211,7 @@ public:
 
 //--------------------------------------------------
 
-class GetDaqProcessorInfoResponse : public ResponsePacket
+class GetDaqProcessorInfoResponse final : public ResponsePacket
 {
 private:
 	enum BytePositions
