@@ -30,8 +30,8 @@ TestAppQt::TestAppQt(QWidget *parent)
 	master = new XCPMaster(TransportLayer::ETHERNET);
 	master->SetSeedAndKeyFunctionPointers(GetAvailablePrivileges, ComputeKeyFromSeed);
 	thread = new XCPWorkerThread(master);
-	connect(thread, SIGNAL(NotifyUI(double)),this,
-		SLOT(AddPoint(double)));
+	connect(thread, SIGNAL(NotifyUI(unsigned int,double)),this,
+		SLOT(AddPoint(unsigned int,double)));
 	connect(thread, SIGNAL(Finished()), this, SLOT(MeasurementFinished()));
 
 	//connect(thread, SIGNAL(NotifyUI(double)), this, SLOT(AddPoint(double)));
@@ -39,15 +39,21 @@ TestAppQt::TestAppQt(QWidget *parent)
 	master->SetExternalMessageHandler(Handler);
 
 
-	series = new QLineSeries();
-	series->setColor(QColor(0, 255, 0));
+	SeriesArray[0] = new QLineSeries();
+	SeriesArray[0]->setColor(QColor(0, 255, 0));
+
+	SeriesArray[1] = new QLineSeries();
+	SeriesArray[1]->setColor(QColor(255, 0, 0));
+
 	QChart* chart = new QChart();
 	chart->legend()->hide();
-	chart->addSeries(series);
+	chart->addSeries(SeriesArray[0]);
+	chart->addSeries(SeriesArray[1]);
+
 	chart->createDefaultAxes();
 	chart->setTitle("Measurement");
 	chart->axisX()->setRange(0, 1000);
-	chart->axisY()->setRange(-60, 60);
+	chart->axisY()->setRange(-150, 150);
 	
 	QChartView* chartView = new QChartView(chart);
 	chartView->setRenderHint(QPainter::Antialiasing);
@@ -61,7 +67,8 @@ TestAppQt::TestAppQt(QWidget *parent)
 
 TestAppQt::~TestAppQt()
 {
-	delete series;
+	delete SeriesArray[0];
+	delete SeriesArray[1];
 
 	delete master;
 	delete Handler;
@@ -69,15 +76,15 @@ TestAppQt::~TestAppQt()
 	//Cleanup(s);
 }
 
-void TestAppQt::AddPoint(double point)
+void TestAppQt::AddPoint(unsigned int series, double point)
 {
-	series->append((i++), point);
+	SeriesArray[series]->append((NumOfPoints++)/2, point);
 }
 
 void TestAppQt::MeasurementFinished()
 {
 	ui.TestSend->setDisabled(false);
-	std::cout << "num of points: " << std::dec<<i << "\n";
+	std::cout << "num of points: " << std::dec<<NumOfPoints << "\n";
 }
 
 int TestAppQt::LoadDLL()
@@ -108,7 +115,8 @@ int TestAppQt::LoadDLL()
 void TestAppQt::TestButtonPressed()
 {
 	ui.TestSend->setDisabled(true);
-	i = 0;
-	series->clear();
+	NumOfPoints = 0;
+	SeriesArray[0]->clear();
+	SeriesArray[1]->clear();
 	thread->start();
 }

@@ -18,22 +18,20 @@ public:
     TestAppQt(QWidget *parent = Q_NULLPTR);
 	virtual ~TestAppQt();
 	
-	std::vector<uint8_t> asd;
-	
 
 	public slots:
 	///void connected();
 	//void disconnected();
 	//void readyRead();
 	void TestButtonPressed();
-	void AddPoint(double point);
+	void AddPoint(unsigned int series, double point);
 	void MeasurementFinished();
 private:
     Ui::TestAppQtClass ui;
-	QLineSeries* series;
+	QLineSeries* SeriesArray[2];
 	XCPMaster* master;
 	XCPWorkerThread* thread;
-	unsigned int i = 0;
+	unsigned int NumOfPoints = 0;
 
 	int LoadDLL();
 	typedef uint32_t(*XCP_GetAvailablePrivilegesPtr_t)(uint8_t* AvailablePrivilege);

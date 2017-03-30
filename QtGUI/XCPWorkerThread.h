@@ -22,9 +22,9 @@ public:
 	XCPWorkerThread(XCPMaster* master);
 	virtual ~XCPWorkerThread();
 	void run();
-	void AddPoint(double point);
+	void AddPoint(unsigned int series, double point);
 
 	signals:
-	void NotifyUI(double point);
+	void NotifyUI(unsigned int series, double point);
 	void Finished();
 };
