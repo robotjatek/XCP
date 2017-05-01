@@ -4,9 +4,12 @@
 #include "ui_TestAppQt.h"
 #include <QtCharts/QtCharts>
 
+
 #include <XCPMaster.h>
 #include <ResponsePacket.h>
 #include "IncomingHandlerExternal.h"
+#include <map>
+#include "SeriesProperties.h"
 
 using namespace QtCharts;
 
@@ -17,18 +20,21 @@ class TestAppQt : public QMainWindow
 public:
     TestAppQt(QWidget *parent = Q_NULLPTR);
 	virtual ~TestAppQt();
-	
 
 	public slots:
 	///void connected();
 	//void disconnected();
 	//void readyRead();
+	void ConfigMeasurementButtonPressed();
 	void TestButtonPressed();
-	void AddPoint(unsigned int series, double point);
+	//void AddPoint(unsigned int series, double point);
+	void AddPointToSeries(uint16_t, uint8_t, uint32_t, double, double);
 	void MeasurementFinished();
 private:
     Ui::TestAppQtClass ui;
-	QLineSeries* SeriesArray[2];
+	QChart* chart;
+	std::vector<QLineSeries*> SeriesVector;
+	std::map<std::tuple<uint16_t, uint8_t, uint32_t>, SeriesProperties> ChartSeries; //daq id, odt id, entry id
 	XCPMaster* master;
 	XCPWorkerThread* thread;
 	unsigned int NumOfPoints = 0;
@@ -43,4 +49,5 @@ private:
 	int SetupConnection(SOCKET& s);
 
 	IncomingHandlerExternal* Handler;
+
 };

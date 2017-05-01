@@ -7,6 +7,7 @@ class IncomingHandlerExternal :
 	public IIncomingMessageHandler
 {
 	XCPWorkerThread* m_wnd;
+	double x = 0;
 public:
 	IncomingHandlerExternal(XCPWorkerThread* wnd);
 	virtual ~IncomingHandlerExternal();
@@ -26,5 +27,7 @@ public:
 	virtual void Handle(DTO& Packet);
 	std::vector<uint8_t> asd;
 	virtual const std::vector<uint8_t>& GetUnlockKey() const { return asd; };
+
+	void Reset();
 };
 

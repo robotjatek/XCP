@@ -20,6 +20,8 @@ DTO::DTO(const std::vector<uint8_t>& Data, uint8_t HeadSize, uint8_t TailSize, u
 	ptr++;
 	if (IdentificationFieldType == GetDaqProcessorInfoResponse::IdentificationFieldType::ABSOLUTE_ODT_NUMBER)
 	{
+		m_DAQIndex = DaqLayout.CalculateDAQNumberFromAbsolutePID(m_PID);
+		m_ODTIndex = DaqLayout.CalculateODTNumberFromAbsolutePID(m_PID);
 		Mode = DaqLayout.GetDAQ(DaqLayout.CalculateDAQNumberFromAbsolutePID(m_PID)).GetMode();
 		CurrentOdtLayout = DaqLayout.GetODTFromAbsolutePID(m_PID);
 		if (CurrentOdtLayout.IsFirst() && (ModeFieldBits::DTO_CTR&Mode))
@@ -31,6 +33,8 @@ DTO::DTO(const std::vector<uint8_t>& Data, uint8_t HeadSize, uint8_t TailSize, u
 	else if (IdentificationFieldType == GetDaqProcessorInfoResponse::IdentificationFieldType::RELATIVE_ODT_ABSOLUTE_DAQ_BYTE)
 	{
 		m_DAQ = Data[ptr];
+		m_DAQIndex = m_DAQ;
+		m_ODTIndex = m_PID;
 		ptr++;
 		Mode = DaqLayout.GetDAQ(m_DAQ).GetMode();
 		CurrentOdtLayout = DaqLayout.GetDAQ(m_DAQ).GetOdt(m_PID);
@@ -46,6 +50,8 @@ DTO::DTO(const std::vector<uint8_t>& Data, uint8_t HeadSize, uint8_t TailSize, u
 		uint16_t t2 = Data[ptr + 1];
 		m_DAQ = t1 & 0xFF;
 		m_DAQ |= (t2 << 8) & 0xFF00;
+		m_DAQIndex = m_DAQ;
+		m_ODTIndex = m_PID;
 		Mode = DaqLayout.GetDAQ(m_DAQ).GetMode();
 		CurrentOdtLayout = DaqLayout.GetDAQ(m_DAQ).GetOdt(m_PID);
 		if (CurrentOdtLayout.IsFirst() && (ModeFieldBits::DTO_CTR&Mode))
@@ -65,6 +71,8 @@ DTO::DTO(const std::vector<uint8_t>& Data, uint8_t HeadSize, uint8_t TailSize, u
 		uint16_t t2 = Data[ptr + 2];
 		m_DAQ = t1 & 0xFF;
 		m_DAQ |= (t2 << 8) & 0xFF00;
+		m_DAQIndex = m_DAQ;
+		m_ODTIndex = m_PID;
 		Mode = DaqLayout.GetDAQ(m_DAQ).GetMode();
 		ptr += 3;
 	}
@@ -158,6 +166,16 @@ bool DTO::GetIsTimestamped()
 bool DTO::GetIsCTRed()
 {
 	return IsCTRed;
+}
+
+XCP_API uint16_t DTO::GetDAQIndex()
+{
+	return m_DAQIndex;
+}
+
+XCP_API uint8_t DTO::GetODTIndex()
+{
+	return m_ODTIndex;
 }
 
 void DTO::Dispatch(IIncomingMessageHandler & Handler)

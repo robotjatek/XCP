@@ -23,8 +23,10 @@ public:
 	virtual ~XCPWorkerThread();
 	void run();
 	void AddPoint(unsigned int series, double point);
+	void AddPointToSeries(uint16_t DAQId, uint8_t ODTId, uint32_t EntryId, double x, double y);
 
 	signals:
-	void NotifyUI(unsigned int series, double point);
+	//void NotifyUI(unsigned int series, double point);
+	void NotifyUI(uint16_t, uint8_t, uint32_t, double, double);
 	void Finished();
 };

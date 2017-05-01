@@ -68,6 +68,15 @@
     <ClCompile Include="GeneratedFiles\Release\moc_XCPWorkerThread.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="ConfigureMeasurementQt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ConfigureMeasurementQt.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ConfigureMeasurementQt.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="TestAppQt.h">
@@ -82,6 +91,12 @@
     <CustomBuild Include="TestAppQt.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="ConfigureMeasurement.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ConfigureMeasurementQt.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IncomingHandlerExternal.h">
@@ -89,6 +104,12 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_TestAppQt.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_ConfigureMeasurement.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SeriesProperties.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

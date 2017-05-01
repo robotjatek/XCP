@@ -120,15 +120,22 @@ void IncomingMessageHandler::Handle(ErrorMemoryOverflowPacket & Packet)
 
 void IncomingMessageHandler::Handle(StartStopDaqListPositiveResponse & Packet)
 {
-	std::cout << "Start/Stop Daq list response | FIRST PID: " << std::hex << (int)Packet.GetFirstPid() << "\n";
-	StartStopDaqListPacket* command = m_Master.GetLastSentPacket<StartStopDaqListPacket*>();
-	if (command)
+	if (m_Master.GetDaqLayout().IsInitialized())
 	{
-		m_Master.GetDaqLayout().GetDAQ(command->GetDaqListNumber(m_Master.GetSlaveProperties().ByteOrder == 0)).SetFirstPid(Packet.GetFirstPid());
+		std::cout << "Start/Stop Daq list response | FIRST PID: " << std::hex << (int)Packet.GetFirstPid() << "\n";
+		StartStopDaqListPacket* command = m_Master.GetLastSentPacket<StartStopDaqListPacket*>();
+		if (command)
+		{
+			m_Master.GetDaqLayout().GetDAQ(command->GetDaqListNumber(m_Master.GetSlaveProperties().ByteOrder == 0)).SetFirstPid(Packet.GetFirstPid());
+		}
+		else
+		{
+			std::cout << "There was an error while setting the first PID on the DAQListDescriptor\a\n";
+		}
 	}
 	else
 	{
-		std::cout << "There was an error while setting the first PID on the DAQListDescriptor\a\n";
+		std::cout << "Warning! Daq layout was not initialized before starting daq transfer.\n";
 	}
 }
 

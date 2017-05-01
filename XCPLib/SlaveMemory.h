@@ -35,7 +35,7 @@ public:
 	XCP_API ODT();
 	XCP_API virtual ~ODT();
 	XCP_API void AddEntry(ODTEntry Entry);
-	XCP_API ODTEntry& GetEntry(uint32_t Index);
+	XCP_API ODTEntry GetEntry(uint32_t Index);
 	XCP_API const uint32_t GetODTSize() const;
 	XCP_API const uint32_t GetNumberOfEntries() const;
 	XCP_API const bool IsFirst() const;
@@ -55,7 +55,7 @@ public:
 	XCP_API DAQ();
 	XCP_API virtual ~DAQ();
 	XCP_API void AddODT(ODT Odt);
-	XCP_API ODT& GetOdt(uint32_t Index);
+	XCP_API ODT GetOdt(uint32_t Index);
 	XCP_API void SetMode(uint8_t Mode);
 	XCP_API const uint8_t GetMode() const;
 	XCP_API const uint16_t GetEventChannel() const;
@@ -69,16 +69,22 @@ public:
 	XCP_API void SetFirstPid(uint8_t FirstPid);
 };
 
+//TODO: write an iterator for this class
+
 class DAQLayout
 {
 private:
 	std::vector<DAQ> m_DAQList;
+	bool Initialized = false;
 public:
 	XCP_API DAQLayout();
 	XCP_API virtual ~DAQLayout();
 	XCP_API void AddDAQ(DAQ daq);
-	XCP_API DAQ& GetDAQ(uint32_t Index);
+	XCP_API DAQ GetDAQ(uint32_t Index);
 	XCP_API const uint16_t GetNumberOfDAQLists() const;
 	XCP_API int32_t CalculateDAQNumberFromAbsolutePID(uint8_t PID);
+	XCP_API int32_t CalculateODTNumberFromAbsolutePID(uint8_t PID);
 	XCP_API ODT GetODTFromAbsolutePID(uint8_t PID);
+	XCP_API bool IsInitialized();
+	XCP_API void SetInitialized(bool i);
 };

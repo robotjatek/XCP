@@ -29,6 +29,7 @@ class Ui_TestAppQtClass
 public:
     QWidget *centralWidget;
     QVBoxLayout *verticalLayout;
+    QPushButton *MeasurementBtn;
     QPushButton *TestSend;
     QWidget *ChartWidget;
     QMenuBar *menuBar;
@@ -46,6 +47,11 @@ public:
         verticalLayout->setSpacing(6);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+        MeasurementBtn = new QPushButton(centralWidget);
+        MeasurementBtn->setObjectName(QStringLiteral("MeasurementBtn"));
+
+        verticalLayout->addWidget(MeasurementBtn);
+
         TestSend = new QPushButton(centralWidget);
         TestSend->setObjectName(QStringLiteral("TestSend"));
 
@@ -82,6 +88,7 @@ public:
     void retranslateUi(QMainWindow *TestAppQtClass)
     {
         TestAppQtClass->setWindowTitle(QApplication::translate("TestAppQtClass", "TestAppQt", Q_NULLPTR));
+        MeasurementBtn->setText(QApplication::translate("TestAppQtClass", "Configure Measurement", Q_NULLPTR));
         TestSend->setText(QApplication::translate("TestAppQtClass", "Test XCP", Q_NULLPTR));
     } // retranslateUi
 

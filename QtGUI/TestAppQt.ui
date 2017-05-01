@@ -16,6 +16,13 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
+     <widget class="QPushButton" name="MeasurementBtn">
+      <property name="text">
+       <string>Configure Measurement</string>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QPushButton" name="TestSend">
       <property name="text">
        <string>Test XCP</string>

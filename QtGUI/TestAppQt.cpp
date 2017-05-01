@@ -1,5 +1,6 @@
 #include "TestAppQt.h"
 #include "XCPWorkerThread.h"
+#include "ConfigureMeasurementQt.h"
 
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
@@ -22,39 +23,39 @@ TestAppQt::TestAppQt(QWidget *parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
-
 	connect(ui.TestSend, SIGNAL(clicked()), this, SLOT(TestButtonPressed()));
+	connect(ui.MeasurementBtn, SIGNAL(clicked()), this, SLOT(ConfigMeasurementButtonPressed()));
 
 
 	LoadDLL();
 	master = new XCPMaster(TransportLayer::ETHERNET);
 	master->SetSeedAndKeyFunctionPointers(GetAvailablePrivileges, ComputeKeyFromSeed);
 	thread = new XCPWorkerThread(master);
-	connect(thread, SIGNAL(NotifyUI(unsigned int,double)),this,
-		SLOT(AddPoint(unsigned int,double)));
+	/*connect(thread, SIGNAL(NotifyUI(unsigned int, double)), this,
+		SLOT(AddPoint(unsigned int, double)));*/
+	connect(thread, SIGNAL(NotifyUI(uint16_t, uint8_t, uint32_t, double, double)), this, SLOT(AddPointToSeries(uint16_t, uint8_t, uint32_t, double, double)));
 	connect(thread, SIGNAL(Finished()), this, SLOT(MeasurementFinished()));
-
 	//connect(thread, SIGNAL(NotifyUI(double)), this, SLOT(AddPoint(double)));
 	Handler = new IncomingHandlerExternal(thread);
 	master->SetExternalMessageHandler(Handler);
+	chart = nullptr;
 
+//	SeriesVector.push_back(new QLineSeries());
+	//SeriesVector[0]->setColor(QColor(0, 255, 0));
 
-	SeriesArray[0] = new QLineSeries();
-	SeriesArray[0]->setColor(QColor(0, 255, 0));
+//	SeriesVector.push_back(new QLineSeries());
+//	SeriesVector[1]->setColor(QColor(255, 0, 0));
 
-	SeriesArray[1] = new QLineSeries();
-	SeriesArray[1]->setColor(QColor(255, 0, 0));
-
-	QChart* chart = new QChart();
+	chart = new QChart();
 	chart->legend()->hide();
-	chart->addSeries(SeriesArray[0]);
-	chart->addSeries(SeriesArray[1]);
+	/*chart->addSeries(SeriesVector[0]);
+	chart->addSeries(SeriesVector[1]);*/
 
-	chart->createDefaultAxes();
+	//chart->createDefaultAxes();
 	chart->setTitle("Measurement");
-	chart->axisX()->setRange(0, 1000);
-	chart->axisY()->setRange(-150, 150);
-	
+	/*chart->axisX()->setRange(0, 1000);
+	chart->axisY()->setRange(-150, 150);*/
+
 	QChartView* chartView = new QChartView(chart);
 	chartView->setRenderHint(QPainter::Antialiasing);
 
@@ -67,24 +68,27 @@ TestAppQt::TestAppQt(QWidget *parent)
 
 TestAppQt::~TestAppQt()
 {
-	delete SeriesArray[0];
-	delete SeriesArray[1];
+	for (auto a : SeriesVector)
+	{
+		delete a;
+	}
 
 	delete master;
 	delete Handler;
 	delete thread;
 	//Cleanup(s);
 }
-
+/*
 void TestAppQt::AddPoint(unsigned int series, double point)
 {
-	SeriesArray[series]->append((NumOfPoints++)/2, point);
+	SeriesVector[series]->append((NumOfPoints++) / 2, point);
 }
-
+*/
 void TestAppQt::MeasurementFinished()
 {
 	ui.TestSend->setDisabled(false);
-	std::cout << "num of points: " << std::dec<<NumOfPoints << "\n";
+	ui.MeasurementBtn->setDisabled(false);
+	std::cout << "Measurement complete!\n";
 }
 
 int TestAppQt::LoadDLL()
@@ -112,11 +116,65 @@ int TestAppQt::LoadDLL()
 	return 0;
 }
 
+void TestAppQt::ConfigMeasurementButtonPressed()
+{
+	ConfigureMeasurementQt* d = new ConfigureMeasurementQt(this);
+	if (d->exec() == QDialog::Accepted)
+	{
+		this->master->SetDaqLayout(d->GetDaqLayout());
+		this->ChartSeries = d->GetChartSeries();
+		
+		if (SeriesVector.size())
+		{
+			for (int i = 0; i < SeriesVector.size(); i++)
+			{
+				chart->removeSeries(SeriesVector[i]);
+				delete SeriesVector[i];
+			}
+			SeriesVector.clear();
+		}
+
+		for (int i = 0; i < ChartSeries.size(); i++)
+		{
+			SeriesVector.push_back(new QLineSeries());
+			chart->addSeries(SeriesVector[i]);
+		}
+		for (auto it = ChartSeries.begin(); it != ChartSeries.end(); it++)
+		{
+			SeriesVector[it->second.SeriesIndex]->setColor(QColor(it->second.r, it->second.g, it->second.b));
+			/*QPen p;
+			p.setWidth(2);
+			p.setColor(QColor(it->second.r, it->second.g, it->second.b));
+			SeriesVector[it->second.SeriesIndex]->setPen(p);*/
+		}
+
+		chart->createDefaultAxes();
+		chart->setTitle("Measurement");
+		chart->axisX()->setRange(0, 1000);
+		chart->axisY()->setRange(-150, 150);
+
+	}
+	else
+	{
+
+	}
+	delete d;
+}
+
 void TestAppQt::TestButtonPressed()
 {
 	ui.TestSend->setDisabled(true);
+	ui.MeasurementBtn->setDisabled(true);
 	NumOfPoints = 0;
-	SeriesArray[0]->clear();
-	SeriesArray[1]->clear();
+	Handler->Reset();
+	for (auto a : SeriesVector)
+	{
+		a->clear();
+	}
 	thread->start();
+}
+
+void TestAppQt::AddPointToSeries(uint16_t DAQId, uint8_t ODTId, uint32_t EntryId, double x, double y)
+{
+	SeriesVector[ChartSeries[{DAQId, ODTId, EntryId}].SeriesIndex]->append(x, y);
 }
