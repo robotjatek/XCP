@@ -26,7 +26,6 @@ TestAppQt::TestAppQt(QWidget *parent)
 	connect(ui.TestSend, SIGNAL(clicked()), this, SLOT(TestButtonPressed()));
 	connect(ui.MeasurementBtn, SIGNAL(clicked()), this, SLOT(ConfigMeasurementButtonPressed()));
 
-
 	LoadDLL();
 	master = new XCPMaster(TransportLayer::ETHERNET);
 	master->SetSeedAndKeyFunctionPointers(GetAvailablePrivileges, ComputeKeyFromSeed);
@@ -35,35 +34,18 @@ TestAppQt::TestAppQt(QWidget *parent)
 		SLOT(AddPoint(unsigned int, double)));*/
 	connect(thread, SIGNAL(NotifyUI(uint16_t, uint8_t, uint32_t, double, double)), this, SLOT(AddPointToSeries(uint16_t, uint8_t, uint32_t, double, double)));
 	connect(thread, SIGNAL(Finished()), this, SLOT(MeasurementFinished()));
-	//connect(thread, SIGNAL(NotifyUI(double)), this, SLOT(AddPoint(double)));
 	Handler = new IncomingHandlerExternal(thread);
 	master->SetExternalMessageHandler(Handler);
-	chart = nullptr;
-
-//	SeriesVector.push_back(new QLineSeries());
-	//SeriesVector[0]->setColor(QColor(0, 255, 0));
-
-//	SeriesVector.push_back(new QLineSeries());
-//	SeriesVector[1]->setColor(QColor(255, 0, 0));
 
 	chart = new QChart();
 	chart->legend()->hide();
-	/*chart->addSeries(SeriesVector[0]);
-	chart->addSeries(SeriesVector[1]);*/
-
-	//chart->createDefaultAxes();
 	chart->setTitle("Measurement");
-	/*chart->axisX()->setRange(0, 1000);
-	chart->axisY()->setRange(-150, 150);*/
-
 	QChartView* chartView = new QChartView(chart);
 	chartView->setRenderHint(QPainter::Antialiasing);
-
 
 	QGridLayout* layout = new QGridLayout();
 	layout->addWidget(chartView);
 	ui.ChartWidget->setLayout(layout);
-	//setCentralWidget(chartView);
 }
 
 TestAppQt::~TestAppQt()
@@ -76,7 +58,6 @@ TestAppQt::~TestAppQt()
 	delete master;
 	delete Handler;
 	delete thread;
-	//Cleanup(s);
 }
 /*
 void TestAppQt::AddPoint(unsigned int series, double point)

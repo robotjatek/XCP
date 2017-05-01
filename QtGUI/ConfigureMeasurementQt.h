@@ -21,9 +21,7 @@ public:
 private:
 	Ui::ConfigureMeasurementUi ui;
 	DAQLayout daq_layout;
-
 	std::map<std::tuple<uint16_t, uint8_t, uint32_t>, SeriesProperties> ChartSeries; //daq id, odt id, entry id
-
 public:
 	const std::map<std::tuple<uint16_t, uint8_t, uint32_t>, SeriesProperties>& GetChartSeries();
 };
