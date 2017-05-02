@@ -92,69 +92,70 @@ void XCPWorkerThread::TestXCP()
 
 	//Using the low level DAQ APIs, it is the programmer's responsibilty to maintain the DAQ layout descriptor:
 	using ModeFieldBits = SetDaqListModePacket::ModeFieldBits;
-	/*DAQLayout daqlayout;
-	DAQ daq0;
-	ODT daq0odt0;
-	ODTEntry daq0odt0entry0(0x21A1BD, 0, 1);
-	ODTEntry daq0odt0entry1(0x21A08D, 0, 1);
-	daq0odt0.AddEntry(daq0odt0entry0);
-	daq0odt0.AddEntry(daq0odt0entry1);
-	daq0.AddODT(daq0odt0);
-	daq0.SetEventChannel(0);
-	daq0.SetMode(ModeFieldBits::TIMESTAMP);
-	daq0.SetPrescaler(1);
-	daq0.SetPriority(1);
-	daqlayout.AddDAQ(daq0);
-	master->SetDaqLayout(daqlayout);*/
+	//DAQLayout daqlayout;
+	//DAQ daq0;
+	//DAQ daq1;
+	//ODT daq0odt0;
+	//ODT daq1odt0;
+	//ODTEntry daq0odt0entry0(0x21A1BD, 0, 1);
+	//ODTEntry daq1odt0entry0(0x21A08D, 0, 1);
 
-	/*XCPMsgPtr AllocDaq = master->CreateAllocDaqMessage(1);
-	Send(s, std::move(AllocDaq));*/
+	//daq0odt0.AddEntry(daq0odt0entry0);
+	//daq1odt0.AddEntry(daq1odt0entry0);
+	//daq0.AddODT(daq0odt0);
+	//daq1.AddODT(daq1odt0);
+	//daq0.SetEventChannel(1);
+	//daq0.SetMode(ModeFieldBits::TIMESTAMP);
+	//daq0.SetPrescaler(1);
+	//daq0.SetPriority(1);
+	//daq1.SetEventChannel(2);
+	//daq1.SetMode(ModeFieldBits::TIMESTAMP);
+	//daq1.SetPrescaler(1);
+	//daq1.SetPriority(2);
+	//daqlayout.AddDAQ(daq0);
+	//daqlayout.AddDAQ(daq1);
+	//master->SetDaqLayout(daqlayout);
 
-	//XCPMsgPtr AllocOdt = master->CreateAllocOdtMessage(0, 1);
-	//Send(s, std::move(AllocOdt));
-
-	/*XCPMsgPtr AllocOdtEntry = master->CreateAllocOdtEntryMessage(0, 0, 2);
-	Send(s, std::move(AllocOdtEntry));*/
-
-	/*XCPMsgPtr SetDaqPtr1 = master->CreateSetDaqPtrMessage(0, 0, 0);
-	Send(s, std::move(SetDaqPtr1));*/
-
-	//XCPMsgPtr WriteDaq1 = master->CreateWriteDaqMessage(0xFF, 1, 0, 0x21A1BD); //sbyte triangle signal
-	//Send(s, std::move(WriteDaq1));
-
-	//XCPMsgPtr SetDaqPtr2 = master->CreateSetDaqPtrMessage(0, 0, 1);
-	//Send(s, std::move(SetDaqPtr2));
-
-	//XCPMsgPtr WriteDaq2 = master->CreateWriteDaqMessage(0xFF, 1, 0, 0x21A08D); //ubyte square signal
-	//Send(s, std::move(WriteDaq2));
-
-
-	if (master->GetDaqLayout().IsInitialized())
+	DAQLayout& daqlayout = master->GetDaqLayout();	
+	if (daqlayout.IsInitialized())
 	{
-		Send(s, std::move(master->CreateAllocDaqMessage(master->GetDaqLayout().GetNumberOfDAQLists())));
+		Send(s, master->CreateAllocDaqMessage(daqlayout.GetNumberOfDAQLists()));
 
-		for (int i = 0; i < master->GetDaqLayout().GetNumberOfDAQLists(); i++)
+		for (int i = 0; i < daqlayout.GetNumberOfDAQLists(); i++)
 		{
-			DAQ daq = master->GetDaqLayout().GetDAQ(i);
-			Send(s, std::move(master->CreateAllocOdtMessage(i, daq.GetNumberOfODTs())));
-			for (int j = 0; j < master->GetDaqLayout().GetDAQ(i).GetNumberOfODTs(); j++)
+			DAQ& daq =daqlayout.GetDAQ(i);
+			Send(s, master->CreateAllocOdtMessage(i, daq.GetNumberOfODTs()));
+			for (int j = 0; j < daqlayout.GetDAQ(i).GetNumberOfODTs(); j++)
 			{
-				ODT odt = daq.GetOdt(j);
-				Send(s, std::move(master->CreateAllocOdtEntryMessage(i, j, odt.GetNumberOfEntries())));
-				for (int k = 0; k < master->GetDaqLayout().GetDAQ(i).GetOdt(j).GetNumberOfEntries(); k++)
+				ODT& odt = daq.GetOdt(j);
+				Send(s, master->CreateAllocOdtEntryMessage(i, j, odt.GetNumberOfEntries()));
+			}
+		}
+
+		//The XCP simulator crashes if I merge these two loops...
+		for (int i = 0; i < daqlayout.GetNumberOfDAQLists(); i++)
+		{
+			DAQ& daq = daqlayout.GetDAQ(i);
+			for (int j = 0; j < daqlayout.GetDAQ(i).GetNumberOfODTs(); j++)
+			{
+				ODT& odt = daq.GetOdt(j);
+				for (int k = 0; k < daqlayout.GetDAQ(i).GetOdt(j).GetNumberOfEntries(); k++)
 				{
-					ODTEntry entry = odt.GetEntry(k);
-					Send(s, std::move(master->CreateSetDaqPtrMessage(i, j, k)));
-					Send(s, std::move(master->CreateWriteDaqMessage(0xFF, entry.GetLength(), entry.GetAddressExtension(), entry.GetAddress())));
+					ODTEntry& entry = odt.GetEntry(k);
+					Send(s, master->CreateSetDaqPtrMessage(i, j, k));
+					Send(s, master->CreateWriteDaqMessage(0xFF, entry.GetLength(), entry.GetAddressExtension(), entry.GetAddress()));
 				}
 			}
 		}
 
-		XCPMsgPtr SetDaqListMode = master->CreateSetDaqListModeMessage(ModeFieldBits::TIMESTAMP, 0, 1, 1, 1); //DAQ direction; Timestamp on; do not use ctr field; Disabled alternating display; Transmit DTO WITH identification field;
-		Send(s, std::move(SetDaqListMode));
+		for (int id = 0; id < daqlayout.GetNumberOfDAQLists(); id++)
+		{
+			XCPMsgPtr SetDaqListMode = master->CreateSetDaqListModeMessage(daqlayout.GetDAQ(id).GetMode(), id, daqlayout.GetDAQ(id).GetEventChannel(), daqlayout.GetDAQ(id).GetPrescaler(), daqlayout.GetDAQ(id).GetPriority());
+			Send(s, std::move(SetDaqListMode));
 
-		XCPMsgPtr StartStopDaqList = master->CreateStartStopDaqListMessage(StartStopDaqListPacket::Mode::SELECT, 0);
-		Send(s, std::move(StartStopDaqList));
+			XCPMsgPtr StartStopDaqList = master->CreateStartStopDaqListMessage(StartStopDaqListPacket::Mode::SELECT, id);
+			Send(s, std::move(StartStopDaqList));
+		}
 
 		XCPMsgPtr StartStopSynch = master->CreateStartStopSynchMessage(StartStopSynchPacket::Mode::START_SELECTED);
 		Send(s, std::move(StartStopSynch));
@@ -211,5 +212,6 @@ void XCPWorkerThread::Send(QTcpSocket* s, XCPMsgPtr message)
 		}
 		std::cout << "\n";
 		XCPMsgPtr asd = master->DeserializeMessage(bytes);
+		//sleep(1);
 	}
 }

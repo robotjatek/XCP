@@ -62,7 +62,7 @@ void ODT::AddEntry(ODTEntry Entry)
 	m_EntryList.push_back(Entry);
 }
 
-ODTEntry ODT::GetEntry(uint32_t Index)
+ODTEntry& ODT::GetEntry(uint32_t Index)
 {
 	return m_EntryList[Index];
 }
@@ -109,7 +109,7 @@ void DAQ::AddODT(ODT Odt)
 	m_ODTList.push_back(Odt);
 }
 
-ODT DAQ::GetOdt(uint32_t Index)
+ODT& DAQ::GetOdt(uint32_t Index)
 {
 	return m_ODTList[Index];
 }
@@ -182,7 +182,7 @@ void DAQLayout::AddDAQ(DAQ daq)
 	m_DAQList.push_back(daq);
 }
 
-DAQ DAQLayout::GetDAQ(uint32_t Index)
+DAQ& DAQLayout::GetDAQ(uint32_t Index)
 {
 	return m_DAQList[Index];
 }
@@ -236,7 +236,7 @@ XCP_API int32_t DAQLayout::CalculateODTNumberFromAbsolutePID(uint8_t PID)
 	return -1;
 }
 
-XCP_API ODT DAQLayout::GetODTFromAbsolutePID(uint8_t PID)
+XCP_API ODT& DAQLayout::GetODTFromAbsolutePID(uint8_t PID)
 {
 	bool found = false;
 	int i;
@@ -253,7 +253,7 @@ XCP_API ODT DAQLayout::GetODTFromAbsolutePID(uint8_t PID)
 		}
 	}
 
-	return ODT();
+	throw "Not found";
 }
 
 XCP_API bool DAQLayout::IsInitialized()
