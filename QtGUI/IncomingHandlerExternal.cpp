@@ -14,20 +14,17 @@ IncomingHandlerExternal::~IncomingHandlerExternal()
 
 void IncomingHandlerExternal::Handle(DTO & Packet)
 {
-	ODT& odt = m_MasterPtr->GetDaqLayout().GetDAQ(Packet.GetDAQIndex()).GetOdt(Packet.GetODTIndex());
-	for (int i = 0; i < odt.GetNumberOfEntries(); i++)
+	//ODT& odt = m_MasterPtr->GetDaqLayout().GetDAQ(Packet.GetDAQIndex()).GetOdt(Packet.GetODTIndex());
+	for (uint32_t i = 0; i <  m_MasterPtr->GetDaqLayout().GetDAQ(Packet.GetDAQIndex()).GetOdt(Packet.GetODTIndex()).GetNumberOfEntries(); i++)
 	{
-		//ODTEntry& entry = odt.GetEntry(i);
-		
+		ODTEntry& entry = m_MasterPtr->GetDaqLayout().GetDAQ(Packet.GetDAQIndex()).GetOdt(Packet.GetODTIndex()).GetEntry(i);
+		m_wnd->AddPointToSeries(Packet.GetDAQIndex(), Packet.GetODTIndex(), i, Packet.GetTimestamp(), (int8_t)Packet.GetByteElement(i));
 	}
 	if (m_FirstMeasurementData)
 	{
 		m_wnd->FirstMeasurementArrived(Packet.GetTimestamp());
 		m_FirstMeasurementData = false;
 	}
-
-	printf("%d\n", Packet.GetTimestamp());
-	m_wnd->AddPointToSeries(Packet.GetDAQIndex(), Packet.GetODTIndex(), 0, Packet.GetTimestamp(), (int8_t)Packet.GetByteElement(0));
 	//m_wnd->AddPointToSeries(Packet.GetDAQIndex(), Packet.GetODTIndex(), 1, x, (uint8_t)Packet.GetByteElement(1));
 	x++;
 }
