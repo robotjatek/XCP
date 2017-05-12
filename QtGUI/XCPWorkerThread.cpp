@@ -30,6 +30,11 @@ void XCPWorkerThread::AddPointToSeries(uint16_t DAQId, uint8_t ODTId, uint32_t E
 	emit NotifyUI(DAQId, ODTId, EntryId, x, y);
 }
 
+void XCPWorkerThread::FirstMeasurementArrived(uint32_t timestamp)
+{
+	emit SetChartXAxisStart(timestamp);
+}
+
 void XCPWorkerThread::TestXCP()
 {
 	s = new QTcpSocket(0);

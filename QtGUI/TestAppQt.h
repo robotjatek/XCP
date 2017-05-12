@@ -30,6 +30,7 @@ public:
 	//void AddPoint(unsigned int series, double point);
 	void AddPointToSeries(uint16_t, uint8_t, uint32_t, double, double);
 	void MeasurementFinished();
+	void FirstMeasurementArrived(uint32_t timestamp);
 private:
     Ui::TestAppQtClass ui;
 	QChart* chart;
@@ -49,5 +50,8 @@ private:
 	int SetupConnection(SOCKET& s);
 
 	IncomingHandlerExternal* Handler;
+
+	uint32_t m_ChartXMin;
+	uint32_t m_ChartXMax;
 
 };

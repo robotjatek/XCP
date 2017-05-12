@@ -1,5 +1,6 @@
 #pragma once
 #include "IIncomingMessageHandler.h"
+#include <XCPMaster.h>
 #include <DTO.h>
 class XCPWorkerThread;
 
@@ -7,9 +8,11 @@ class IncomingHandlerExternal :
 	public IIncomingMessageHandler
 {
 	XCPWorkerThread* m_wnd;
+	XCPMaster* m_MasterPtr;
 	double x = 0;
+	bool m_FirstMeasurementData;
 public:
-	IncomingHandlerExternal(XCPWorkerThread* wnd);
+	IncomingHandlerExternal(XCPWorkerThread* wnd, XCPMaster* master);
 	virtual ~IncomingHandlerExternal();
 	virtual void Handle(ConnectPositivePacket& Packet) {};
 	virtual void Handle(ResponsePacket& Packet) {};

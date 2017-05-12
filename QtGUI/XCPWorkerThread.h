@@ -24,9 +24,10 @@ public:
 	void run();
 	void AddPoint(unsigned int series, double point);
 	void AddPointToSeries(uint16_t DAQId, uint8_t ODTId, uint32_t EntryId, double x, double y);
-
+	void FirstMeasurementArrived(uint32_t timestamp);
 	signals:
 	//void NotifyUI(unsigned int series, double point);
 	void NotifyUI(uint16_t, uint8_t, uint32_t, double, double);
 	void Finished();
+	void SetChartXAxisStart(uint32_t);
 };

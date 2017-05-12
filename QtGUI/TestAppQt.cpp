@@ -34,7 +34,8 @@ TestAppQt::TestAppQt(QWidget *parent)
 		SLOT(AddPoint(unsigned int, double)));*/
 	connect(thread, SIGNAL(NotifyUI(uint16_t, uint8_t, uint32_t, double, double)), this, SLOT(AddPointToSeries(uint16_t, uint8_t, uint32_t, double, double)));
 	connect(thread, SIGNAL(Finished()), this, SLOT(MeasurementFinished()));
-	Handler = new IncomingHandlerExternal(thread);
+	connect(thread, SIGNAL(SetChartXAxisStart(uint32_t)), this, SLOT(FirstMeasurementArrived(uint32_t)));
+	Handler = new IncomingHandlerExternal(thread, master);
 	master->SetExternalMessageHandler(Handler);
 
 	chart = new QChart();
@@ -46,6 +47,8 @@ TestAppQt::TestAppQt(QWidget *parent)
 	QGridLayout* layout = new QGridLayout();
 	layout->addWidget(chartView);
 	ui.ChartWidget->setLayout(layout);
+	m_ChartXMin = 0;
+	m_ChartXMax = 0;
 }
 
 TestAppQt::~TestAppQt()
@@ -69,7 +72,14 @@ void TestAppQt::MeasurementFinished()
 {
 	ui.TestSend->setDisabled(false);
 	ui.MeasurementBtn->setDisabled(false);
-	std::cout << "Measurement complete!\n";
+	std::cout << "Measurement complete!\nResizing chart axis...";
+	chart->axisX()->setRange(m_ChartXMin, m_ChartXMax);
+}
+
+void TestAppQt::FirstMeasurementArrived(uint32_t timestamp)
+{
+	m_ChartXMin = timestamp;
+	chart->axisX()->setRange(timestamp, timestamp + 110000);
 }
 
 int TestAppQt::LoadDLL()
@@ -131,7 +141,7 @@ void TestAppQt::ConfigMeasurementButtonPressed()
 
 		chart->createDefaultAxes();
 		chart->setTitle("Measurement");
-		chart->axisX()->setRange(0, 1000);
+		//chart->axisX()->setRange(0, 1000);
 		chart->axisY()->setRange(-150, 150);
 
 	}
@@ -157,5 +167,6 @@ void TestAppQt::TestButtonPressed()
 
 void TestAppQt::AddPointToSeries(uint16_t DAQId, uint8_t ODTId, uint32_t EntryId, double x, double y)
 {
+	m_ChartXMax = x;
 	SeriesVector[ChartSeries[{DAQId, ODTId, EntryId}].SeriesIndex]->append(x, y);
 }
