@@ -121,18 +121,18 @@ void XCPWorkerThread::TestXCP()
 	//daqlayout.AddDAQ(daq1);
 	//master->SetDaqLayout(daqlayout);
 
-	DAQLayout& daqlayout = master->GetDaqLayout();	
+	DAQLayout daqlayout = master->GetDaqLayout();	
 	if (daqlayout.IsInitialized())
 	{
 		Send(s, master->CreateAllocDaqMessage(daqlayout.GetNumberOfDAQLists()));
 
 		for (int i = 0; i < daqlayout.GetNumberOfDAQLists(); i++)
 		{
-			DAQ& daq =daqlayout.GetDAQ(i);
+			DAQ daq =daqlayout.GetDAQ(i);
 			Send(s, master->CreateAllocOdtMessage(i, daq.GetNumberOfODTs()));
 			for (int j = 0; j < daqlayout.GetDAQ(i).GetNumberOfODTs(); j++)
 			{
-				ODT& odt = daq.GetOdt(j);
+				ODT odt = daq.GetOdt(j);
 				Send(s, master->CreateAllocOdtEntryMessage(i, j, odt.GetNumberOfEntries()));
 			}
 		}
@@ -140,13 +140,13 @@ void XCPWorkerThread::TestXCP()
 		//The XCP simulator crashes if I merge these two loops...
 		for (int i = 0; i < daqlayout.GetNumberOfDAQLists(); i++)
 		{
-			DAQ& daq = daqlayout.GetDAQ(i);
+			DAQ daq = daqlayout.GetDAQ(i);
 			for (int j = 0; j < daqlayout.GetDAQ(i).GetNumberOfODTs(); j++)
 			{
-				ODT& odt = daq.GetOdt(j);
+				ODT odt = daq.GetOdt(j);
 				for (int k = 0; k < daqlayout.GetDAQ(i).GetOdt(j).GetNumberOfEntries(); k++)
 				{
-					ODTEntry& entry = odt.GetEntry(k);
+					ODTEntry entry = odt.GetEntry(k);
 					Send(s, master->CreateSetDaqPtrMessage(i, j, k));
 					Send(s, master->CreateWriteDaqMessage(0xFF, entry.GetLength(), entry.GetAddressExtension(), entry.GetAddress()));
 				}

@@ -15,6 +15,14 @@ ODTEntry::ODTEntry(uint32_t Address, uint8_t AddressExtension, uint8_t Length)
 	m_Length = Length;
 }
 
+ODTEntry::ODTEntry(const ODTEntry & o)
+{
+	m_Address = o.m_Address;
+	m_AddressExtension = o.m_AddressExtension;
+	m_Length = o.m_Length;
+	m_DataType = o.m_DataType;
+}
+
 ODTEntry::~ODTEntry()
 {
 }
@@ -100,6 +108,12 @@ ODT::ODT()
 	m_First = false;
 }
 
+
+ODT::ODT(const ODT & o) : m_EntryList(o.m_EntryList)
+{
+	m_First = o.m_First;
+}
+
 ODT::~ODT()
 {
 }
@@ -141,6 +155,15 @@ XCP_API void ODT::SetFirst(bool First)
 
 DAQ::DAQ()
 {
+}
+
+DAQ::DAQ(const DAQ & o) : m_ODTList(o.m_ODTList)
+{
+	m_Mode = o.m_Mode;
+	m_EventChannel = o.m_EventChannel;
+	m_Prescaler = o.m_Prescaler;
+	m_Priority = o.m_Priority;
+	m_FirstPid = o.m_FirstPid;
 }
 
 DAQ::~DAQ()
@@ -218,6 +241,11 @@ XCP_API void DAQ::SetFirstPid(uint8_t FirstPid)
 
 DAQLayout::DAQLayout()
 {
+}
+
+DAQLayout::DAQLayout(const DAQLayout & o)  : m_DAQList(o.m_DAQList)
+{
+	Initialized = o.Initialized;
 }
 
 DAQLayout::~DAQLayout()

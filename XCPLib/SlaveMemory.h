@@ -32,6 +32,7 @@ private:
 public:
 	XCP_API ODTEntry();
 	XCP_API ODTEntry(uint32_t Address, uint8_t AddressExtension, uint8_t Length);
+	XCP_API ODTEntry(const ODTEntry& o);
 	XCP_API virtual ~ODTEntry();
 	XCP_API const uint32_t GetAddress() const;
 	XCP_API void SetAddress(uint32_t Address);
@@ -50,6 +51,7 @@ private:
 	bool m_First;
 public:
 	XCP_API ODT();
+	XCP_API ODT(const ODT& o);
 	XCP_API virtual ~ODT();
 	XCP_API void AddEntry(ODTEntry Entry);
 	XCP_API ODTEntry& GetEntry(uint32_t Index);
@@ -70,6 +72,7 @@ private:
 	uint8_t m_FirstPid;
 public:
 	XCP_API DAQ();
+	XCP_API DAQ(const DAQ& o);
 	XCP_API virtual ~DAQ();
 	XCP_API void AddODT(ODT Odt);
 	XCP_API ODT& GetOdt(uint32_t Index);
@@ -95,6 +98,7 @@ private:
 	bool Initialized = false;
 public:
 	XCP_API DAQLayout();
+	XCP_API DAQLayout(const DAQLayout &o);
 	XCP_API virtual ~DAQLayout();
 	XCP_API void AddDAQ(DAQ daq);
 	XCP_API DAQ& GetDAQ(uint32_t Index);

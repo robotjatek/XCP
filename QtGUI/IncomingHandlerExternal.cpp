@@ -15,10 +15,11 @@ IncomingHandlerExternal::~IncomingHandlerExternal()
 
 void IncomingHandlerExternal::Handle(DTO & Packet)
 {
+	ODT o = m_MasterPtr->GetDaqLayout().GetDAQ(Packet.GetDAQIndex()).GetOdt(Packet.GetODTIndex());
 	uint32_t ByteIndex = 0;
-	for (uint32_t i = 0; i <  m_MasterPtr->GetDaqLayout().GetDAQ(Packet.GetDAQIndex()).GetOdt(Packet.GetODTIndex()).GetNumberOfEntries(); i++)
+	for (uint32_t i = 0; i <  o.GetNumberOfEntries(); i++)
 	{		
-		switch (m_MasterPtr->GetDaqLayout().GetDAQ(Packet.GetDAQIndex()).GetOdt(Packet.GetODTIndex()).GetEntry(i).GetDataType())
+		switch (o.GetEntry(i).GetDataType())
 		{
 		case MeasurementDataTypes::XBYTE:
 			m_wnd->AddPointToSeries(Packet.GetDAQIndex(), Packet.GetODTIndex(), i, Packet.GetTimestamp(), (int8_t)Packet.GetByteElement(ByteIndex));
@@ -115,7 +116,7 @@ void IncomingHandlerExternal::Handle(DTO & Packet)
 		}
 			break;
 		}
-		ByteIndex += m_MasterPtr->GetDaqLayout().GetDAQ(Packet.GetDAQIndex()).GetOdt(Packet.GetODTIndex()).GetEntry(i).GetLength();
+		ByteIndex += o.GetEntry(i).GetLength();
 	}
 	if (m_FirstMeasurementData)
 	{
