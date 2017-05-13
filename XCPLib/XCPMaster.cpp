@@ -119,13 +119,13 @@ std::unique_ptr<IXCPMessage> XCPMaster::DeserializeMessage(std::vector<uint8_t>&
 		}
 		return std::unique_ptr<IXCPMessage>(MessageFrame);
 	}
-	std::cout << "couldnt deserialise the message\a\n";
+	std::cout << "couldnt deserialise the message\n";
 	std::cout << "---------------------------------------------\n";
 	if (m_SentCommandQueue.size() > 0) //TODO: delete this after all packet types are handled correctly...
 	{
 		m_SentCommandQueue.pop();
-		data.clear();
 	}
+	data.clear();
 	return nullptr;
 }
 

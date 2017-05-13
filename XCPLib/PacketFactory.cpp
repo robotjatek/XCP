@@ -234,25 +234,28 @@ std::vector<IXCPPacket*> PacketFactory::CreateUnlockPackets(const std::vector<ui
 
 IXCPPacket * PacketFactory::DeserializeIncomingFromSlave(const std::vector<uint8_t>& Data, uint8_t HeaderSize, uint8_t TailSize, CommandPacket* LastSentCommand)
 {
-	uint8_t PID = Data[HeaderSize];
-	switch (PID)
+	if (Data.size() > HeaderSize)
 	{
-	case CTOSlaveToMasterPacketTypes::RES:
-		return CreateResponsePacket(Data, HeaderSize, TailSize, LastSentCommand);
-		break;
-	case CTOSlaveToMasterPacketTypes::EV:
-		break;
-	case CTOSlaveToMasterPacketTypes::ERR:
-		return CreateErrorPacket(Data, HeaderSize, TailSize, LastSentCommand);
-		break;
-	case CTOSlaveToMasterPacketTypes::SERV:
-		break;
-	default:
-		if (PID >= 0x00 && PID <= 0xFB)
+		uint8_t PID = Data[HeaderSize];
+		switch (PID)
 		{
-			return DeserializeIncomingDaq(Data, HeaderSize, TailSize);
+		case CTOSlaveToMasterPacketTypes::RES:
+			return CreateResponsePacket(Data, HeaderSize, TailSize, LastSentCommand);
+			break;
+		case CTOSlaveToMasterPacketTypes::EV:
+			break;
+		case CTOSlaveToMasterPacketTypes::ERR:
+			return CreateErrorPacket(Data, HeaderSize, TailSize, LastSentCommand);
+			break;
+		case CTOSlaveToMasterPacketTypes::SERV:
+			break;
+		default:
+			if (PID >= 0x00 && PID <= 0xFB)
+			{
+				return DeserializeIncomingDaq(Data, HeaderSize, TailSize);
+			}
+			break;
 		}
-		break;
 	}
 	return nullptr;
 }

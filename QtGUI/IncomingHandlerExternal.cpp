@@ -13,6 +13,8 @@ IncomingHandlerExternal::~IncomingHandlerExternal()
 {
 }
 
+//TODO: fix multiple ODTs in a DAQ measurements
+
 void IncomingHandlerExternal::Handle(DTO & Packet)
 {
 	ODT o = m_MasterPtr->GetDaqLayout().GetDAQ(Packet.GetDAQIndex()).GetOdt(Packet.GetODTIndex());

@@ -69,8 +69,11 @@ void TestAppQt::MeasurementFinished()
 	ui.TestSend->setDisabled(false);
 	ui.MeasurementBtn->setDisabled(false);
 	std::cout << "Measurement complete!\nResizing chart axis...";
-	chart->axisX()->setRange(m_ChartXMin, m_ChartXMax);
-	chart->update();
+	if (this->SeriesVector.size())
+	{
+		chart->axisX()->setRange(m_ChartXMin, m_ChartXMax);
+		chart->update();
+	}
 }
 
 void TestAppQt::FirstMeasurementArrived(uint32_t timestamp)
@@ -117,7 +120,7 @@ void TestAppQt::ConfigMeasurementButtonPressed()
 	{
 		this->master->SetDaqLayout(d->GetDaqLayout());
 		this->ChartSeries = d->GetChartSeries();
-		
+
 		if (SeriesVector.size())
 		{
 			for (int i = 0; i < SeriesVector.size(); i++)
@@ -142,10 +145,13 @@ void TestAppQt::ConfigMeasurementButtonPressed()
 			SeriesVector[it->second.SeriesIndex]->setPen(p);*/
 		}
 
-		chart->createDefaultAxes();
-		chart->setTitle("Measurement");
-		chart->axisX()->setRange(0, 1000);
-		chart->axisY()->setRange(-150, 150);
+		if (SeriesVector.size())
+		{
+			chart->createDefaultAxes();
+			chart->setTitle("Measurement");
+			chart->axisX()->setRange(0, 1000);
+			chart->axisY()->setRange(-150, 150);
+		}
 
 	}
 	else
