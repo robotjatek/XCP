@@ -126,9 +126,6 @@ void ConfigureMeasurementQt::ItemClicked(QTreeWidgetItem *item, int column)
 		ui.addressInput->setText(QString::number(e.GetAddress(),16));
 		ui.addressExtInput->setText(QString::number(e.GetAddressExtension(), 16));
 		SeriesProperties p;
-		p.r = 0;
-		p.g = 0;
-		p.b = 0;
 		if (ChartSeries.find({ SelectedDAQId, SelectedODTId, SelectedEntryId }) != ChartSeries.end())
 		{
 			p = ChartSeries[{SelectedDAQId, SelectedODTId, SelectedEntryId}];
