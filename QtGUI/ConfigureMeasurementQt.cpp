@@ -125,7 +125,23 @@ void ConfigureMeasurementQt::ItemClicked(QTreeWidgetItem *item, int column)
 		ODTEntry e = daq_layout.GetDAQ(SelectedDAQId).GetOdt(SelectedODTId).GetEntry(SelectedEntryId);
 		ui.addressInput->setText(QString::number(e.GetAddress(),16));
 		ui.addressExtInput->setText(QString::number(e.GetAddressExtension(), 16));
-		ui.lengthInput->setText(QString::number(e.GetLength()));
+		SeriesProperties p;
+		p.r = 0;
+		p.g = 0;
+		p.b = 0;
+		if (ChartSeries.find({ SelectedDAQId, SelectedODTId, SelectedEntryId }) != ChartSeries.end())
+		{
+			p = ChartSeries[{SelectedDAQId, SelectedODTId, SelectedEntryId}];
+		}	
+		QColor c(p.r,p.g,p.b);
+		ui.colorBtn->setAutoFillBackground(true);
+		QPalette pal;
+		pal.setColor(QPalette::Button, c);
+		ui.colorBtn->setPalette(pal);
+		ui.colorBtn->setFlat(true);
+		ui.colorBtn->update();
+		ui.typeInput->setCurrentIndex(e.GetDataType());
+//		ui.lengthInput->setText(QString::number(e.GetLength()));
 	}
 }
 
@@ -177,8 +193,9 @@ void ConfigureMeasurementQt::SetEntrySettingsClicked()
 		e.SetAddress(address);
 		uint8_t addressExt = ui.addressExtInput->text().toUInt(&ok, 16);
 		e.SetAddressExtension(addressExt);
-		uint8_t length = ui.lengthInput->text().toUInt(&ok, 16);
-		e.SetLength(length);
+		e.SetDataType(ui.typeInput->currentIndex());
+		//uint8_t length = 1;//ui.lengthInput->text().toUInt(&ok, 16);
+		//e.SetLength(length);
 	}
 }
 
@@ -200,6 +217,12 @@ void ConfigureMeasurementQt::ColorPickerButtonClicked()
 	p.g = c.green();
 	p.b = c.blue();
 	ChartSeries[{SelectedDAQId, SelectedODTId, SelectedEntryId}] = p;
+	ui.colorBtn->setAutoFillBackground(true);
+	QPalette pal;
+	pal.setColor(QPalette::Button, c);
+	ui.colorBtn->setPalette(pal);
+	ui.colorBtn->setFlat(true);
+	ui.colorBtn->update();
 }
 
 void ConfigureMeasurementQt::AddDAQToTree()

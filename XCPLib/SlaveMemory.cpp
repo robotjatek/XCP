@@ -5,6 +5,7 @@ ODTEntry::ODTEntry()
 	m_Address = 0;
 	m_AddressExtension = 0;
 	m_Length = 0;
+	m_DataType = 0;
 }
 
 ODTEntry::ODTEntry(uint32_t Address, uint8_t AddressExtension, uint8_t Length)
@@ -46,6 +47,52 @@ const uint8_t ODTEntry::GetLength() const
 void ODTEntry::SetLength(uint8_t Length)
 {
 	m_Length = Length;
+}
+
+void ODTEntry::SetDataType(uint8_t DataType)
+{
+	m_DataType = DataType;
+	switch (m_DataType)
+	{
+	case MeasurementDataTypes::XBYTE:
+		m_Length = 1;
+		break;
+	case MeasurementDataTypes::XUBYTE:
+		m_Length = 1;
+		break;
+	case MeasurementDataTypes::XSHORT:
+		m_Length = 2;
+		break;
+	case MeasurementDataTypes::XUSHORT:
+		m_Length = 2;
+		break;
+	case MeasurementDataTypes::XWORD:
+		m_Length = 4;
+		break;
+	case MeasurementDataTypes::XUWORD:
+		m_Length = 4;
+		break;
+	case MeasurementDataTypes::XLONG:
+		m_Length = 8;
+		break;
+	case MeasurementDataTypes::XULONG:
+		m_Length = 8;
+		break;
+	case MeasurementDataTypes::XFLOAT32:
+		m_Length = 4;
+		break;
+	case MeasurementDataTypes::XFLOAT64:
+		m_Length = 8;
+		break;
+	default:
+		m_Length = 0; //undefined data type = error
+		break;
+	}
+}
+
+const uint8_t ODTEntry::GetDataType() const
+{
+	return m_DataType;
 }
 
 ODT::ODT()

@@ -1,5 +1,6 @@
 #include "IncomingHandlerExternal.h"
 #include "XCPWorkerThread.h"
+#include <Utils.h>
 
 IncomingHandlerExternal::IncomingHandlerExternal(XCPWorkerThread* wnd, XCPMaster* master)
 {
@@ -14,18 +15,113 @@ IncomingHandlerExternal::~IncomingHandlerExternal()
 
 void IncomingHandlerExternal::Handle(DTO & Packet)
 {
-	//ODT& odt = m_MasterPtr->GetDaqLayout().GetDAQ(Packet.GetDAQIndex()).GetOdt(Packet.GetODTIndex());
+	uint32_t ByteIndex = 0;
 	for (uint32_t i = 0; i <  m_MasterPtr->GetDaqLayout().GetDAQ(Packet.GetDAQIndex()).GetOdt(Packet.GetODTIndex()).GetNumberOfEntries(); i++)
-	{
-		ODTEntry& entry = m_MasterPtr->GetDaqLayout().GetDAQ(Packet.GetDAQIndex()).GetOdt(Packet.GetODTIndex()).GetEntry(i);
-		m_wnd->AddPointToSeries(Packet.GetDAQIndex(), Packet.GetODTIndex(), i, Packet.GetTimestamp(), (int8_t)Packet.GetByteElement(i));
+	{		
+		switch (m_MasterPtr->GetDaqLayout().GetDAQ(Packet.GetDAQIndex()).GetOdt(Packet.GetODTIndex()).GetEntry(i).GetDataType())
+		{
+		case MeasurementDataTypes::XBYTE:
+			m_wnd->AddPointToSeries(Packet.GetDAQIndex(), Packet.GetODTIndex(), i, Packet.GetTimestamp(), (int8_t)Packet.GetByteElement(ByteIndex));
+			break;
+		case MeasurementDataTypes::XUBYTE:
+			m_wnd->AddPointToSeries(Packet.GetDAQIndex(), Packet.GetODTIndex(), i, Packet.GetTimestamp(), (uint8_t)Packet.GetByteElement(ByteIndex));
+			break;
+		case MeasurementDataTypes::XSHORT:
+		{
+			std::vector<uint8_t> vec;
+			vec.push_back(Packet.GetByteElement(ByteIndex));
+			vec.push_back(Packet.GetByteElement(ByteIndex+1));
+			m_wnd->AddPointToSeries(Packet.GetDAQIndex(), Packet.GetODTIndex(), i, Packet.GetTimestamp(), XCP::Bitconverter::ToInt16(vec,m_MasterPtr->GetSlaveProperties().ByteOrder));
+		}
+			break;
+		case MeasurementDataTypes::XUSHORT:
+		{
+			std::vector<uint8_t> vec;
+			vec.push_back(Packet.GetByteElement(ByteIndex));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 1));
+			m_wnd->AddPointToSeries(Packet.GetDAQIndex(), Packet.GetODTIndex(), i, Packet.GetTimestamp(), XCP::Bitconverter::ToUint16(vec, m_MasterPtr->GetSlaveProperties().ByteOrder));
+		}
+			break;
+		case MeasurementDataTypes::XWORD:
+		{
+			std::vector<uint8_t> vec;
+			vec.push_back(Packet.GetByteElement(ByteIndex));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 1));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 2));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 3));
+			m_wnd->AddPointToSeries(Packet.GetDAQIndex(), Packet.GetODTIndex(), i, Packet.GetTimestamp(), XCP::Bitconverter::ToInt32(vec, m_MasterPtr->GetSlaveProperties().ByteOrder));
+		}
+			break;
+		case MeasurementDataTypes::XUWORD:
+		{
+			std::vector<uint8_t> vec;
+			vec.push_back(Packet.GetByteElement(ByteIndex));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 1));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 2));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 3));
+			m_wnd->AddPointToSeries(Packet.GetDAQIndex(), Packet.GetODTIndex(), i, Packet.GetTimestamp(), XCP::Bitconverter::ToUint32(vec, m_MasterPtr->GetSlaveProperties().ByteOrder));
+		}
+			break;
+		case MeasurementDataTypes::XLONG:
+		{
+			std::vector<uint8_t> vec;
+			vec.push_back(Packet.GetByteElement(ByteIndex));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 1));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 2));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 3));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 4));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 5));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 6));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 7));
+			m_wnd->AddPointToSeries(Packet.GetDAQIndex(), Packet.GetODTIndex(), i, Packet.GetTimestamp(), XCP::Bitconverter::ToInt64(vec, m_MasterPtr->GetSlaveProperties().ByteOrder));
+		}
+			break;
+		case MeasurementDataTypes::XULONG:
+		{
+			std::vector<uint8_t> vec;
+			vec.push_back(Packet.GetByteElement(ByteIndex));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 1));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 2));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 3));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 4));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 5));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 6));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 7));
+			m_wnd->AddPointToSeries(Packet.GetDAQIndex(), Packet.GetODTIndex(), i, Packet.GetTimestamp(), XCP::Bitconverter::ToUint64(vec, m_MasterPtr->GetSlaveProperties().ByteOrder));
+		}
+			break;
+		case MeasurementDataTypes::XFLOAT32:
+		{
+			std::vector<uint8_t> vec;
+			vec.push_back(Packet.GetByteElement(ByteIndex));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 1));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 2));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 3));
+			m_wnd->AddPointToSeries(Packet.GetDAQIndex(), Packet.GetODTIndex(), i, Packet.GetTimestamp(), XCP::Bitconverter::ToFloat(vec, m_MasterPtr->GetSlaveProperties().ByteOrder));
+		}
+			break;
+		case MeasurementDataTypes::XFLOAT64:
+		{
+			std::vector<uint8_t> vec;
+			vec.push_back(Packet.GetByteElement(ByteIndex));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 1));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 2));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 3));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 4));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 5));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 6));
+			vec.push_back(Packet.GetByteElement(ByteIndex + 7));
+			m_wnd->AddPointToSeries(Packet.GetDAQIndex(), Packet.GetODTIndex(), i, Packet.GetTimestamp(), XCP::Bitconverter::ToDouble(vec, m_MasterPtr->GetSlaveProperties().ByteOrder));
+		}
+			break;
+		}
+		ByteIndex += m_MasterPtr->GetDaqLayout().GetDAQ(Packet.GetDAQIndex()).GetOdt(Packet.GetODTIndex()).GetEntry(i).GetLength();
 	}
 	if (m_FirstMeasurementData)
 	{
 		m_wnd->FirstMeasurementArrived(Packet.GetTimestamp());
 		m_FirstMeasurementData = false;
 	}
-	//m_wnd->AddPointToSeries(Packet.GetDAQIndex(), Packet.GetODTIndex(), 1, x, (uint8_t)Packet.GetByteElement(1));
 	x++;
 }
 

@@ -13,10 +13,12 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QSlider>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QVBoxLayout>
@@ -31,6 +33,8 @@ public:
     QVBoxLayout *verticalLayout;
     QPushButton *MeasurementBtn;
     QPushButton *TestSend;
+    QHBoxLayout *horizontalLayout_2;
+    QSlider *verticalSlider;
     QWidget *ChartWidget;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
@@ -40,7 +44,7 @@ public:
     {
         if (TestAppQtClass->objectName().isEmpty())
             TestAppQtClass->setObjectName(QStringLiteral("TestAppQtClass"));
-        TestAppQtClass->resize(840, 718);
+        TestAppQtClass->resize(881, 805);
         centralWidget = new QWidget(TestAppQtClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         verticalLayout = new QVBoxLayout(centralWidget);
@@ -57,6 +61,19 @@ public:
 
         verticalLayout->addWidget(TestSend);
 
+        horizontalLayout_2 = new QHBoxLayout();
+        horizontalLayout_2->setSpacing(6);
+        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
+        horizontalLayout_2->setContentsMargins(-1, 5, -1, -1);
+        verticalSlider = new QSlider(centralWidget);
+        verticalSlider->setObjectName(QStringLiteral("verticalSlider"));
+        verticalSlider->setMinimum(0);
+        verticalSlider->setMaximum(65535);
+        verticalSlider->setValue(127);
+        verticalSlider->setOrientation(Qt::Vertical);
+
+        horizontalLayout_2->addWidget(verticalSlider);
+
         ChartWidget = new QWidget(centralWidget);
         ChartWidget->setObjectName(QStringLiteral("ChartWidget"));
         QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -65,13 +82,17 @@ public:
         sizePolicy.setHeightForWidth(ChartWidget->sizePolicy().hasHeightForWidth());
         ChartWidget->setSizePolicy(sizePolicy);
         ChartWidget->setMinimumSize(QSize(0, 500));
+        TestSend->raise();
 
-        verticalLayout->addWidget(ChartWidget);
+        horizontalLayout_2->addWidget(ChartWidget);
+
+
+        verticalLayout->addLayout(horizontalLayout_2);
 
         TestAppQtClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(TestAppQtClass);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 840, 21));
+        menuBar->setGeometry(QRect(0, 0, 881, 21));
         TestAppQtClass->setMenuBar(menuBar);
         mainToolBar = new QToolBar(TestAppQtClass);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));

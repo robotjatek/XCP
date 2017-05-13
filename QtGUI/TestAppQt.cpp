@@ -30,17 +30,18 @@ TestAppQt::TestAppQt(QWidget *parent)
 	master = new XCPMaster(TransportLayer::ETHERNET);
 	master->SetSeedAndKeyFunctionPointers(GetAvailablePrivileges, ComputeKeyFromSeed);
 	thread = new XCPWorkerThread(master);
-	/*connect(thread, SIGNAL(NotifyUI(unsigned int, double)), this,
-		SLOT(AddPoint(unsigned int, double)));*/
+
 	connect(thread, SIGNAL(NotifyUI(uint16_t, uint8_t, uint32_t, double, double)), this, SLOT(AddPointToSeries(uint16_t, uint8_t, uint32_t, double, double)));
 	connect(thread, SIGNAL(Finished()), this, SLOT(MeasurementFinished()));
 	connect(thread, SIGNAL(SetChartXAxisStart(uint32_t)), this, SLOT(FirstMeasurementArrived(uint32_t)));
+	connect(ui.verticalSlider, SIGNAL(valueChanged(int)), this, SLOT(SliderValueChanged(int)));
 	Handler = new IncomingHandlerExternal(thread, master);
 	master->SetExternalMessageHandler(Handler);
 
 	chart = new QChart();
 	chart->legend()->hide();
 	chart->setTitle("Measurement");
+	chart->createDefaultAxes();
 	QChartView* chartView = new QChartView(chart);
 	chartView->setRenderHint(QPainter::Antialiasing);
 
@@ -62,24 +63,26 @@ TestAppQt::~TestAppQt()
 	delete Handler;
 	delete thread;
 }
-/*
-void TestAppQt::AddPoint(unsigned int series, double point)
-{
-	SeriesVector[series]->append((NumOfPoints++) / 2, point);
-}
-*/
+
 void TestAppQt::MeasurementFinished()
 {
 	ui.TestSend->setDisabled(false);
 	ui.MeasurementBtn->setDisabled(false);
 	std::cout << "Measurement complete!\nResizing chart axis...";
 	chart->axisX()->setRange(m_ChartXMin, m_ChartXMax);
+	chart->update();
 }
 
 void TestAppQt::FirstMeasurementArrived(uint32_t timestamp)
 {
 	m_ChartXMin = timestamp;
 	chart->axisX()->setRange(timestamp, timestamp + 110000);
+}
+
+void TestAppQt::SliderValueChanged(int value)
+{
+	chart->axisY()->setRange((int32_t)0-value, (int32_t)0+value);
+	chart->update();
 }
 
 int TestAppQt::LoadDLL()
@@ -141,7 +144,7 @@ void TestAppQt::ConfigMeasurementButtonPressed()
 
 		chart->createDefaultAxes();
 		chart->setTitle("Measurement");
-		//chart->axisX()->setRange(0, 1000);
+		chart->axisX()->setRange(0, 1000);
 		chart->axisY()->setRange(-150, 150);
 
 	}

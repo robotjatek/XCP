@@ -31,6 +31,7 @@ public:
 	void AddPointToSeries(uint16_t, uint8_t, uint32_t, double, double);
 	void MeasurementFinished();
 	void FirstMeasurementArrived(uint32_t timestamp);
+	void SliderValueChanged(int value);
 private:
     Ui::TestAppQtClass ui;
 	QChart* chart;

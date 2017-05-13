@@ -177,6 +177,7 @@
     <ClInclude Include="TCPMessageFactory.h" />
     <ClInclude Include="UnlockPacket.h" />
     <ClInclude Include="UploadPacket.h" />
+    <ClInclude Include="Utils.h" />
     <ClInclude Include="XCPMaster.h" />
   </ItemGroup>
   <ItemGroup>
@@ -204,6 +205,7 @@
     <ClCompile Include="TCPMessageFactory.cpp" />
     <ClCompile Include="UnlockPacket.cpp" />
     <ClCompile Include="UploadPacket.cpp" />
+    <ClCompile Include="Utils.cpp" />
     <ClCompile Include="XCPMaster.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

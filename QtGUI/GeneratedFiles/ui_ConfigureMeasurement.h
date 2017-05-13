@@ -14,6 +14,7 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QCheckBox>
+#include <QtWidgets/QComboBox>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QGroupBox>
@@ -68,12 +69,12 @@ public:
     QGroupBox *entryBox;
     QWidget *formLayoutWidget_2;
     QFormLayout *formLayout_2;
-    QLineEdit *addressInput;
     QLabel *label_4;
+    QLineEdit *addressInput;
     QLabel *label_5;
-    QLabel *label_6;
     QLineEdit *addressExtInput;
-    QLineEdit *lengthInput;
+    QLabel *label_6;
+    QComboBox *typeInput;
     QLabel *label_7;
     QPushButton *colorBtn;
 
@@ -81,7 +82,7 @@ public:
     {
         if (ConfigureMeasurementUi->objectName().isEmpty())
             ConfigureMeasurementUi->setObjectName(QStringLiteral("ConfigureMeasurementUi"));
-        ConfigureMeasurementUi->resize(715, 382);
+        ConfigureMeasurementUi->resize(721, 376);
         layoutWidget = new QWidget(ConfigureMeasurementUi);
         layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
         layoutWidget->setGeometry(QRect(606, 10, 97, 151));
@@ -229,40 +230,40 @@ public:
         entryBox->setGeometry(QRect(310, 240, 291, 131));
         formLayoutWidget_2 = new QWidget(entryBox);
         formLayoutWidget_2->setObjectName(QStringLiteral("formLayoutWidget_2"));
-        formLayoutWidget_2->setGeometry(QRect(0, 20, 281, 107));
+        formLayoutWidget_2->setGeometry(QRect(0, 20, 281, 133));
         formLayout_2 = new QFormLayout(formLayoutWidget_2);
         formLayout_2->setObjectName(QStringLiteral("formLayout_2"));
         formLayout_2->setSizeConstraint(QLayout::SetMaximumSize);
         formLayout_2->setContentsMargins(7, 0, 5, 5);
-        addressInput = new QLineEdit(formLayoutWidget_2);
-        addressInput->setObjectName(QStringLiteral("addressInput"));
-
-        formLayout_2->setWidget(0, QFormLayout::FieldRole, addressInput);
-
         label_4 = new QLabel(formLayoutWidget_2);
         label_4->setObjectName(QStringLiteral("label_4"));
 
         formLayout_2->setWidget(0, QFormLayout::LabelRole, label_4);
+
+        addressInput = new QLineEdit(formLayoutWidget_2);
+        addressInput->setObjectName(QStringLiteral("addressInput"));
+
+        formLayout_2->setWidget(0, QFormLayout::FieldRole, addressInput);
 
         label_5 = new QLabel(formLayoutWidget_2);
         label_5->setObjectName(QStringLiteral("label_5"));
 
         formLayout_2->setWidget(1, QFormLayout::LabelRole, label_5);
 
-        label_6 = new QLabel(formLayoutWidget_2);
-        label_6->setObjectName(QStringLiteral("label_6"));
-
-        formLayout_2->setWidget(2, QFormLayout::LabelRole, label_6);
-
         addressExtInput = new QLineEdit(formLayoutWidget_2);
         addressExtInput->setObjectName(QStringLiteral("addressExtInput"));
 
         formLayout_2->setWidget(1, QFormLayout::FieldRole, addressExtInput);
 
-        lengthInput = new QLineEdit(formLayoutWidget_2);
-        lengthInput->setObjectName(QStringLiteral("lengthInput"));
+        label_6 = new QLabel(formLayoutWidget_2);
+        label_6->setObjectName(QStringLiteral("label_6"));
 
-        formLayout_2->setWidget(2, QFormLayout::FieldRole, lengthInput);
+        formLayout_2->setWidget(2, QFormLayout::LabelRole, label_6);
+
+        typeInput = new QComboBox(formLayoutWidget_2);
+        typeInput->setObjectName(QStringLiteral("typeInput"));
+
+        formLayout_2->setWidget(2, QFormLayout::FieldRole, typeInput);
 
         label_7 = new QLabel(formLayoutWidget_2);
         label_7->setObjectName(QStringLiteral("label_7"));
@@ -307,7 +308,20 @@ public:
         entryBox->setTitle(QApplication::translate("ConfigureMeasurementUi", "Entry Settings", Q_NULLPTR));
         label_4->setText(QApplication::translate("ConfigureMeasurementUi", "Address", Q_NULLPTR));
         label_5->setText(QApplication::translate("ConfigureMeasurementUi", "Address Extension", Q_NULLPTR));
-        label_6->setText(QApplication::translate("ConfigureMeasurementUi", "Length", Q_NULLPTR));
+        label_6->setText(QApplication::translate("ConfigureMeasurementUi", "Type", Q_NULLPTR));
+        typeInput->clear();
+        typeInput->insertItems(0, QStringList()
+         << QApplication::translate("ConfigureMeasurementUi", "byte", Q_NULLPTR)
+         << QApplication::translate("ConfigureMeasurementUi", "ubyte", Q_NULLPTR)
+         << QApplication::translate("ConfigureMeasurementUi", "short", Q_NULLPTR)
+         << QApplication::translate("ConfigureMeasurementUi", "ushort", Q_NULLPTR)
+         << QApplication::translate("ConfigureMeasurementUi", "word", Q_NULLPTR)
+         << QApplication::translate("ConfigureMeasurementUi", "uword", Q_NULLPTR)
+         << QApplication::translate("ConfigureMeasurementUi", "long", Q_NULLPTR)
+         << QApplication::translate("ConfigureMeasurementUi", "ulong", Q_NULLPTR)
+         << QApplication::translate("ConfigureMeasurementUi", "float32", Q_NULLPTR)
+         << QApplication::translate("ConfigureMeasurementUi", "float64", Q_NULLPTR)
+        );
         label_7->setText(QApplication::translate("ConfigureMeasurementUi", "SeriesColor", Q_NULLPTR));
         colorBtn->setText(QString());
     } // retranslateUi

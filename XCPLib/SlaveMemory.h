@@ -8,12 +8,27 @@
 #define XCP_API    __declspec(dllimport)
 #endif
 
+enum MeasurementDataTypes
+{
+	XBYTE = 0,
+	XUBYTE = 1,
+	XSHORT = 2,
+	XUSHORT = 3,
+	XWORD = 4,
+	XUWORD = 5,
+	XLONG = 6,
+	XULONG = 7,
+	XFLOAT32 = 8,
+	XFLOAT64 = 9,
+};
+
 class ODTEntry
 {
 private:
 	uint32_t m_Address;
 	uint8_t m_AddressExtension;
 	uint8_t m_Length;
+	uint8_t m_DataType;
 public:
 	XCP_API ODTEntry();
 	XCP_API ODTEntry(uint32_t Address, uint8_t AddressExtension, uint8_t Length);
@@ -24,6 +39,8 @@ public:
 	XCP_API void SetAddressExtension(uint8_t AddressExtension);
 	XCP_API const uint8_t GetLength() const;
 	XCP_API void SetLength(uint8_t Length);
+	XCP_API void SetDataType(uint8_t DataType);
+	XCP_API const uint8_t GetDataType() const;
 };
 
 class ODT

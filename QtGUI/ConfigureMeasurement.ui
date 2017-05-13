@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>715</width>
-    <height>382</height>
+    <width>721</width>
+    <height>376</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -336,7 +336,7 @@
       <x>0</x>
       <y>20</y>
       <width>281</width>
-      <height>107</height>
+      <height>133</height>
      </rect>
     </property>
     <layout class="QFormLayout" name="formLayout_2">
@@ -352,15 +352,15 @@
      <property name="bottomMargin">
       <number>5</number>
      </property>
-     <item row="0" column="1">
-      <widget class="QLineEdit" name="addressInput"/>
-     </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label_4">
        <property name="text">
         <string>Address</string>
        </property>
       </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="addressInput"/>
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label_5">
@@ -369,18 +369,69 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_6">
-       <property name="text">
-        <string>Length</string>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="1">
       <widget class="QLineEdit" name="addressExtInput"/>
      </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>Type</string>
+       </property>
+      </widget>
+     </item>
      <item row="2" column="1">
-      <widget class="QLineEdit" name="lengthInput"/>
+      <widget class="QComboBox" name="typeInput">
+       <item>
+        <property name="text">
+         <string>byte</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>ubyte</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>short</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>ushort</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>word</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>uword</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>long</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>ulong</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>float32</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>float64</string>
+        </property>
+       </item>
+      </widget>
      </item>
      <item row="3" column="0">
       <widget class="QLabel" name="label_7">
