@@ -3,7 +3,7 @@
 
 using ModeFieldBits = SetDaqListModePacket::ModeFieldBits;
 
-ConfigureMeasurementQt::ConfigureMeasurementQt(const DAQLayout& MasterDAQLayout, QWidget* parent) : QDialog(parent)
+ConfigureMeasurementQt::ConfigureMeasurementQt(const std::map<std::tuple<uint16_t, uint8_t, uint32_t>, SeriesProperties>& ChartSeries, const DAQLayout& MasterDAQLayout, QWidget* parent) : QDialog(parent)
 {
 	ui.setupUi(this);
 	ui.treeWidget->setColumnCount(1);
@@ -18,6 +18,7 @@ ConfigureMeasurementQt::ConfigureMeasurementQt(const DAQLayout& MasterDAQLayout,
 	SelectedODT = nullptr;
 	SelectedEntry = nullptr;
 
+	m_ChartSeries = ChartSeries;
 	m_DAQLayout = MasterDAQLayout;
 	for (unsigned int i = 0; i < m_DAQLayout.GetNumberOfDAQLists(); i++)
 	{
@@ -130,9 +131,9 @@ void ConfigureMeasurementQt::ItemClicked(QTreeWidgetItem *item, int column)
 		ui.addressInput->setText(QString::number(e.GetAddress(),16));
 		ui.addressExtInput->setText(QString::number(e.GetAddressExtension(), 16));
 		SeriesProperties p;
-		if (ChartSeries.find({ SelectedDAQId, SelectedODTId, SelectedEntryId }) != ChartSeries.end())
+		if (m_ChartSeries.find({ SelectedDAQId, SelectedODTId, SelectedEntryId }) != m_ChartSeries.end())
 		{
-			p = ChartSeries[{SelectedDAQId, SelectedODTId, SelectedEntryId}];
+			p = m_ChartSeries[{SelectedDAQId, SelectedODTId, SelectedEntryId}];
 		}	
 		QColor c(p.r,p.g,p.b);
 		ui.colorBtn->setAutoFillBackground(true);
@@ -203,18 +204,18 @@ void ConfigureMeasurementQt::ColorPickerButtonClicked()
 	ColorDialog->exec();
 	SeriesProperties p;
 	QColor c = ColorDialog->selectedColor();
-	if (ChartSeries.find({ SelectedDAQId, SelectedODTId, SelectedEntryId }) == ChartSeries.end())
+	if (m_ChartSeries.find({ SelectedDAQId, SelectedODTId, SelectedEntryId }) == m_ChartSeries.end())
 	{
-		p.SeriesIndex = ChartSeries.size();
+		p.SeriesIndex = m_ChartSeries.size();
 	}
 	else
 	{
-		p = ChartSeries[{ SelectedDAQId, SelectedODTId, SelectedEntryId }];
+		p = m_ChartSeries[{ SelectedDAQId, SelectedODTId, SelectedEntryId }];
 	}
 	p.r = c.red();
 	p.g = c.green();
 	p.b = c.blue();
-	ChartSeries[{SelectedDAQId, SelectedODTId, SelectedEntryId}] = p;
+	m_ChartSeries[{SelectedDAQId, SelectedODTId, SelectedEntryId}] = p;
 	ui.colorBtn->setAutoFillBackground(true);
 	QPalette pal;
 	pal.setColor(QPalette::Button, c);
@@ -278,7 +279,7 @@ void ConfigureMeasurementQt::AddEntryToList(QTreeWidgetItem * parent)
 
 const std::map<std::tuple<uint16_t, uint8_t, uint32_t>, SeriesProperties>& ConfigureMeasurementQt::GetChartSeries()
 {
-	return this->ChartSeries;
+	return this->m_ChartSeries;
 }
 
 void ConfigureMeasurementQt::reject()

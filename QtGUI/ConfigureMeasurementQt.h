@@ -13,7 +13,7 @@ class ConfigureMeasurementQt :
 	Q_OBJECT
 
 public:
-	ConfigureMeasurementQt(const DAQLayout& MasterDAQLayout, QWidget* parent = nullptr);
+	ConfigureMeasurementQt(const std::map<std::tuple<uint16_t, uint8_t, uint32_t>, SeriesProperties>& ChartSeries, const DAQLayout& MasterDAQLayout, QWidget* parent = nullptr);
 	virtual ~ConfigureMeasurementQt();
 	public slots:
 	void accept();
@@ -32,7 +32,7 @@ public:
 private:
 	Ui::ConfigureMeasurementUi ui;
 	DAQLayout m_DAQLayout;
-	std::map<std::tuple<uint16_t, uint8_t, uint32_t>, SeriesProperties> ChartSeries; //daq id, odt id, entry id
+	std::map<std::tuple<uint16_t, uint8_t, uint32_t>, SeriesProperties> m_ChartSeries; //daq id, odt id, entry id
 	QTreeWidgetItem* SelectedDAQ;
 	QTreeWidgetItem* SelectedODT;
 	QTreeWidgetItem* SelectedEntry;
