@@ -115,7 +115,7 @@ int TestAppQt::LoadDLL()
 
 void TestAppQt::ConfigMeasurementButtonPressed()
 {
-	ConfigureMeasurementQt* d = new ConfigureMeasurementQt(this);
+	ConfigureMeasurementQt* d = new ConfigureMeasurementQt(master->GetDaqLayout(),this);
 	if (d->exec() == QDialog::Accepted)
 	{
 		this->master->SetDaqLayout(d->GetDaqLayout());

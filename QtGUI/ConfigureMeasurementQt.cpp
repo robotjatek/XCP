@@ -3,7 +3,7 @@
 
 using ModeFieldBits = SetDaqListModePacket::ModeFieldBits;
 
-ConfigureMeasurementQt::ConfigureMeasurementQt(QWidget* parent) : QDialog(parent)
+ConfigureMeasurementQt::ConfigureMeasurementQt(const DAQLayout& MasterDAQLayout, QWidget* parent) : QDialog(parent)
 {
 	ui.setupUi(this);
 	ui.treeWidget->setColumnCount(1);
@@ -13,11 +13,24 @@ ConfigureMeasurementQt::ConfigureMeasurementQt(QWidget* parent) : QDialog(parent
 	connect(ui.setDAQBtn, SIGNAL(clicked()), this, SLOT(SetDAQSettingsClicked()));
 	connect(ui.setEntryBtn, SIGNAL(clicked()), this, SLOT(SetEntrySettingsClicked()));
 	connect(ui.colorBtn, SIGNAL(clicked()), this, SLOT(ColorPickerButtonClicked()));
-	//connect(ui.treeWidget, SIGNAL(itemClicked(QTreeWidgetItem*, int)), this, SLOT(ItemClicked(QTreeWidgetItem*, int)));
 	connect(ui.treeWidget, SIGNAL(itemSelectionChanged()), this, SLOT(ItemSelected()));
 	SelectedDAQ = nullptr;
 	SelectedODT = nullptr;
 	SelectedEntry = nullptr;
+
+	m_DAQLayout = MasterDAQLayout;
+	for (unsigned int i = 0; i < m_DAQLayout.GetNumberOfDAQLists(); i++)
+	{
+		QTreeWidgetItem* LastAddedDAQItem = AddDAQToList();
+		for (unsigned int j = 0; j < m_DAQLayout.GetDAQ(i).GetNumberOfODTs(); j++)
+		{
+			QTreeWidgetItem* LastAddedODTItem = AddODTToList(LastAddedDAQItem);
+			for (unsigned int k = 0; k < m_DAQLayout.GetDAQ(i).GetOdt(j).GetNumberOfEntries(); k++)
+			{
+				AddEntryToList(LastAddedODTItem);
+			}
+		}
+	}
 
 	/*DAQLayout daqlayout;
 	DAQ daq0;
@@ -52,7 +65,7 @@ ConfigureMeasurementQt::~ConfigureMeasurementQt()
 
 const DAQLayout & ConfigureMeasurementQt::GetDaqLayout()
 {
-	return daq_layout;
+	return m_DAQLayout;
 }
 
 void ConfigureMeasurementQt::AddDaqBtnClicked()
@@ -78,15 +91,6 @@ void ConfigureMeasurementQt::AddEntryBtnClicked()
 
 void ConfigureMeasurementQt::ItemClicked(QTreeWidgetItem *item, int column)
 {
-	if (item->parent())
-	{
-		printf("%d", item->parent()->indexOfChild(item));
-	}
-	else
-	{
-		printf("%d", ui.treeWidget->indexOfTopLevelItem(item));
-	}
-
 	if (item->parent() == 0) //DAQ
 	{
 		SelectedDAQ = item;
@@ -94,7 +98,7 @@ void ConfigureMeasurementQt::ItemClicked(QTreeWidgetItem *item, int column)
 		SelectedEntry = nullptr;
 		SelectedDAQId = ui.treeWidget->indexOfTopLevelItem(item);
 
-		DAQ d = daq_layout.GetDAQ(SelectedDAQId);
+		DAQ d = m_DAQLayout.GetDAQ(SelectedDAQId);
 		ui.timestampBox->setChecked(d.GetMode()&ModeFieldBits::TIMESTAMP);
 		ui.pidBox->setChecked(d.GetMode()&ModeFieldBits::PID_OFF);
 		ui.ctrBox->setChecked(d.GetMode()&ModeFieldBits::DTO_CTR);
@@ -122,7 +126,7 @@ void ConfigureMeasurementQt::ItemClicked(QTreeWidgetItem *item, int column)
 		SelectedODTId = item->parent()->parent()->indexOfChild(item->parent());
 		SelectedDAQ = item->parent()->parent();
 		SelectedDAQId = ui.treeWidget->indexOfTopLevelItem(item->parent()->parent());
-		ODTEntry e = daq_layout.GetDAQ(SelectedDAQId).GetOdt(SelectedODTId).GetEntry(SelectedEntryId);
+		ODTEntry e = m_DAQLayout.GetDAQ(SelectedDAQId).GetOdt(SelectedODTId).GetEntry(SelectedEntryId);
 		ui.addressInput->setText(QString::number(e.GetAddress(),16));
 		ui.addressExtInput->setText(QString::number(e.GetAddressExtension(), 16));
 		SeriesProperties p;
@@ -138,7 +142,6 @@ void ConfigureMeasurementQt::ItemClicked(QTreeWidgetItem *item, int column)
 		ui.colorBtn->setFlat(true);
 		ui.colorBtn->update();
 		ui.typeInput->setCurrentIndex(e.GetDataType());
-//		ui.lengthInput->setText(QString::number(e.GetLength()));
 	}
 }
 
@@ -151,7 +154,7 @@ void ConfigureMeasurementQt::SetDAQSettingsClicked()
 {
 	if (SelectedDAQ)
 	{
-		DAQ& d = daq_layout.GetDAQ(SelectedDAQId);
+		DAQ& d = m_DAQLayout.GetDAQ(SelectedDAQId);
 		d.SetEventChannel(ui.eventBox->value());
 		d.SetPriority(ui.priorityBox->value());
 		d.SetPrescaler(ui.prescalerBox->value());
@@ -184,15 +187,13 @@ void ConfigureMeasurementQt::SetEntrySettingsClicked()
 {
 	if (SelectedEntry)
 	{
-		ODTEntry& e = daq_layout.GetDAQ(SelectedDAQId).GetOdt(SelectedODTId).GetEntry(SelectedEntryId);
+		ODTEntry& e = m_DAQLayout.GetDAQ(SelectedDAQId).GetOdt(SelectedODTId).GetEntry(SelectedEntryId);
 		bool ok;
 		uint32_t address = ui.addressInput->text().toUInt(&ok,16);
 		e.SetAddress(address);
 		uint8_t addressExt = ui.addressExtInput->text().toUInt(&ok, 16);
 		e.SetAddressExtension(addressExt);
 		e.SetDataType(ui.typeInput->currentIndex());
-		//uint8_t length = 1;//ui.lengthInput->text().toUInt(&ok, 16);
-		//e.SetLength(length);
 	}
 }
 
@@ -224,40 +225,55 @@ void ConfigureMeasurementQt::ColorPickerButtonClicked()
 
 void ConfigureMeasurementQt::AddDAQToTree()
 {
-	QTreeWidgetItem* item = new QTreeWidgetItem(ui.treeWidget);
-	static int i = 0;
-	item->setText(0, QString("DAQ ")+QString::number(i++));
+	AddDAQToList();
 	DAQ d;
 	d.SetPriority(0);
 	d.SetEventChannel(1);
 	d.SetMode(ModeFieldBits::TIMESTAMP);
 	d.SetPrescaler(1);
-	daq_layout.AddDAQ(d);
+	m_DAQLayout.AddDAQ(d);
 }
 
 void ConfigureMeasurementQt::AddODTToDAQ(QTreeWidgetItem * parent)
+{
+	AddODTToList(parent);
+	ODT o;
+	m_DAQLayout.GetDAQ(SelectedDAQId).AddODT(o);
+}
+
+void ConfigureMeasurementQt::AddEntryToODT(QTreeWidgetItem * parent)
+{
+	AddEntryToList(parent);
+	ODTEntry e;
+	e.SetLength(1);
+	m_DAQLayout.GetDAQ(SelectedDAQId).GetOdt(SelectedODTId).AddEntry(e);
+}
+
+QTreeWidgetItem* ConfigureMeasurementQt::AddDAQToList()
+{
+	QTreeWidgetItem* item = new QTreeWidgetItem(ui.treeWidget);
+	int i = ui.treeWidget->topLevelItemCount();
+	item->setText(0, QString("DAQ ") + QString::number(i++));
+	return item;
+}
+
+QTreeWidgetItem* ConfigureMeasurementQt::AddODTToList(QTreeWidgetItem * parent)
 {
 	QTreeWidgetItem *treeItem = new QTreeWidgetItem();
 	int i = parent->childCount();
 	treeItem->setText(0, QString("ODT ") + QString::number(i));
 	parent->addChild(treeItem);
 	parent->setExpanded(true);
-
-	ODT o;
-	daq_layout.GetDAQ(SelectedDAQId).AddODT(o);
+	return treeItem;
 }
 
-void ConfigureMeasurementQt::AddEntryToODT(QTreeWidgetItem * parent)
+void ConfigureMeasurementQt::AddEntryToList(QTreeWidgetItem * parent)
 {
 	QTreeWidgetItem *treeItem = new QTreeWidgetItem();
 	int i = parent->childCount();
 	treeItem->setText(0, QString("Entry ") + QString::number(i));
 	parent->addChild(treeItem);
 	parent->setExpanded(true);
-
-	ODTEntry e;
-	e.SetLength(1);
-	daq_layout.GetDAQ(SelectedDAQId).GetOdt(SelectedODTId).AddEntry(e);
 }
 
 const std::map<std::tuple<uint16_t, uint8_t, uint32_t>, SeriesProperties>& ConfigureMeasurementQt::GetChartSeries()
@@ -272,6 +288,6 @@ void ConfigureMeasurementQt::reject()
 
 void ConfigureMeasurementQt::accept()
 {
-	this->daq_layout.SetInitialized(true);
+	this->m_DAQLayout.SetInitialized(true);
 	QDialog::accept();
 }
