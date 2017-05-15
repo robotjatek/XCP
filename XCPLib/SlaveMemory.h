@@ -104,6 +104,7 @@ public:
 	XCP_API DAQLayout(const DAQLayout &o);
 	XCP_API virtual ~DAQLayout();
 	XCP_API void AddDAQ(DAQ daq);
+	XCP_API void SetDAQ(unsigned int id,DAQ daq);
 	XCP_API DAQ& GetDAQ(uint32_t Index);
 	XCP_API const uint16_t GetNumberOfDAQLists() const;
 	XCP_API int32_t CalculateDAQNumberFromAbsolutePID(uint8_t PID);

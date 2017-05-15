@@ -286,7 +286,7 @@ XCP_API void XCPMaster::SetSeedAndKeyFunctionPointers(XCP_GetAvailablePrivileges
 	m_ComputeKeyFromSeed = ComputeKeyPtr;
 }
 
-XCP_API DAQLayout XCPMaster::GetDaqLayout()
+XCP_API DAQLayout& XCPMaster::GetDaqLayout()
 {
 	return m_DAQLayout;
 }

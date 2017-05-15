@@ -110,7 +110,7 @@ public:
 	XCP_API IXCPMessage* ReceiveMessage(IXCPMessage* Message);
 	XCP_API void AddSentMessage(IXCPMessage* Packet);
 	XCP_API void SetSeedAndKeyFunctionPointers(XCP_GetAvailablePrivilegesPtr_t GetAvailablePrivilegesPtr, XCP_ComputeKeyFromSeedPtr_t ComputeKeyPtr);
-	XCP_API DAQLayout GetDaqLayout();
+	XCP_API DAQLayout& GetDaqLayout();
 	XCP_API void SetDaqLayout(DAQLayout layout);
 	XCP_API void SetExternalMessageHandler(IIncomingMessageHandler* Handler);
 	XCP_ComputeKeyFromSeedPtr_t GetComputeKeyPtr();

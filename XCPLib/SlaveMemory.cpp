@@ -267,6 +267,14 @@ void DAQLayout::AddDAQ(DAQ daq)
 	m_DAQList.push_back(daq);
 }
 
+XCP_API void DAQLayout::SetDAQ(unsigned int id, DAQ daq)
+{
+	if (id < m_DAQList.size())
+	{
+		m_DAQList[id] = daq;
+	}
+}
+
 DAQ& DAQLayout::GetDAQ(uint32_t Index)
 {
 	return m_DAQList[Index];

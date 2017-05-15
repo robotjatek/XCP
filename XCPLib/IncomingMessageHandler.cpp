@@ -126,7 +126,10 @@ void IncomingMessageHandler::Handle(StartStopDaqListPositiveResponse & Packet)
 		StartStopDaqListPacket* command = m_Master.GetLastSentPacket<StartStopDaqListPacket*>();
 		if (command)
 		{
-			m_Master.GetDaqLayout().GetDAQ(command->GetDaqListNumber(m_Master.GetSlaveProperties().ByteOrder == 0)).SetFirstPid(Packet.GetFirstPid());
+			DAQLayout dl = m_Master.GetDaqLayout();
+			DAQ d = dl.GetDAQ(command->GetDaqListNumber(m_Master.GetSlaveProperties().ByteOrder == 0));
+			d.SetFirstPid(Packet.GetFirstPid());
+			m_Master.SetDaqLayout(dl);
 		}
 		else
 		{
@@ -309,7 +312,11 @@ void IncomingMessageHandler::Handle(DTO & Packet)
 	if (Packet.GetIsTimestamped())
 	{
 		std::cout << Packet.GetTimestamp() << "\n";
-		m_Master.GetDaqLayout().GetDAQ(Packet.GetDAQIndex()).SetLastTimestamp(Packet.GetTimestamp());
+		DAQLayout& dl = m_Master.GetDaqLayout();
+		DAQ& d = dl.GetDAQ(Packet.GetDAQIndex());
+		d.SetLastTimestamp(Packet.GetTimestamp());
+		//dl.SetDAQ(Packet.GetDAQIndex(), d);
+		//m_Master.SetDaqLayout(dl);
 	}
 	for (unsigned int i = 0; i < Packet.GetDataLength(); i++)
 	{
