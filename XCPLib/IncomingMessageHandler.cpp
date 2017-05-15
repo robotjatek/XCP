@@ -126,10 +126,9 @@ void IncomingMessageHandler::Handle(StartStopDaqListPositiveResponse & Packet)
 		StartStopDaqListPacket* command = m_Master.GetLastSentPacket<StartStopDaqListPacket*>();
 		if (command)
 		{
-			DAQLayout dl = m_Master.GetDaqLayout();
-			DAQ d = dl.GetDAQ(command->GetDaqListNumber(m_Master.GetSlaveProperties().ByteOrder == 0));
+			DAQLayout& dl = m_Master.GetDaqLayout();
+			DAQ& d = dl.GetDAQ(command->GetDaqListNumber(m_Master.GetSlaveProperties().ByteOrder == 0));
 			d.SetFirstPid(Packet.GetFirstPid());
-			m_Master.SetDaqLayout(dl);
 		}
 		else
 		{
