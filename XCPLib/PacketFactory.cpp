@@ -234,7 +234,7 @@ std::vector<IXCPPacket*> PacketFactory::CreateUnlockPackets(const std::vector<ui
 
 IXCPPacket * PacketFactory::DeserializeIncomingFromSlave(const std::vector<uint8_t>& Data, uint8_t HeaderSize, uint8_t TailSize, CommandPacket* LastSentCommand)
 {
-	if (Data.size() > HeaderSize)
+	if (Data.size() > HeaderSize) //Handle empty messages
 	{
 		uint8_t PID = Data[HeaderSize];
 		switch (PID)

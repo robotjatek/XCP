@@ -306,7 +306,11 @@ void IncomingMessageHandler::Handle(DTO & Packet)
 {
 	std::cout << "DAQ packet:\n";
 	std::cout << Packet.GetDAQField()<<"\n";
-	std::cout << Packet.GetTimestamp() << "\n";
+	if (Packet.GetIsTimestamped())
+	{
+		std::cout << Packet.GetTimestamp() << "\n";
+		m_Master.GetDaqLayout().GetDAQ(Packet.GetDAQIndex()).SetLastTimestamp(Packet.GetTimestamp());
+	}
 	for (unsigned int i = 0; i < Packet.GetDataLength(); i++)
 	{
 		std::cout << std::hex << (int)Packet.GetByteElement(i) << " ";

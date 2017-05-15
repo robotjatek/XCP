@@ -70,6 +70,7 @@ private:
 	uint8_t m_Prescaler;
 	uint8_t m_Priority;
 	uint8_t m_FirstPid;
+	uint32_t m_LastTimestamp;
 public:
 	XCP_API DAQ();
 	XCP_API DAQ(const DAQ& o);
@@ -87,6 +88,8 @@ public:
 	XCP_API const uint16_t GetNumberOfODTs() const;
 	XCP_API uint8_t GetFirstPid();
 	XCP_API void SetFirstPid(uint8_t FirstPid);
+	XCP_API void SetLastTimestamp(uint32_t Timestamp);
+	XCP_API uint32_t GetLastTimestamp();
 };
 
 //TODO: write an iterator for this class

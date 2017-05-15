@@ -239,6 +239,16 @@ XCP_API void DAQ::SetFirstPid(uint8_t FirstPid)
 	m_FirstPid = FirstPid;
 }
 
+XCP_API void DAQ::SetLastTimestamp(uint32_t Timestamp)
+{
+	m_LastTimestamp = Timestamp;
+}
+
+XCP_API uint32_t DAQ::GetLastTimestamp()
+{
+	return m_LastTimestamp;
+}
+
 DAQLayout::DAQLayout()
 {
 }
