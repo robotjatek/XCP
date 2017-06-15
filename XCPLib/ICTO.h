@@ -30,8 +30,6 @@ enum CTOMasterToSlaveCommands
 	USER_CMD = 0xF1,
 
 	//Calibration commands:
-	CLEAR_DAQ_LIST = 0xE3,
-	GET_DAQ_LIST_INFO = 0xD8,
 
 	//Page switching commands:
 
@@ -51,6 +49,8 @@ enum CTOMasterToSlaveCommands
 	DTO_CTR_PROPERTIES = 0xC5,
 
 	//Static data acquisition and stim commands:
+	CLEAR_DAQ_LIST = 0xE3,
+	GET_DAQ_LIST_INFO = 0xD8,
 
 	//Dynamic data acquisition and stim commands:
 	FREE_DAQ = 0xD6,
