@@ -37,6 +37,7 @@ public:
 	IXCPPacket* CreateStartStopSyncPacket(StartStopSynchPacket::Mode Mode);
 	IXCPPacket* CreateGetSeedPacket(GetSeedPacket::Mode Mode, GetSeedPacket::Resource Resource);
 	IXCPPacket* CreateGetDaqProcessorInfoPacket();
+	IXCPPacket* CreateClearDaqListPacket(uint16_t DaqListNumber, bool LittleEndian);
 	std::vector<IXCPPacket*> CreateUnlockPackets(const std::vector<uint8_t>& Key);
 	IXCPPacket* DeserializeIncomingFromSlave(const std::vector<uint8_t>& Data, uint8_t HeaderSize, uint8_t TailSize, CommandPacket* LastSentCommand);
 };

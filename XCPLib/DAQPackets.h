@@ -306,3 +306,18 @@ public:
 };
 
 //--------------------------------------------------
+
+class ClearDAQListPacket final : public CommandPacket
+{
+private:
+	enum BytePositions
+	{
+		RESERVED = 0x00,
+		DAQ_LIST_NUMBER = 0x01,
+	};
+public:
+	ClearDAQListPacket(uint16_t DAQListNumber, bool LittleEndian);
+	virtual ~ClearDAQListPacket();
+	void SetDaqListNumber(uint16_t DAQListNumber, bool LittleEndian);
+	uint16_t GetDaqListNumbet(bool LittleEndian);
+};

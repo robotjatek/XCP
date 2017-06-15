@@ -227,6 +227,11 @@ IXCPPacket * PacketFactory::CreateGetDaqProcessorInfoPacket()
 	return new GetDaqProcessorInfo();
 }
 
+IXCPPacket * PacketFactory::CreateClearDaqListPacket(uint16_t DaqListNumber, bool LittleEndian)
+{
+	return new ClearDAQListPacket(DaqListNumber, LittleEndian);
+}
+
 std::vector<IXCPPacket*> PacketFactory::CreateUnlockPackets(const std::vector<uint8_t>& Key)
 {
 	return UnlockPacket::CreateUnlockPackets(Key, m_Master.GetSlaveProperties().MaxCto);

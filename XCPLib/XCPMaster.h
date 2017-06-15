@@ -105,6 +105,7 @@ public:
 	XCP_API std::unique_ptr<IXCPMessage> CreateStartStopSynchMessage(StartStopSynchPacket::Mode Mode);
 	XCP_API std::unique_ptr<IXCPMessage> CreateGetSeedMessage(GetSeedPacket::Mode Mode, GetSeedPacket::Resource Resource);
 	XCP_API std::unique_ptr<IXCPMessage> CreateGetDaqProcessorInfoMessage();
+	XCP_API std::unique_ptr<IXCPMessage> CreateClearDaqListMessage(uint16_t DaqListNumber);
 	XCP_API std::vector<std::unique_ptr<IXCPMessage>> CreateUnlockMessages();
 	XCP_API void SendMessage(IXCPMessage* Message);
 	XCP_API IXCPMessage* ReceiveMessage(IXCPMessage* Message);

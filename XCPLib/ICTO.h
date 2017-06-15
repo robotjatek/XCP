@@ -30,6 +30,8 @@ enum CTOMasterToSlaveCommands
 	USER_CMD = 0xF1,
 
 	//Calibration commands:
+	CLEAR_DAQ_LIST = 0xE3,
+	GET_DAQ_LIST_INFO = 0xD8,
 
 	//Page switching commands:
 

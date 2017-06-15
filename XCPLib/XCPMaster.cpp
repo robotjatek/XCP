@@ -256,6 +256,15 @@ XCP_API std::unique_ptr<IXCPMessage> XCPMaster::CreateGetDaqProcessorInfoMessage
 	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateGetDaqProcessorInfoPacket()));
 }
 
+XCP_API std::unique_ptr<IXCPMessage> XCPMaster::CreateClearDaqListMessage(uint16_t DaqListNumber)
+{
+	if (!m_MessageFactory)
+	{
+		return nullptr;
+	}
+	return std::unique_ptr<IXCPMessage>(m_MessageFactory->CreateMessage(m_PacketFactory->CreateClearDaqListPacket(DaqListNumber, m_SlaveProperties.ByteOrder == 0)));
+}
+
 XCP_API std::vector<std::unique_ptr<IXCPMessage>> XCPMaster::CreateUnlockMessages()
 {
 	std::vector<std::unique_ptr<IXCPMessage>> ret;

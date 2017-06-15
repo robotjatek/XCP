@@ -192,6 +192,9 @@ void XCPWorkerThread::TestXCP()
 		Send(s, std::move(Stop));
 	}
 
+	XCPMsgPtr ClearDaqMsg = master->CreateClearDaqListMessage(0);
+	Send(s, std::move(ClearDaqMsg));
+
 	XCPMsgPtr disconnect_message = master->CreateDisconnectMessage();
 	Send(s, std::move(disconnect_message));
 	emit Finished();

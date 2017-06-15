@@ -524,3 +524,52 @@ uint8_t GetDaqProcessorInfoResponse::GetDaqKeyByte()
 {
 	return m_Data[BytePositions::DAQ_KEY_BYTE];
 }
+
+//--------------------------------------------------
+
+ClearDAQListPacket::ClearDAQListPacket(uint16_t DAQListNumber, bool LittleEndian) : CommandPacket()
+{
+	m_PID = CTOMasterToSlaveCommands::CLEAR_DAQ_LIST;
+	m_DataLength = 3;
+	m_PacketSize = 4;
+	m_Data = new uint8_t[m_DataLength];
+	m_Data[0] = 0; //Reserved
+	SetDaqListNumber(DAQListNumber, LittleEndian);
+}
+
+ClearDAQListPacket::~ClearDAQListPacket()
+{
+	delete[] m_Data;
+	m_Data = nullptr;
+}
+
+void ClearDAQListPacket::SetDaqListNumber(uint16_t DAQListNumber, bool LittleEndian)
+{
+	uint8_t t1, t2;
+	t1 = DAQListNumber & 0xFF;
+	t2 = (DAQListNumber >> 8) & 0xFF;
+
+	if (LittleEndian)
+	{
+		m_Data[BytePositions::DAQ_LIST_NUMBER] = t1;
+		m_Data[BytePositions::DAQ_LIST_NUMBER + 1] = t2;
+	}
+	else
+	{
+		m_Data[BytePositions::DAQ_LIST_NUMBER] = t2;
+		m_Data[BytePositions::DAQ_LIST_NUMBER + 1] = t1;
+	}
+}
+
+uint16_t ClearDAQListPacket::GetDaqListNumbet(bool LittleEndian)
+{
+	if (LittleEndian)
+	{
+		return (((uint16_t)m_Data[BytePositions::DAQ_LIST_NUMBER + 1]) << 8) | m_Data[BytePositions::DAQ_LIST_NUMBER];
+	}
+	else
+	{
+		//do byte-swap
+		return (((uint16_t)m_Data[BytePositions::DAQ_LIST_NUMBER]) << 8) | m_Data[BytePositions::DAQ_LIST_NUMBER + 1];
+	}
+}
