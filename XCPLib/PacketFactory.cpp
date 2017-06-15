@@ -14,6 +14,7 @@
 #include "XCPMaster.h"
 #include "UnlockPacket.h"
 #include "DTO.h"
+#include "ErrorCommandUnknown.h"
 #include <iostream>
 
 
@@ -85,6 +86,9 @@ IXCPPacket * PacketFactory::CreateErrorPacket(const std::vector<uint8_t>& data, 
 			break;
 		case ErrorCodes::ERR_MEMORY_OVERFLOW:
 			return new ErrorMemoryOverflowPacket();
+			break;
+		case ErrorCodes::ERR_CMD_UNKNOWN:
+			return new ErrorCommandUnknown();
 			break;
 		default:
 			std::cout << "Deserialization error: Unhandled errorcode\n";

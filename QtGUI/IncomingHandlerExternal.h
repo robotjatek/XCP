@@ -28,6 +28,7 @@ public:
 	virtual void Handle(UnlockResponsePacket& Packet) {};
 	virtual void Handle(GetDaqProcessorInfoResponse& Packet) {};
 	virtual void Handle(DTO& Packet);
+	virtual void Handle(ErrorCommandUnknown& Packet) {};
 	std::vector<uint8_t> asd;
 	virtual const std::vector<uint8_t>& GetUnlockKey() const { return asd; };
 

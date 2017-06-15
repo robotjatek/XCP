@@ -11,6 +11,7 @@
 #include "ErrorMemoryOverflowPacket.h"
 #include "UnlockPacket.h"
 #include "DTO.h"
+#include "ErrorCommandUnknown.h"
 
 void IncomingMessageHandler::ResetSeedAndKey()
 {
@@ -322,6 +323,11 @@ void IncomingMessageHandler::Handle(DTO & Packet)
 		std::cout << std::hex << (int)Packet.GetByteElement(i) << " ";
 	}
 	std::cout << "\n";
+}
+
+void IncomingMessageHandler::Handle(ErrorCommandUnknown & Packet)
+{
+	std::cout << "ERROR: Unknown command\n";
 }
 
 const std::vector<uint8_t>& IncomingMessageHandler::GetUnlockKey() const

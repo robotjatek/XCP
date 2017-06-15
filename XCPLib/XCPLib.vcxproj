@@ -153,6 +153,7 @@
     <ClInclude Include="DisconnectPacket.h" />
     <ClInclude Include="DTO.h" />
     <ClInclude Include="ErrorAccessLockedPacket.h" />
+    <ClInclude Include="ErrorCommandUnknown.h" />
     <ClInclude Include="ErrorMemoryOverflowPacket.h" />
     <ClInclude Include="ErrorOutOfRangePacket.h" />
     <ClInclude Include="ErrorSequencePacket.h" />
@@ -187,6 +188,7 @@
     <ClCompile Include="DisconnectPacket.cpp" />
     <ClCompile Include="DTO.cpp" />
     <ClCompile Include="ErrorAccessLockedPacket.cpp" />
+    <ClCompile Include="ErrorCommandUnknown.cpp" />
     <ClCompile Include="ErrorMemoryOverflowPacket.cpp" />
     <ClCompile Include="ErrorOutOfRangePacket.cpp" />
     <ClCompile Include="ErrorPacket.h" />

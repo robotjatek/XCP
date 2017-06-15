@@ -15,6 +15,7 @@ class GetSeedResponsePacket;
 class UnlockResponsePacket;
 class GetDaqProcessorInfoResponse;
 class DTO;
+class ErrorCommandUnknown;
 #include <vector>
 
 class IIncomingMessageHandler
@@ -34,6 +35,7 @@ public:
 	virtual void Handle(UnlockResponsePacket& Packet) = 0;
 	virtual void Handle(GetDaqProcessorInfoResponse& Packet) = 0;
 	virtual void Handle(DTO& Packet) = 0;
+	virtual void Handle(ErrorCommandUnknown& Packet) = 0;
 	virtual const std::vector<uint8_t>& GetUnlockKey() const = 0;
 	virtual ~IIncomingMessageHandler() {};
 };
