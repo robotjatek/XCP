@@ -123,9 +123,11 @@ TestAppQt::TestAppQt(QWidget *parent)
 	connect(ui.TestSend, SIGNAL(clicked()), this, SLOT(TestButtonPressed()));
 	connect(ui.MeasurementBtn, SIGNAL(clicked()), this, SLOT(ConfigMeasurementButtonPressed()));
 
-	LoadDLL();
+	LoadDLL(); //Loads the user provided dll with the Seed&Key algorithms. Sets up the GetAvailablePrivileges and ComputeKeyFromSeed function pointers.
 	master = new XCPMaster(TransportLayer::ETHERNET);
-	master->SetSeedAndKeyFunctionPointers(GetAvailablePrivileges, ComputeKeyFromSeed);
+	master->SetSeedAndKeyFunctionPointers(
+		GetAvailablePrivileges, //function pointer for the GetAvailablePrivileges 
+		ComputeKeyFromSeed); //function pointer for the ComputeKeyFromSeed 
 	thread = new XCPWorkerThread(master);
 
 	connect(thread, SIGNAL(NotifyUI(uint16_t, uint8_t, uint32_t, double, double)), this, SLOT(AddPointToSeries(uint16_t, uint8_t, uint32_t, double, double)));
