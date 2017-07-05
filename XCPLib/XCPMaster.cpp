@@ -1,5 +1,6 @@
 #include "XCPMaster.h"
 #include "TCPMessageFactory.h"
+#include "CANMessageFactory.h"
 #include "IncomingMessageHandler.h"
 //#include <vld.h>
 
@@ -20,8 +21,9 @@ XCPMaster::XCPMaster(TransportLayer transportlayer)
 	case TransportLayer::ETHERNET:
 		m_MessageFactory = new TCPMessageFactory();
 		break;
-		//case TransportLayer::CAN:
-		//	break;
+	case TransportLayer::CAN:
+		m_MessageFactory = new CANMessageFactory();
+		break;
 	default:
 		m_MessageFactory = nullptr;
 		break;

@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CANMessageFactory.h" />
     <ClInclude Include="CANMessage.h" />
     <ClInclude Include="ConnectPacket.h" />
     <ClInclude Include="ConnectPositivePacket.h" />
@@ -182,6 +183,8 @@
     <ClInclude Include="XCPMaster.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CANMessage.cpp" />
+    <ClCompile Include="CANMessageFactory.cpp" />
     <ClCompile Include="ConnectPacket.cpp" />
     <ClCompile Include="ConnectPositivePacket.cpp" />
     <ClCompile Include="DAQPackets.cpp" />

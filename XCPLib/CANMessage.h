@@ -4,5 +4,6 @@
 class CANMessage final : public IXCPMessage
 {
 public:
-	virtual ~CANMessage() {};
+	CANMessage(IXCPPacket* Packet);
+	virtual ~CANMessage();
 };

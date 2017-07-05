@@ -155,14 +155,18 @@ void IncomingMessageHandler::Handle(GetSeedResponsePacket & Packet)
 	{
 		m_SeedBytes.push_back(Packet.GetSeedPart(i));
 	}
-
+	
 	m_ProcessedSeedLength += SeedPartSize;
 	m_RemainingSeedLength -= SeedPartSize;
 	GetSeedPacket* LastPacket = m_Master.GetLastSentPacket<GetSeedPacket*>();
 	if (m_RemainingSeedLength == 0)
 	{
-		m_Master.GetComputeKeyPtr()(LastPacket->GetResource(), Packet.GetLengthField(), &m_SeedBytes[0], &m_KeyLength, &m_Key[0]);
-		m_Key.resize(m_KeyLength);
+		XCP_ComputeKeyFromSeedPtr_t ptr = m_Master.GetComputeKeyPtr();
+		if (ptr)
+		{
+			ptr(LastPacket->GetResource(), Packet.GetLengthField(), &m_SeedBytes[0], &m_KeyLength, &m_Key[0]);
+			m_Key.resize(m_KeyLength);
+		}
 	}
 }
 

@@ -117,6 +117,9 @@
     <ClInclude Include="ErrorCommandUnknown.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CANMessageFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConnectPacket.cpp">
@@ -198,6 +201,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ErrorCommandUnknown.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CANMessageFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CANMessage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
