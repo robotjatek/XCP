@@ -3,6 +3,8 @@ An object oriented XCP (Universal Measurement and Calibration Protocol) implemen
 This library is still in "Work In Progress" it is not recommended for everyday use. 
 A lots of functionalities are still missing, and the rest is not extensively tested.
 
+[![Build status](https://ci.appveyor.com/api/projects/status/nhffe3hghggmvqqs/branch/master?svg=true)](https://ci.appveyor.com/project/robotjatek/xcp/branch/master)
+
 
 ## Features
 - Connect/Disconnect
