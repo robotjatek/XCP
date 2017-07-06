@@ -109,7 +109,7 @@ Send(s, std::move(ShortUpload));
 ```
 
 ### Setting up the DAQ layout
-The following code sets up the DAQ layout to be used. This will be used to create the DAQ lists in the slave. It is always the user's responsibility to maintain the DAQ layout descriptor. The following code sets up 2 DAQ list with 1 ODT and 1 ODT entry each.
+The following code sets up the DAQ layout to be used. This will be used to create the DAQ lists in the slave. It is always the user's responsibility to maintain the DAQ layout descriptor. The following code sets up 2 DAQ lists with 1 ODT and 1 ODT entry each.
 ```cpp
 DAQLayout daqlayout;
 DAQ daq0;
@@ -242,8 +242,8 @@ Send(s, std::move(Stop));
 ```
 
 ### Handling incoming packets from slave
-Some of the incoming responses are handled internally by the library (eg.: ConnectResponse), but there are some responses that you are most definetly want to handle by yourself. (eg.: incoming DAQ packets, UploadResponse, various error messages, etc.)
-For that you have to implement the **IIncomingMessageHandler** interface. After you implemented the interface, you have to tell the master to use your implementation. It is up to you how to handle the incoming packets. Every incoming packet will be deserialized by the master, then the appropriate handler function will be called.
+Some of the incoming responses are handled internally by the library (eg.: ConnectResponse), but there are some responses that you are most definitely want to handle by yourself. (eg.: incoming DAQ packets, UploadResponse, various error messages, etc.)
+For that you have to implement the **IIncomingMessageHandler** interface. After you implemented the interface, you'll have to tell the master to use your implementation. It is up to you how to handle the incoming packets. Every incoming packet will be deserialized by the master, then the appropriate handler function will be called.
 ```cpp
 IncomingHandlerExternal* Handler = new IncomingHandlerExternal(thread, master);
 master->SetExternalMessageHandler(Handler);
