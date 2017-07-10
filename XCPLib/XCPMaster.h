@@ -81,6 +81,7 @@ private:
 
 	XCP_GetAvailablePrivilegesPtr_t m_GetAvailablePrivileges = nullptr;
 	XCP_ComputeKeyFromSeedPtr_t m_ComputeKeyFromSeed = nullptr;
+	XCP_API XCPMaster();
 
 public:
 	XCP_API const SlaveProperties& GetSlaveProperties() const;
