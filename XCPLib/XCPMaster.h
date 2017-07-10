@@ -29,6 +29,7 @@ enum TransportLayer
 
 typedef uint32_t(*XCP_GetAvailablePrivilegesPtr_t)(uint8_t* AvailablePrivilege);
 typedef uint32_t(*XCP_ComputeKeyFromSeedPtr_t)(uint8_t RequestedPrivilege, uint8_t ByteLenghtSeed, uint8_t* PointerToSeed, uint8_t* ByteLengthKey, uint8_t* PointerToKey);
+using XCPMsgPtr = std::unique_ptr<IXCPMessage>;
 
 class XCPMaster
 {

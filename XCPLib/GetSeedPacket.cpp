@@ -41,7 +41,7 @@ uint8_t GetSeedPacket::GetResource()
 
 GetSeedResponsePacket::GetSeedResponsePacket(const std::vector<uint8_t>& Data, uint8_t HeaderSize, uint8_t TailSize) : ResponsePacket()
 {
-	m_DataLength = Data.size() - HeaderSize - TailSize - 1;
+	m_DataLength = (uint32_t)Data.size() - HeaderSize - TailSize - 1;
 	m_PacketSize = m_DataLength + 1;
 	m_Data = new uint8_t[m_DataLength];
 	for (unsigned int i = 0; i < m_DataLength; i++)

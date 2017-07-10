@@ -32,7 +32,7 @@ uint8_t UploadPacket::GetNumberOfDataElements()
 
 UploadResponse::UploadResponse(const std::vector<uint8_t>& Data, uint8_t HeaderSize, uint8_t AG) : ResponsePacket()
 {
-	m_DataLength = Data.size() - HeaderSize - 1; //size -headersize - PID fieldsize
+	m_DataLength = (uint32_t)Data.size() - HeaderSize - 1; //size -headersize - PID fieldsize
 	m_PacketSize = m_DataLength + 1;
 	m_Data = new uint8_t[m_DataLength];
 	for (unsigned int i = 0; i < m_DataLength; i++)

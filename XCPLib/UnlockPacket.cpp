@@ -10,7 +10,7 @@ UnlockPacket::UnlockPacket(const std::vector<uint8_t>& Key, uint8_t StartIndex, 
 	}
 	else
 	{
-		m_DataLength = Key.size() + 1;
+		m_DataLength = (uint32_t)Key.size() + 1;
 	}
 
 	m_PacketSize = m_DataLength + 1;

@@ -140,7 +140,7 @@ const uint32_t ODT::GetODTSize() const
 
 XCP_API const uint32_t ODT::GetNumberOfEntries() const
 {
-	return m_EntryList.size();
+	return (uint32_t)m_EntryList.size();
 }
 
 XCP_API const bool ODT::IsFirst() const

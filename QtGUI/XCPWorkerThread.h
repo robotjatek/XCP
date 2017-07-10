@@ -5,7 +5,7 @@
 #include <qtcpsocket.h>
 #include <qthread.h>
 
-using XCPMsgPtr = std::unique_ptr<IXCPMessage>;
+
 
 
 class XCPWorkerThread : public QThread
