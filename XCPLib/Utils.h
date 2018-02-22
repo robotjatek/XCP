@@ -2,11 +2,8 @@
 #include <cstdint>
 #include <vector>
 
-#ifdef XCPLIB_EXPORTS //XCPLIB_EXPORTS macro is defined in the project settings
-#define XCP_API    __declspec(dllexport)
-#else
-#define XCP_API    __declspec(dllimport)
-#endif
+#include "XCPApiDecl.h"
+
 //TODO: make this work with big endian systems
 //TODO: use bitconverter everywhere, instead of converting values by hand every occasion
 //TODO: make converting work to the other way as well

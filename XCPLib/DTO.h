@@ -2,11 +2,7 @@
 #include "IXCPPacket.h"
 #include "SlaveMemory.h"
 
-#ifdef XCPLIB_EXPORTS //XCPLIB_EXPORTS macro is defined in the project settings
-#define XCP_API    __declspec(dllexport)
-#else
-#define XCP_API    __declspec(dllimport)
-#endif
+#include "XCPApiDecl.h"
 
 class DTO final :
 	public IXCPPacket

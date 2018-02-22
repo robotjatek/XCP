@@ -28,7 +28,7 @@ public:
 
 	enum CommModeBasicBits
 	{
-		BYTE_ORDER				= 0x1,	//Byte order for multibyte parameters. 0 = Little endian (Intel format), 1 = Big Endian (Motorola format)
+        COMM_BYTE_ORDER				= 0x1,	//Byte order for multibyte parameters. 0 = Little endian (Intel format), 1 = Big Endian (Motorola format)
 		ADDRESS_GRANULARITY_0	= 0x2,	//The address granularity indicates the size of an element 
 		ADDRESS_GRANULARITY_1	= 0x4,	//The address granularity indicates the size of an element: 00-byte, 01-word, 10-DWORD, 11-reserved
 		ADDRESS_GRANULARITY_BOTH = 0x6,

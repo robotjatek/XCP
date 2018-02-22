@@ -17,6 +17,7 @@ class GetDaqProcessorInfoResponse;
 class DTO;
 class ErrorCommandUnknown;
 #include <vector>
+#include <stdint.h>
 
 class IIncomingMessageHandler
 {
