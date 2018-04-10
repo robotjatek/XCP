@@ -2,7 +2,6 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_TestAppQt.h"
-#include <QtCharts/QtCharts>
 
 
 #include <XCPMaster.h>

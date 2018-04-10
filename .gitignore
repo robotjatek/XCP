@@ -243,3 +243,6 @@ ModelManifest.xml
 
 # DLL
 *.dll
+
+# Qmake generated Makefile
+Makefile
