@@ -98,28 +98,69 @@ void XCPWorkerThread::TestXCP()
 	//Using the low level DAQ APIs, it is the programmer's responsibilty to maintain the DAQ layout descriptor:
 	using ModeFieldBits = SetDaqListModePacket::ModeFieldBits;
 	//DAQLayout daqlayout;
-	//DAQ daq0;
-	//DAQ daq1;
-	//ODT daq0odt0;
-	//ODT daq1odt0;
-	//ODTEntry daq0odt0entry0(0x21A1BD, 0, 1);
-	//ODTEntry daq1odt0entry0(0x21A08D, 0, 1);
+	/*daqlayout.WithDAQ([](DAQ d) -> DAQ
+	{  
+		d.SetEventChannel(1);
+		d.SetMode(ModeFieldBits::TIMESTAMP);
+		d.SetPrescaler(1);
+		d.SetPriority(1);
 
-	//daq0odt0.AddEntry(daq0odt0entry0);
-	//daq1odt0.AddEntry(daq1odt0entry0);
-	//daq0.AddODT(daq0odt0);
-	//daq1.AddODT(daq1odt0);
-	//daq0.SetEventChannel(1);
-	//daq0.SetMode(ModeFieldBits::TIMESTAMP);
-	//daq0.SetPrescaler(1);
-	//daq0.SetPriority(1);
-	//daq1.SetEventChannel(2);
-	//daq1.SetMode(ModeFieldBits::TIMESTAMP);
-	//daq1.SetPrescaler(1);
-	//daq1.SetPriority(2);
-	//daqlayout.AddDAQ(daq0);
-	//daqlayout.AddDAQ(daq1);
-	//master->SetDaqLayout(daqlayout);
+		d.WithODT([](ODT o) -> ODT {
+			o.WithODTEntry([](ODTEntry e) -> ODTEntry {
+				e.SetAddress(0x21A1BD);
+				e.SetAddressExtension(0);
+				e.SetLength(1);
+				return e;
+			});
+			return o;
+		});
+
+		return d;
+	}).WithDAQ([](DAQ d) ->  DAQ
+	{
+		d.SetEventChannel(2);
+		d.SetMode(ModeFieldBits::TIMESTAMP);
+		d.SetPrescaler(1);
+		d.SetPriority(2);
+
+		d.WithODT([](ODT o) -> ODT {
+			o.WithODTEntry([](ODTEntry e) -> ODTEntry {
+				e.SetAddress(0x21A08D);
+				e.SetAddressExtension(0);
+				e.SetLength(1);
+				return e;
+			});
+
+			return o;
+		});
+
+		return d;
+	});
+	daqlayout.SetInitialized(true);
+	master->SetDaqLayout(daqlayout);*/
+	/*DAQ daq0;
+	DAQ daq1;
+	ODT daq0odt0;
+	ODT daq1odt0;
+	ODTEntry daq0odt0entry0(0x21A1BD, 0, 1);
+	ODTEntry daq1odt0entry0(0x21A08D, 0, 1);
+
+	daq0odt0.AddEntry(daq0odt0entry0);
+	daq1odt0.AddEntry(daq1odt0entry0);
+	daq0.AddODT(daq0odt0);
+	daq1.AddODT(daq1odt0);
+	daq0.SetEventChannel(1);
+	daq0.SetMode(ModeFieldBits::TIMESTAMP);
+	daq0.SetPrescaler(1);
+	daq0.SetPriority(1);
+	daq1.SetEventChannel(2);
+	daq1.SetMode(ModeFieldBits::TIMESTAMP);
+	daq1.SetPrescaler(1);
+	daq1.SetPriority(2);
+	daqlayout.AddDAQ(daq0);
+	daqlayout.AddDAQ(daq1);
+	daqlayout.SetInitialized(true);
+	master->SetDaqLayout(daqlayout);*/
 
 	DAQLayout daqlayout = master->GetDaqLayout();	
 	if (daqlayout.IsInitialized())

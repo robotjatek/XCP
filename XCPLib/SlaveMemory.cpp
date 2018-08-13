@@ -358,3 +358,27 @@ XCP_API void DAQLayout::SetInitialized(bool i)
 {
 	Initialized = i;
 }
+
+XCP_API DAQLayout& DAQLayout::WithDAQ(std::function<DAQ&(DAQ&)> daq_func)
+{
+	DAQ d;
+	this->AddDAQ(daq_func(d));
+
+	return *this;
+}
+
+XCP_API DAQ& DAQ::WithODT(std::function<ODT&(ODT&)> odt_func)
+{
+	ODT o;
+	this->AddODT(odt_func(o));
+
+	return *this;
+}
+
+XCP_API ODT& ODT::WithODTEntry(std::function<ODTEntry&(ODTEntry&)> entry_func)
+{
+	ODTEntry e;
+	this->AddEntry(entry_func(e));
+
+	return *this;
+}

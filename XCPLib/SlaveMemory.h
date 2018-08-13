@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <vector>
+#include <functional>
 
 #ifdef XCPLIB_EXPORTS //XCPLIB_EXPORTS macro is defined in the project settings
 #define XCP_API    __declspec(dllexport)
@@ -59,6 +60,8 @@ public:
 	XCP_API const uint32_t GetNumberOfEntries() const;
 	XCP_API const bool IsFirst() const;
 	XCP_API void SetFirst(bool First);
+
+	XCP_API ODT& WithODTEntry(std::function<ODTEntry&(ODTEntry&)> entry_func);
 };
 
 class DAQ
@@ -90,6 +93,8 @@ public:
 	XCP_API void SetFirstPid(uint8_t FirstPid);
 	XCP_API void SetLastTimestamp(uint32_t Timestamp);
 	XCP_API uint32_t GetLastTimestamp();
+
+	XCP_API DAQ& WithODT(std::function<ODT&(ODT&)> odt_func);
 };
 
 //TODO: write an iterator for this class
@@ -112,4 +117,6 @@ public:
 	XCP_API ODT& GetODTFromAbsolutePID(uint8_t PID);
 	XCP_API bool IsInitialized();
 	XCP_API void SetInitialized(bool i);
+
+	XCP_API DAQLayout& WithDAQ(std::function<DAQ&(DAQ&)> daq_fun);
 };

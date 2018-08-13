@@ -55,8 +55,50 @@ ConfigureMeasurementQt::ConfigureMeasurementQt(const std::map<std::tuple<uint16_
 	daq1.SetPriority(2);
 	daqlayout.AddDAQ(daq0);
 	daqlayout.AddDAQ(daq1);
+	daqlayout.SetInitialized(true);*/
+
+	DAQLayout daqlayout;
+	daqlayout.WithDAQ([](DAQ& d) -> DAQ&
+	{
+		d.SetEventChannel(1);
+		d.SetMode(ModeFieldBits::TIMESTAMP);
+		d.SetPrescaler(1);
+		d.SetPriority(1);
+
+		d.WithODT([](ODT& o) -> ODT& {
+			o.WithODTEntry([](ODTEntry& e) -> ODTEntry& {
+				e.SetAddress(0x21A1BD);
+				e.SetAddressExtension(0);
+				e.SetLength(1);
+				return e;
+			});
+			return o;
+		});
+
+		return d;
+	}).WithDAQ([](DAQ& d) ->  DAQ&
+	{
+		d.SetEventChannel(2);
+		d.SetMode(ModeFieldBits::TIMESTAMP);
+		d.SetPrescaler(1);
+		d.SetPriority(2);
+
+		d.WithODT([](ODT& o) -> ODT& {
+			o.WithODTEntry([](ODTEntry& e) -> ODTEntry& {
+				e.SetAddress(0x21A08D);
+				e.SetAddressExtension(0);
+				e.SetLength(1);
+				return e;
+			});
+
+			return o;
+		});
+
+		return d;
+	});
 	daqlayout.SetInitialized(true);
-	this->daq_layout = daqlayout;*/
+
+	m_DAQLayout = daqlayout;
 }
 
 
