@@ -138,6 +138,52 @@ daqlayout.AddDAQ(daq1);
 master->SetDaqLayout(daqlayout);
 ```
 
+### Setting up the DAQ layout with the fluent API
+It's also possible to set up the DAQ layout with a fluent API:
+
+```cppDAQLayout daqlayout;
+daqlayout.WithDAQ([](DAQ& d) -> DAQ&
+{
+	d.SetEventChannel(1);
+	d.SetMode(ModeFieldBits::TIMESTAMP);
+	d.SetPrescaler(1);
+	d.SetPriority(1);
+
+	d.WithODT([](ODT& o) -> ODT& {
+		o.WithODTEntry([](ODTEntry& e) -> ODTEntry& {
+			e.SetAddress(0x21A1BD);
+			e.SetAddressExtension(0);
+			e.SetLength(1);
+			return e;
+		});
+		return o;
+	});
+
+	return d;
+}).WithDAQ([](DAQ& d) ->  DAQ&
+{
+	d.SetEventChannel(2);
+	d.SetMode(ModeFieldBits::TIMESTAMP);
+	d.SetPrescaler(1);
+	d.SetPriority(2);
+
+	d.WithODT([](ODT& o) -> ODT& {
+		o.WithODTEntry([](ODTEntry& e) -> ODTEntry& {
+			e.SetAddress(0x21A08D);
+			e.SetAddressExtension(0);
+			e.SetLength(1);
+			return e;
+		});
+
+		return o;
+	});
+
+	return d;
+});
+daqlayout.SetInitialized(true);
+master->SetDaqLayout(daqlayout);
+```
+
 ### Getting DAQ processor info
 You should get the DAQ processor information by sending out this command.
 
